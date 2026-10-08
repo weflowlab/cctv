@@ -1,26 +1,134 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   전역 스타일 (keeper.ceo 클론)
+   - 원본 사이트의 리셋/폰트/스크롤 애니메이션 유틸을 그대로 옮겨옴
+   - 컴포넌트 스타일은 Tailwind 클래스로 작성 (원본 수치는 arbitrary value 로 보존)
+   ========================================================================== */
+
+/* --- 웹폰트: 원본과 동일하게 Pretendard (500/600/700) --- */
+@font-face {
+  font-family: Pretendard;
+  src: url(https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Regular.woff2) format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: Pretendard;
+  src: url(https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2) format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: Pretendard;
+  src: url(https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-SemiBold.woff2) format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: Pretendard;
+  src: url(https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Bold.woff2) format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* 손글씨 포인트 폰트 (트렌드 리포트 등에서 font-family: TtangsBudaeJjigae 로 사용) */
+@font-face {
+  font-family: TtangsBudaeJjigae;
+  src: url(https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2212@1.0/TTTtangsbudaejjigaeB.woff2) format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* --- 디자인 토큰: 원본에서 반복 사용되는 색상 --- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --header-height: 80px; /* PC 헤더 높이 */
+  --header-height-mobile: 72px; /* 모바일(≤1023px) 헤더 높이 */
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+  --color-brand: #ff5c00; /* 키퍼 메인 오렌지 */
+  --color-brand-light: #fff6f1; /* 오렌지 배경 버튼 */
+  --color-ink: #111; /* 본문 진한 텍스트 */
+  --color-sub: #666; /* 보조 텍스트 */
+  --color-line: #f0f0f0; /* 구분선 */
+  /* 원본 브레이크포인트: max-width 1023px 기준으로 모바일/PC 분기 → lg(1024px) */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* --- 리셋: 원본 전역 CSS 발췌 --- */
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  height: 100%;
+}
+body {
+  position: relative;
+  word-break: keep-all;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: none;
+  background-color: #fff;
+  color: #111;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.4;
+  letter-spacing: -1px;
+}
+button {
+  cursor: pointer;
+}
+img {
+  vertical-align: top;
+  user-select: none;
+}
+/* 스크린리더 전용 텍스트 (원본 .blind) */
+.blind {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* --- 스크롤 등장 애니메이션 (원본 07a0986...css 그대로) ---
+   <Reveal> 컴포넌트가 뷰포트 진입 시 아래 클래스를 붙여 실행한다. */
+@keyframes floatingRight {
+  0% { transform: translateX(90px); }
+  to { transform: translateX(-90px); }
+}
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideInLeft {
+  0% { opacity: 0; transform: translate3d(-50px, 0, 0); }
+  to { opacity: 1; transform: translateZ(0); }
+}
+@keyframes slideInRight {
+  0% { opacity: 0; transform: translate3d(50px, 0, 0); }
+  to { opacity: 1; transform: translateZ(0); }
+}
+@keyframes slideInUp {
+  0% { opacity: 0; transform: translate3d(0, 50px, 0); }
+  to { opacity: 1; transform: translateZ(0); }
+}
+@keyframes slideInDown {
+  0% { opacity: 0; transform: translate3d(0, -50px, 0); }
+  to { opacity: 1; transform: translateZ(0); }
+}
+.reveal-pending { opacity: 0; } /* 진입 전 숨김 */
+.fade-in { animation: fadeIn 1s ease-out forwards; }
+.slide-in-left { animation: slideInLeft 1s ease-out forwards; }
+.slide-in-right { animation: slideInRight 1s ease-out forwards; }
+.slide-in-up { animation: slideInUp 1s ease-out forwards; }
+.slide-in-down { animation: slideInDown 1s ease-out forwards; }
+.float-right { animation: floatingRight 12s linear infinite; }
+
+/* 모션 최소화 설정 사용자는 애니메이션 생략 */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-pending { opacity: 1; }
+  .fade-in, .slide-in-left, .slide-in-right, .slide-in-up, .slide-in-down, .float-right {
+    animation: none;
+    opacity: 1;
+  }
 }

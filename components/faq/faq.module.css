@@ -1,0 +1,53 @@
+/*
+ * FAQ 답변 안의 "보험 보장 내용" 표 스타일 (원본 sc-b20ee4e5-1 그대로)
+ * - th/td 중첩 선택자가 많아 Tailwind 대신 모듈 CSS 로 분리
+ * - PC: 어두운 박스 + 회색 테두리 / 모바일(≤1023px): 패딩·글자 축소
+ */
+.table {
+  border-radius: 10px;
+  background: #34333e;
+  overflow: hidden;
+  border: 1px solid #6f7079;
+}
+.table > table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table > table th,
+.table > table td {
+  border: 1px solid #6f7079;
+  padding: 16px 0;
+  font-size: 14px;
+  text-align: center;
+  font-weight: 400;
+  line-height: 160%;
+  letter-spacing: -0.14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+.table > table th:first-of-type,
+.table > table td:first-of-type {
+  border-left: 0;
+}
+.table > table th:last-of-type,
+.table > table td:last-of-type {
+  border-right: 0;
+}
+.table > table th {
+  background: rgba(255, 255, 255, 0.2);
+  border-top: 0;
+}
+.table > table tr:last-of-type > td {
+  border-bottom: 0;
+}
+
+@media (max-width: 1023px) {
+  .table {
+    border-radius: 8px;
+    background: rgba(222, 224, 235, 0.2);
+  }
+  .table > table th,
+  .table > table td {
+    padding: 8px 0;
+    font-size: 12px;
+  }
+}

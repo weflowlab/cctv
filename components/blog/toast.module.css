@@ -1,0 +1,17 @@
+/*
+ * 공유하기 토스트 등장 애니메이션 (원본 sc-3656b52b-1)
+ * - 위에서(translateY -100%) 내려오며 페이드 인, 0.3s ease-out
+ */
+.toast {
+  animation: toastDown 0.3s ease-out;
+}
+@keyframes toastDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

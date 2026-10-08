@@ -1,0 +1,14 @@
+/*
+ * 견적계산기 로딩 애니메이션 (원본 Lottie "로딩 디벨롭" 대체)
+ * - 원본 Lottie: 280×180 캔버스, 이미지 아래 주황 점 3개가 순서대로 10px 튀어오름
+ * - 점마다 animation-delay 를 달리 줘서 차례로 통통 튀는 효과
+ */
+@keyframes dotBounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-10px); }
+}
+.dot {
+  animation: dotBounce 1.2s ease-in-out infinite;
+}
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }

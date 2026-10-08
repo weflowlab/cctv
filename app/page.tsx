@@ -1,69 +1,70 @@
-import Image from "next/image";
+/**
+ * 홈 페이지 `/` (원본 keeper.ceo 메인, app/page 청크의 tK 컴포넌트)
+ * - 섹션 순서(원본 그대로):
+ *   히어로 배너 → 브랜드 필름 → 서비스 소개 → Who We Are → 제품/기술 → 매장관리 올인원
+ *   → 고객사례 → 상담 폼 → 유튜브 영상 → 하단 CTA
+ * - 헤더: 기본 "transparent"(히어로 위 투명), 스크롤 50px 이상이면 "white" (HomeHeaderScroll).
+ * - 히어로는 ?banner= 쿼리를 읽으므로(useSearchParams) Suspense 로 감싼다.
+ * - 페이지 자체는 서버 컴포넌트, 인터랙션이 있는 섹션만 클라이언트 컴포넌트.
+ */
+import type { Metadata } from "next";
+import { Suspense } from "react";
+import AllInOne from "@/components/home/AllInOne";
+import BottomCta from "@/components/home/BottomCta";
+import BrandFilm from "@/components/home/BrandFilm";
+import ConsultForm from "@/components/home/ConsultForm";
+import CustomerCases from "@/components/home/CustomerCases";
+import HeroBanner, { HeroBannerFallback } from "@/components/home/HeroBanner";
+import HomeHeaderScroll from "@/components/home/HomeHeaderScroll";
+import ProductTech from "@/components/home/ProductTech";
+import ServiceIntro from "@/components/home/ServiceIntro";
+import WhoWeAre from "@/components/home/WhoWeAre";
+import YoutubeSection from "@/components/home/YoutubeSection";
+
+export const metadata: Metadata = {
+  title: "한화비전 키퍼 | 매장관리 올인원 CCTV",
+  description: "매장전용 CCTV부터 알바 출퇴근 관리까지, 무약정·설치비 0원 매장관리 올인원 솔루션",
+  keywords: ["매장관리", "한화비전", "매장 CCTV", "무약정 CCTV", "알바 출퇴근 관리"],
+};
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    // 원본 sc-469414c5-0: 최소 폭 360px, 세로 스택, 가운데 정렬
+    <div className="flex w-full min-w-[360px] flex-col items-center">
+      {/* 스크롤 위치에 따라 헤더 투명 ↔ 흰색 전환 */}
+      <HomeHeaderScroll />
+
+      {/* ===== 히어로 메인 배너: 영상 + 프로모션 이미지 Swiper ===== */}
+      <Suspense fallback={<HeroBannerFallback />}>
+        <HeroBanner />
+      </Suspense>
+
+      {/* ===== 브랜드 필름: 신혜선 Brand Film 유튜브 ===== */}
+      <BrandFilm />
+
+      {/* ===== 서비스 소개: 카드 4개 ===== */}
+      <ServiceIntro />
+
+      {/* ===== Who We Are: 한화비전 소개 ===== */}
+      <WhoWeAre />
+
+      {/* ===== 사장님들의 이유있는 선택: 제품/기술 ===== */}
+      <ProductTech />
+
+      {/* ===== 매장 관리 올인원: 매장 보안 / 직원 관리 ===== */}
+      <AllInOne />
+
+      {/* ===== 고객사례 + 더보기 ===== */}
+      <CustomerCases />
+
+      {/* ===== 상담 신청 폼 ===== */}
+      <ConsultForm />
+
+      {/* ===== 유튜브 영상 콘텐츠 ===== */}
+      <YoutubeSection />
+
+      {/* ===== 하단 CTA: 지금 바로 키퍼 하세요 + 앱 다운로드 ===== */}
+      <BottomCta />
     </div>
   );
 }
