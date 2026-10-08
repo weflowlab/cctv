@@ -1,92 +1,105 @@
 /**
- * 전역 푸터 (원본 layout 청크의 `eZ` 컴포넌트, sc-1776113b)
- * - 한화비전 로고, 회사 정보(대표/사업자번호/통신판매업/주소/개인정보 책임자), 구매·A/S 문의 번호,
- *   약관 링크 3개, 카피라이트.
+ * 전역 푸터 + 플로팅 상담 버튼
+ * - keeper 푸터 레이아웃 그대로: 로고, 회사 정보(상호/대표/사업자번호/주소) | 통합콜센터 번호,
+ *   약관 링크 3개, 카피라이트. 값은 모두 SITE(@/lib/site) 에서 가져온다.
  * - PC: 회사정보(폭 560px) | 문의번호 가로 배치 / 모바일(≤1023px): 세로 배치 + 작은 글자.
  * - 서버 컴포넌트. 카피라이트 연도(현재 연도)는 Cache Components 규칙상 "use cache" 로 계산.
- * - 경로별 노출/하단 고정 상담바 제어는 클라이언트 FooterShell 이 담당.
+ * - app/layout.tsx 를 건드리지 않기 위해 모든 페이지 공통 플로팅 버튼(FloatingContact)도 여기서 렌더.
  */
 import Link from "next/link";
+import FloatingContact from "@/components/common/FloatingContact";
 import Placeholder from "@/components/common/Placeholder";
-import FooterShell from "./FooterShell";
+import { SITE } from "@/lib/site";
 
-/** 원본 eR: 정보 사이 세로 구분선 */
+/** 정보 사이 세로 구분선 */
 function Divider() {
   return (
     <span className="relative top-[1px] mx-[6px] inline-block h-[9px] w-px bg-[#dedede] lg:top-[2px] lg:mx-[8px] lg:h-[14px]" />
   );
 }
 
-/** 원본 eN: 문의 번호 한 줄 (라벨 / 번호 / 운영시간) */
-function ContactLine({ label, phone, hours }: { label: string; phone: string; hours: string }) {
+/** 문의 번호 한 줄 (라벨 / 번호 / 부가설명) */
+function ContactLine({ label, phone, href, note }: { label: string; phone: string; href: string; note?: string }) {
   return (
     <div className="flex items-center text-[12px] leading-[1.5] tracking-[-1px] text-[#666] lg:text-[16px]">
       <strong className="mr-[6px] font-bold text-[#333]">{label}</strong>
-      <span>{phone}</span>
-      <span className="ml-[4px] text-[10px] leading-[1.4] tracking-[-0.2px] text-[#999] lg:ml-[6px] lg:text-[15px] lg:leading-[1.5] lg:tracking-[-0.3px]">
-        {hours}
-      </span>
+      <a href={href} className="text-[#666] no-underline">
+        {phone}
+      </a>
+      {note && (
+        <span className="ml-[4px] text-[10px] leading-[1.4] tracking-[-0.2px] text-[#999] lg:ml-[6px] lg:text-[15px] lg:leading-[1.5] lg:tracking-[-0.3px]">
+          {note}
+        </span>
+      )}
     </div>
   );
 }
 
-export default async function Footer() {
+/** 카피라이트 연도 — Cache Components 규칙상 현재 시각 읽기는 캐시 함수 안에서만 */
+async function getCopyrightYear() {
   "use cache";
-  const year = new Date().getFullYear();
+  return new Date().getFullYear();
+}
+
+export default async function Footer() {
+  const year = await getCopyrightYear();
 
   return (
-    <FooterShell>
-      <div className="mx-auto w-full max-w-[1080px] bg-white px-[16px] py-[38px] lg:px-[20px] lg:pb-[60px] lg:pt-[52px]">
-        {/* ===== 한화비전 로고 ===== */}
-        <Placeholder label="한화비전" className="h-[36px] w-[218px] rounded-[4px]" />
+    <>
+      <footer id="footer-main" className="relative border-t border-[#f0f0f0]">
+        <div className="mx-auto w-full max-w-[1080px] bg-white px-[16px] py-[38px] lg:px-[20px] lg:pb-[60px] lg:pt-[52px]">
+          {/* ===== 로고 ===== */}
+          <Placeholder label={`${SITE.name} 로고`} className="h-[36px] w-[180px] rounded-[4px]" />
 
-        <div className="mt-[20px] block w-full lg:flex">
-          {/* ===== 회사 정보 ===== */}
-          <div className="flex shrink-0 basis-[560px] flex-col gap-[4px] text-[11px] font-normal leading-[1.4] tracking-[-1px] text-[#333] lg:text-[14px] lg:leading-[22px] [&_a]:text-[#333] [&_a]:no-underline">
-            <div>
-              <span>대표 : 김기철</span>
-              <Divider />
-              <span>사업자 등록번호 : 680-86-03414</span>{" "}
-              <a target="_blank" rel="noreferrer" href="https://www.ftc.go.kr/bizCommPop.do?wrkr_no=6808603414">
-                [사업자 정보 확인]
-              </a>
+          <div className="mt-[20px] block w-full lg:flex">
+            {/* ===== 회사 정보: 상호 / 대표 / 사업자등록번호 / 주소 ===== */}
+            <div className="flex shrink-0 basis-[560px] flex-col gap-[4px] text-[11px] font-normal leading-[1.4] tracking-[-1px] text-[#333] lg:text-[14px] lg:leading-[22px] [&_a]:text-[#333] [&_a]:no-underline">
+              <div>
+                <span>상호 : {SITE.legalName}</span>
+                <Divider />
+                <span>대표 : {SITE.ceo}</span>
+              </div>
+              <div>
+                <span>사업자 등록번호 : {SITE.bizNumber}</span>{" "}
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={`https://www.ftc.go.kr/bizCommPop.do?wrkr_no=${SITE.bizNumber.replace(/-/g, "")}`}
+                >
+                  [사업자 정보 확인]
+                </a>
+              </div>
+              <div>주소 : {SITE.address}</div>
             </div>
-            <div>
-              <span>통신판매업 신고번호: 제 2025-성남분당A-0113호</span>
-            </div>
-            <div>주소 : 경기도 성남시 분당구 판교로 319번길 6 (삼평동)</div>
-            <div>
-              <span>개인정보 보호책임자 : 김현섭</span>
-              <Divider />
-              <span>이메일 : privacy.htw@hanwha.com</span>
+
+            {/* ===== 통합콜센터 번호 ===== */}
+            <div className="mt-[20px] grow space-y-[8px] lg:mt-0">
+              <ContactLine label="통합콜센터" phone={SITE.phone} href={SITE.phoneHref} />
             </div>
           </div>
 
-          {/* ===== 구매 / A/S 문의 번호 ===== */}
-          <div className="mt-[20px] grow space-y-[8px] lg:mt-0">
-            <ContactLine label="키퍼 구매문의" phone="1670-5773" hours="09:00~18:00 (월~금)" />
-            <ContactLine label="제품 A/S문의" phone="1670-5772" hours="09:00 ~ 22:00 (365일 연중무휴)" />
+          {/* ===== 약관 링크 + 카피라이트 ===== */}
+          <div className="mt-[27px]">
+            <div className="flex flex-wrap gap-[13px] text-[11px] font-medium leading-[1.4] tracking-[-0.3px] text-[#333] lg:gap-[32px] lg:text-[14px] lg:font-normal lg:leading-[22px] [&_a]:text-[#333] [&_a]:no-underline">
+              <Link href="/terms/service">
+                <span>서비스이용약관</span>
+              </Link>
+              <Link href="/terms/personal">
+                <strong>개인정보처리방침</strong>
+              </Link>
+              <Link href="/terms/location">
+                <span>위치정보 이용약관</span>
+              </Link>
+            </div>
+            <div className="mt-[16px] text-[11px] leading-[1.4] tracking-[-0.22px] text-[#8e9097] lg:mt-[12px] lg:text-[14px] lg:leading-[22px] lg:tracking-[-0.3px] lg:text-[#888]">
+              © {year} {SITE.legalName}. All rights Reserved.
+            </div>
           </div>
         </div>
+      </footer>
 
-        {/* ===== 약관 링크 + 카피라이트 ===== */}
-        <div className="mt-[27px]">
-          <div className="flex flex-wrap gap-[13px] text-[11px] font-medium leading-[1.4] tracking-[-0.3px] text-[#333] lg:gap-[32px] lg:text-[14px] lg:font-normal lg:leading-[22px] [&_a]:text-[#333] [&_a]:no-underline">
-            <Link href="/terms/service">
-              <span>서비스이용약관</span>
-            </Link>
-            <Link href="/terms/personal">
-              <strong>개인정보처리방침</strong>
-            </Link>
-            <Link href="/terms/location">
-              <span>위치정보 이용약관</span>
-            </Link>
-          </div>
-          <div className="mt-[16px] text-[11px] leading-[1.4] tracking-[-0.22px] text-[#8e9097] lg:mt-[12px] lg:text-[14px] lg:leading-[22px] lg:tracking-[-0.3px] lg:text-[#888]">
-            © {year} Hanwha Vision Co., Ltd. All rights Reserved.
-          </div>
-        </div>
-      </div>
-    </FooterShell>
+      {/* ===== 플로팅 상담 버튼 (카카오톡 / 전화 / 맨 위로) ===== */}
+      <FloatingContact />
+    </>
   );
 }

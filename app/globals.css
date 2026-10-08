@@ -48,7 +48,7 @@
 
 @theme inline {
   --font-sans: Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
-  --color-brand: #ff5c00; /* 키퍼 메인 오렌지 */
+  --color-brand: #ff5c00; /* 메인 오렌지 (keeper 틀에서 유지, 브랜드 컬러 확정 시 교체) */
   --color-brand-light: #fff6f1; /* 오렌지 배경 버튼 */
   --color-ink: #111; /* 본문 진한 텍스트 */
   --color-sub: #666; /* 보조 텍스트 */

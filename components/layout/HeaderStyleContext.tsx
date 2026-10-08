@@ -2,9 +2,9 @@
 
 /**
  * 헤더 스타일 컨텍스트
- * - 원본은 경로에 따라 헤더 배경/글자색을 바꾼다.
- *   · "transparent"       : 배경 투명 + 흰 글자 (/, /security, /business — 어두운 히어로 위)
- *   · "transparent-black" : 배경 투명 + 검은 글자 (/new-service/employee-contract)
+ * - 경로에 따라 헤더 배경/글자색 기본값을 정한다.
+ *   · "transparent"       : 배경 투명 + 흰 글자 (홈 "/" — 어두운 히어로 위)
+ *   · "transparent-black" : 배경 투명 + 검은 글자 (기본값으로는 쓰지 않음, 페이지가 직접 지정할 때만)
  *   · "white"             : 흰 배경 + 검은 글자 (그 외 모든 페이지)
  * - 페이지에서 스크롤 위치에 따라 바꾸고 싶으면 useHeaderStyle().setHeaderStyle 을 호출한다.
  *   (예: 히어로를 지나면 "white" 로 전환)
@@ -18,11 +18,9 @@ type Ctx = { headerStyle: HeaderStyle; setHeaderStyle: (s: HeaderStyle) => void 
 
 const HeaderStyleContext = createContext<Ctx | undefined>(undefined);
 
-/** 경로별 기본 헤더 스타일 (원본 HeaderProvider 로직 그대로) */
+/** 경로별 기본 헤더 스타일 — 홈만 투명, 나머지는 흰색 */
 export function getDefaultHeaderStyle(pathname: string): HeaderStyle {
-  if (["/", "/security", "/business"].includes(pathname)) return "transparent";
-  if (pathname === "/new-service/employee-contract") return "transparent-black";
-  return "white";
+  return pathname === "/" ? "transparent" : "white";
 }
 
 export function HeaderStyleProvider({ children }: { children: ReactNode }) {

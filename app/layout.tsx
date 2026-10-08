@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import { HeaderStyleProvider } from "@/components/layout/HeaderStyleContext";
+import { SITE } from "@/lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "한화비전 키퍼 | 사장님 매장을 위한 프리미엄 CCTV",
-  description: "매장 보안부터 직원 근태관리까지, 매장관리 올인원 솔루션 키퍼",
+  title: `${SITE.name} | CCTV 설치·렌탈·AS 전국 인프라`,
+  description: "CCTV 설치부터 렌탈, AS 출장수리, CCTV+스피커 동시 시공까지. 전국 어디든 빠른 설치와 AS.",
 };
 
 /**

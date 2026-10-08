@@ -1,15 +1,18 @@
 /**
- * /faq 페이지 — 키퍼 자주 묻는 질문 (원본 https://keeper.ceo/faq)
- * - 서버 컴포넌트. 인터랙션은 카테고리 탭(FaqTabs)과 헤더 스크롤 연동(HeaderScrollStyle)만 클라이언트.
- * - 원본: 스크롤 100px 미만이면 헤더 투명(흰 글자), 그 이상이면 흰 헤더.
+ * /faq 페이지 — 자주 묻는 질문 (keeper FAQ 틀 + 기존 사이트 내용 기반 초안)
+ * - 서버 컴포넌트. 탭·아코디언(FaqAccordion)과 헤더 스크롤 연동(HeaderScrollStyle)만 클라이언트.
+ * - 헤더: 스크롤 100px 미만이면 투명(흰 글자, 어두운 배경 위), 그 이상이면 흰 헤더.
+ * - Q&A 는 초안 — components/support-faq/data.ts 참고 (사장님 검수 필요).
  */
 import type { Metadata } from "next";
-import FaqSection from "@/components/faq/FaqSection";
-import HeaderScrollStyle from "@/components/faq/HeaderScrollStyle";
+import ConsultCta from "@/components/common/ConsultCta";
+import FaqSection from "@/components/support-faq/FaqSection";
+import HeaderScrollStyle from "@/components/support-faq/HeaderScrollStyle";
+import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "키퍼 자주 묻는 질문(FAQ) | 가격·설치·A/S",
-  description: "약정, 설치 기간, 저장 기간, 직원관리 앱, 안심보험까지 사장님들이 가장 많이 묻는 질문 모음",
+  title: `자주 묻는 질문(FAQ) | ${SITE.name}`,
+  description: "CCTV 설치 비용, 렌탈, AS 등 고객님들이 자주 묻는 질문 모음",
 };
 
 export default function FaqPage() {
@@ -17,8 +20,10 @@ export default function FaqPage() {
     <>
       {/* ===== 헤더 스타일: 상단(100px 미만)에서는 투명, 스크롤 후 흰색 ===== */}
       <HeaderScrollStyle threshold={100} topStyle="transparent" scrolledStyle="white" />
-      {/* ===== FAQ 본문: 제목 / 카테고리 탭 / 카테고리별 Q&A ===== */}
+      {/* ===== FAQ 본문: 제목 / 카테고리 탭 / 아코디언 ===== */}
       <FaqSection />
+      {/* ===== 상담 신청 CTA 배너 ===== */}
+      <ConsultCta />
     </>
   );
 }

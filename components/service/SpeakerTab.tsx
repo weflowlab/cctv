@@ -1,0 +1,78 @@
+/**
+ * /service/speaker — CCTV+스피커 동시 시공 탭 콘텐츠 (서버 컴포넌트)
+ * - 출처: 기존 홈페이지 홈 하단 배너 1장 (2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg) 속 문구
+ * - 구성: 히어로(동시 시공 카피 + 배너 이미지) → 혜택 3가지(시간 단축 / 비용 절감 / 통합 관리)
+ * - 원본 자료가 배너 한 장뿐이라 섹션을 2개로 간결하게 유지. 원본에 없는 문구는 TODO 주석.
+ */
+import Placeholder from "@/components/common/Placeholder";
+import Reveal from "@/components/common/Reveal";
+import { SPEAKER_BENEFITS } from "./data";
+import { SectionHeading, SpaceOrBreak } from "./ui";
+
+export default function SpeakerTab() {
+  return (
+    <>
+      {/* ===== 히어로: CCTV + 스피커 동시 시공 가능 / 배너 이미지 ===== */}
+      <section className="bg-[#fff9f0] px-[16px] py-[56px] lg:px-0 lg:py-[100px]">
+        <div className="mx-auto flex w-full max-w-[580px] flex-col items-center gap-[32px] lg:w-[1080px] lg:max-w-none lg:flex-row lg:justify-between lg:gap-[64px]">
+          <div className="text-center lg:text-left">
+            <p className="text-[14px] font-bold tracking-[-0.28px] text-[#ff5c00] lg:text-[18px]">Smart Integrated Solution</p>
+            <h2 className="mt-[8px] text-[30px] font-bold leading-[1.4] tracking-[-0.6px] text-[#222] lg:text-[44px] lg:tracking-[-2px] [&>strong]:text-[#ff5c00]">
+              <strong>CCTV + 스피커</strong>
+              <br />
+              동시 시공 가능
+            </h2>
+            <p className="mt-[12px] text-[15px] leading-[1.6] tracking-[-0.3px] text-[#1d1d1f] lg:mt-[16px] lg:text-[20px] lg:tracking-[-0.44px]">
+              좋은 품질의 음향 시스템과
+              <SpaceOrBreak />
+              보안 솔루션을 한 번에
+            </p>
+          </div>
+          <Placeholder
+            label="CCTV+스피커 동시 시공 배너 (원본 2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg)"
+            className="aspect-[1693/929] w-full max-w-[520px] rounded-[20px] lg:w-[520px]"
+          />
+        </div>
+      </section>
+
+      {/* ===== 혜택 3가지: 원본 배너 하단 3칸 (라벨 + 2줄 설명) ===== */}
+      <section className="bg-white px-[16px] py-[60px] lg:px-0 lg:py-[120px]">
+        <div className="mx-auto w-full max-w-[580px] lg:w-[1080px] lg:max-w-none">
+          <SectionHeading
+            title={
+              <>
+                두 가지 전문성을
+                <SpaceOrBreak />
+                <strong>하나의 신뢰로 완성합니다</strong>
+              </>
+            }
+            // TODO: 문구 확정 (원본 배너에 없는 보조 설명 — placeholder)
+            desc="CCTV와 스피커를 한 팀이 함께 시공해 드립니다."
+          />
+          <ul className="mt-[32px] grid grid-cols-1 gap-[12px] lg:mt-[64px] lg:grid-cols-3 lg:gap-[20px]">
+            {SPEAKER_BENEFITS.map((b, i) => (
+              <Reveal
+                as="li"
+                key={b.label}
+                delay={i * 150}
+                className="flex items-center gap-[16px] rounded-[16px] bg-[#f6f7fa] px-[24px] py-[24px] lg:flex-col lg:gap-[20px] lg:py-[48px] lg:text-center"
+              >
+                <div className="flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-full bg-white lg:h-[88px] lg:w-[88px]">
+                  <Placeholder label={`${b.label} 아이콘`} kind="icon" className="h-[32px] w-[32px] lg:h-[48px] lg:w-[48px]" />
+                </div>
+                <div>
+                  <h3 className="text-[14px] font-bold tracking-[-0.28px] text-[#ff5c00] lg:text-[18px]">{b.label}</h3>
+                  <p className="mt-[4px] text-[17px] font-bold leading-[25px] tracking-[-0.34px] text-[#222] lg:mt-[8px] lg:text-[22px] lg:leading-[32px]">
+                    {b.desc[0]}
+                    <SpaceOrBreak />
+                    {b.desc[1]}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </ul>
+        </div>
+      </section>
+    </>
+  );
+}
