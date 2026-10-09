@@ -78,8 +78,8 @@ export default function FloatingContact() {
         <Tooltip>카카오톡 상담</Tooltip>
       </a>
 
-      {/* ===== 전화 상담: 오렌지 원 + 수화기 아이콘 ===== */}
-      <a href={SITE.phoneHref} aria-label={`전화 상담 ${SITE.phone}`} className={`${circle} bg-[#ff5c00]`}>
+      {/* ===== 전화 상담: 브랜드색 원 + 수화기 아이콘 ===== */}
+      <a href={SITE.phoneHref} aria-label={`전화 상담 ${SITE.phone}`} className={`${circle} bg-brand`}>
         <svg className="h-[22px] w-[22px] lg:h-[26px] lg:w-[26px]" viewBox="0 0 24 24" aria-hidden>
           <path
             fill="#fff"

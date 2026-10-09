@@ -29,7 +29,7 @@ export function ArrowIcon(props: SVGProps<SVGSVGElement>) {
 }
 
 type SectionHeadingProps = {
-  /** 제목 위 작은 오렌지 라벨 */
+  /** 제목 위 작은 브랜드색 라벨 */
   eyebrow?: string;
   title: ReactNode;
   desc?: ReactNode;
@@ -40,11 +40,11 @@ export function SectionHeading({ eyebrow, title, desc, className = "" }: Section
   return (
     <div className={`text-center ${className}`}>
       {eyebrow && (
-        <p className="text-[14px] font-bold tracking-[-0.28px] text-[#ff5c00] lg:text-[18px] lg:tracking-[-0.36px]">
+        <p className="text-[14px] font-bold tracking-[-0.28px] text-point-strong lg:text-[18px] lg:tracking-[-0.36px]">
           {eyebrow}
         </p>
       )}
-      <h2 className="mt-[6px] text-[26px] font-bold leading-[37px] tracking-[-0.52px] text-[#222] lg:mt-[10px] lg:text-[42px] lg:leading-[60px] lg:tracking-[-1px] [&>strong]:text-[#ff5c00]">
+      <h2 className="mt-[6px] text-[26px] font-bold leading-[37px] tracking-[-0.52px] text-[#222] lg:mt-[10px] lg:text-[42px] lg:leading-[60px] lg:tracking-[-1px] [&>strong]:text-point-strong">
         {title}
       </h2>
       {desc && (
@@ -72,7 +72,7 @@ export function CrossLink({ href, caption, label, className = "" }: CrossLinkPro
     <section className={`bg-white px-[16px] pb-[60px] lg:px-0 lg:pb-[120px] ${className}`}>
       <Link
         href={href}
-        className="group mx-auto flex w-full max-w-[580px] items-center justify-between gap-[16px] rounded-[16px] bg-[#f6f7fa] px-[24px] py-[22px] transition-colors hover:bg-[#fff6f1] lg:w-[1080px] lg:max-w-none lg:rounded-[20px] lg:px-[44px] lg:py-[36px]"
+        className="group mx-auto flex w-full max-w-[580px] items-center justify-between gap-[16px] rounded-[16px] bg-[#f6f7fa] px-[24px] py-[22px] transition-colors hover:bg-brand-light lg:w-[1080px] lg:max-w-none lg:rounded-[20px] lg:px-[44px] lg:py-[36px]"
       >
         <div>
           <p className="text-[14px] font-medium leading-[20px] tracking-[-0.28px] text-[#888] lg:text-[18px] lg:leading-[26px]">
@@ -82,7 +82,7 @@ export function CrossLink({ href, caption, label, className = "" }: CrossLinkPro
             {label}
           </p>
         </div>
-        <span className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full bg-[#ff5c00] text-white transition-transform duration-200 group-hover:translate-x-[4px] lg:h-[56px] lg:w-[56px]">
+        <span className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full bg-brand text-white transition-transform duration-200 group-hover:translate-x-[4px] lg:h-[56px] lg:w-[56px]">
           <ArrowIcon className="h-[14px] w-[14px] lg:h-[18px] lg:w-[18px]" />
         </span>
       </Link>

@@ -39,13 +39,38 @@ export const PACKAGE_IMAGES: Record<Placement, string[]> = {
   outdoor: ["2024/04/070.png", "2024/04/071.jpg", "2024/04/072.jpg", "2024/04/073.jpg"],
 };
 
-/** 패키지 공통 구성/조건 — 첫 줄(장비 구성)은 화소·카메라 종류에 따라 조합 */
+/** 패키지 공통 구성/조건 — 첫 줄(장비 구성)은 화소·카메라 종류에 따라 조합
+ *  TODO: 신규 회사 정책 확인 — "기계 무상 AS 1년" 은 기존 회사 정책 */
 export const PACKAGE_COMMON_ITEMS = ["꼼꼼한 설치 시공+기본 자재 포함", "기계 무상 AS 1년", "모니터 별도", "부가세 별도"];
 
 export const PACKAGE_NOTES = [
   "매장, 주택, 사무실 등 소규모 전용 알뜰 특가패키지, 정보통신면허 공사 및 큰 규모의 공사 발주 별도 문의",
   "수도권 기준, 지방권 금액 소폭 변동",
 ];
+
+/**
+ * 패키지 풀세트 구성품 (원본 "FullHD 실내/실외 CCTV 풀세트 구성품" 이미지 속 문구 · 번호 순서 그대로)
+ * - 실내 9종 = 01 실내 카메라 + 02~09 공통 8종
+ * - 실외 10종 = 01 실외 방수 카메라 + 02~09 공통 8종 + 10 방수 하이박스(실외 전용)
+ * - 원본 카메라·DVR 이미지는 HIKVISION 제품 — TODO: 신규 회사 취급 제품 확인
+ * - 원본 HDD 사진은 8TB 제품인데 문구는 1TB → 사진 교체 시 1TB 제품으로
+ */
+export const FULLSET_CAMERA: Record<Placement, { name: string; image: string }> = {
+  indoor: { name: "실내 카메라", image: "2024/04/062-1.png" },
+  outdoor: { name: "실외 방수 카메라", image: "2024/04/063-1.png" },
+};
+export const FULLSET_COMMON = [
+  { name: "CCTV 녹화기 (DVR)", image: "2024/04/054-1.png" },
+  { name: "1TB 하드디스크", image: "2024/04/055-1.jpg" },
+  { name: "고급 실드 케이블", image: "2024/04/056-1.jpg" },
+  { name: "CCTV 아답터", image: "2024/04/057-1.png" },
+  { name: "CCTV 전용 브라켓", image: "2024/04/058-1.png" },
+  { name: "CCTV 젠더 (BNCP-RCAJ)", image: "2024/04/059-1.png" },
+  { name: "CCTV 설치안내판", image: "2024/04/060-1.jpg" },
+  { name: "PC·모바일 소프트웨어 (실시간 영상 확인)", image: "2024/04/061-1.png" },
+];
+/** 실외 패키지에만 추가되는 구성품 */
+export const FULLSET_OUTDOOR_ONLY = [{ name: "CCTV 방수 하이박스", image: "2024/04/064-1.png" }];
 
 /** 설치 시공절차 4단계 (원본 이미지 002-1 / 003 / 004 / 005 속 문구) */
 export const INSTALL_STEPS = [
@@ -79,7 +104,7 @@ export const RENTAL_MONTHLY: { count: number; other: number; ours: number }[] = 
 /** 렌탈 서비스 진행 과정 5단계 (원본 Service 1~5 — 설명 문구는 원본에 없음) */
 export const RENTAL_STEPS = ["전화상담", "신청서작성", "본인인증", "설치일정조율", "설치완료"];
 
-/** 렌탈 제휴 브랜드 (원본 홈 2024/12/ 로고 이미지들) */
+/** 렌탈 제휴 브랜드 (원본 홈 2024/12/ 로고 이미지들) — 기존 회사 제휴. 화면은 LEGACY.partners 로 숨김 */
 export const RENTAL_PARTNERS = ["딜라이브", "KT", "SK", "ADT캡스", "LG U+"];
 
 /* ------------------------------------------------------------------ */
@@ -93,14 +118,26 @@ export const AS_SERVICES = [
   { title: "유지보수", img: "2024/06/CK_ti219a8508_l-e1717386668787.jpg" },
 ];
 
-/** AS 고객 고민 4가지 (원본 "CCTV AS 이런 문제로 고민해보신 적 있으신가요?") */
-export const AS_WORRIES = ["설치업체 책임회피", "시공사 조작미숙", "시공사 연락두절", "설치업체 불친절"];
+/**
+ * AS 고객 고민 4가지 (원본 "CCTV AS 이런 문제로 고민해보신 적 있으신가요?")
+ * - title 은 원본 그대로, desc 는 고객 입장 공감 문구(신규 작성), icon 은 AsTab 의 인라인 SVG 키
+ */
+export const AS_WORRIES = [
+  { title: "설치업체 책임회피", desc: "고장 났는데 설치 업체는 '우리 책임 아니다'만 반복해요", icon: "shield" },
+  { title: "시공사 조작미숙", desc: "사용법을 물어봐도 시공 기사님도 잘 모르세요", icon: "tool" },
+  { title: "시공사 연락두절", desc: "AS 요청 전화를 해도 받지 않아요", icon: "phone" },
+  { title: "설치업체 불친절", desc: "문의할 때마다 불친절한 응대에 마음이 상해요", icon: "chat" },
+] as const;
 
-/** AS 핵심 강점 (원본 강점 9가지 중 AS 관련만 발췌) */
+/**
+ * AS 핵심 강점 (원본 강점 9가지 중 AS 관련만 발췌)
+ * TODO: 신규 회사 정책 확인 — 24시간 이내 방문 / 무상 AS 1년 / 1:1 담당자는 기존 회사 정책 수치
+ * - 3번 원문 "전국 인프라 구성으로 어디든 설치가 가능" 은 신규 회사가 단정할 수 없는 실적이라 교체
+ */
 export const AS_STRENGTHS = [
   { title: ["의뢰 후 24시간 이내", "방문 진단 및 수리"], img: "2024/03/017.png" },
   { title: ["당사 설치 시", "모든 부품 무상 AS 1년"], img: "2024/03/010.png" },
-  { title: ["전국 인프라 구성으로", "어디든 설치가 가능"], img: "2024/03/011.png" },
+  { title: ["타사 설치 제품도", "책임지고 수리"], img: "2024/03/011.png" },
   { title: ["1:1 유지 보수", "담당자 배정"], img: "2024/03/015.png" },
 ];
 

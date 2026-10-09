@@ -10,8 +10,8 @@ export type Menu = { name: string };
 export const MENUS: Record<string, Menu> = {
   "/about": { name: "회사소개" },
   "/service": { name: "서비스" }, // 탭: /service/install · rental · as · speaker
-  "/places": { name: "장소별 CCTV" }, // 칩: /places/home · store · office · factory · public
-  "/cases": { name: "시공사례" },
+  "/cases": { name: "시공사례" }, // 칩: /cases/place/home · store · office · factory · public (구 장소별 CCTV 통합)
+  "/calculator": { name: "견적 계산기" }, // 질문 6단계 → 추천 대수·예상 견적
   "/faq": { name: "FAQ" },
 };
 

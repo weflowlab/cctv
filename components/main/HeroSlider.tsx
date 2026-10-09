@@ -1,11 +1,12 @@
 "use client";
 
 /**
- * 홈 히어로 슬라이더 (keeper HeroBanner 틀 + 기존 kkcctv 메인 카피)
+ * 홈 히어로 슬라이더 (keeper HeroBanner 틀 + 신규 회사 카피)
  * - 투명 헤더 밑으로 깔리도록 음수 margin-top(헤더 높이만큼) 적용. 헤더 투명/흰색 전환은 HomeHeaderScroll 담당.
  * - 높이 640px(PC·모바일 동일), 배경은 슬라이드별 Placeholder + 어두운 그라데이션, 카피는 그 위에 표시.
  * - Swiper 옵션: loop, autoplay 5초(사용자 조작 후에도 계속), Pagination(clickable, 커스텀 원형 불릿).
- * - 슬라이드 4장: 메인(내 공간 견적 계산하기 / 상담 신청하기) → 렌탈 → CCTV+스피커 → AS 출장수리.
+ * - 슬라이드 4장: 메인(내 공간 견적 계산하기 / 상담 신청하기) → 렌탈 → AS 수리 → CCTV+스피커.
+ *   각 장 = 문제 공감(1줄) → 해결 약속(2줄, 강조) → 설명 → [자세히 보기] [상담 신청하기].
  * - 초기화 전에는 opacity 0 → onBeforeInit 에서 1 로 페이드 인 (레이아웃 깜빡임 방지).
  * - Swiper Autoplay 는 렌더 중 현재 시각을 읽어 정적 프리렌더(Cache Components)와 충돌한다.
  *   → 서버/프리렌더에서는 첫 슬라이드만 정적 HTML 로 그리고, 브라우저에서 Swiper 로 교체한다.
@@ -17,6 +18,7 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import Placeholder from "@/components/common/Placeholder";
 import useIsClient from "@/components/common/useIsClient";
+import { SITE } from "@/lib/site";
 import { ArrowRightIcon } from "./icons";
 
 type Slide = {
@@ -27,48 +29,51 @@ type Slide = {
   title: string[];
   /** 서브 카피 */
   desc: string;
-  /** 버튼 (첫 번째는 주황 채움, 두 번째는 흰 테두리) */
+  /** 버튼 (첫 번째는 브랜드색 채움, 두 번째는 흰 테두리) */
   buttons: { label: string; href: string }[];
   /** 배경 이미지 자리 설명 */
   bg: string;
 };
 
-/** 슬라이드 데이터 — 카피 출처: kkcctv 메인(index) / 렌탈 / AS / 스피커 배너 */
+/**
+ * 슬라이드 데이터 — 신규 회사 카피 (문제제기 → 해결 → 행동)
+ * - 기존 회사 실적(수상·순위·전국 지사) 표현은 쓰지 않는다.
+ * - 첫 장: 회사가 무엇을 하는지(설치·렌탈·AS + 운영시간)를 eyebrow 로 바로 보여 줌.
+ */
+const CONSULT = { label: "상담 신청하기", href: "/contact" };
+
 const SLIDES: Slide[] = [
   {
     id: "main",
-    eyebrow: "한국브랜드 선호도 3년 연속 1위 수상",
-    title: ["대한민국 CCTV 1등 브랜드", "보안 솔루션 전문 기업"],
-    desc: "전국 인프라 구성으로 발빠른 대응과 설치가 가능합니다.",
-    buttons: [
-      { label: "내 공간 견적 계산하기", href: "/calculator" },
-      { label: "상담 신청하기", href: "/contact" },
-    ],
-    bg: "메인 히어로 배경 (CCTV 설치 현장 / 원본 메인 상단 배경)",
+    eyebrow: `CCTV 설치 · 렌탈 · AS | ${SITE.hours}`,
+    title: ["자리 비운 사이 생기는 일,", "이제 CCTV로 지키세요"],
+    desc: `현장에 맞춘 설계부터 설치·렌탈·수리까지, ${SITE.name}가 한 번에 책임집니다.`,
+    buttons: [{ label: "내 공간 견적 계산하기", href: "/calculator" }, CONSULT],
+    bg: "메인 히어로 배경 (매장·사무실 CCTV 설치 현장)",
   },
   {
     id: "rental",
     eyebrow: "CCTV 렌탈",
-    title: ["초기비용 0원,", "부담 없는 CCTV 렌탈"],
-    desc: "설치비·가입비·보증료 면제, 최저가 월비용으로 전국 어디든 설치가 가능합니다.",
-    buttons: [{ label: "렌탈 자세히 보기", href: "/service/rental" }],
-    bg: "렌탈 슬라이드 배경 (초기비용 0원 CCTV 렌탈)",
-  },
-  {
-    id: "speaker",
-    eyebrow: "CCTV + 스피커",
-    title: ["CCTV + 스피커", "동시 시공 가능"],
-    desc: "좋은 품질의 음향 시스템과 보안 솔루션을 한 번에 완성합니다.",
-    buttons: [{ label: "동시 시공 알아보기", href: "/service/speaker" }],
-    bg: "CCTV+스피커 슬라이드 배경 (원본 2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg)",
+    title: ["설치비 부담에 미루고 계셨다면,", "월 렌탈로 바로 시작하세요"],
+    desc: "목돈 없이 월 이용료로 설치하고, 사용 중 고장도 함께 관리합니다.",
+    buttons: [{ label: "렌탈 자세히 보기", href: "/service/rental" }, CONSULT],
+    bg: "렌탈 슬라이드 배경 (CCTV 렌탈 설치 현장)",
   },
   {
     id: "as",
     eyebrow: "AS 수리",
-    title: ["타사 제품도 OK,", "AS 전문 출장수리"],
-    desc: "의뢰 후 24시간 이내 방문 진단 및 수리, 전국 어디든 찾아갑니다.",
-    buttons: [{ label: "AS 수리 알아보기", href: "/service/as" }],
+    title: ["설치 업체가 연락 두절이라면,", "다른 업체 제품도 고쳐 드립니다"],
+    desc: `${SITE.hours} 접수 — 방문 점검부터 수리까지 끝까지 맡습니다.`,
+    buttons: [{ label: "AS 수리 알아보기", href: "/service/as" }, CONSULT],
     bg: "AS 출장수리 슬라이드 배경 (CCTV 점검·수리 현장)",
+  },
+  {
+    id: "speaker",
+    eyebrow: "CCTV + 스피커",
+    title: ["CCTV·스피커, 따로 공사하시나요?", "한 번에 동시 시공하세요"],
+    desc: "배선 공사를 한 번에 끝내 공사 기간과 중복 비용을 줄이고, 관리도 한 곳에서.",
+    buttons: [{ label: "동시 시공 알아보기", href: "/service/speaker" }, CONSULT],
+    bg: "CCTV+스피커 슬라이드 배경 (원본 2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg)",
   },
 ];
 
@@ -91,6 +96,7 @@ function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
       {/* 배경 이미지 자리 */}
       <Placeholder
         dark
+        quiet
         label={slide.bg}
         className="absolute inset-0 z-0 h-full w-full border-0"
       />
@@ -102,14 +108,14 @@ function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
         <p className="mb-[12px] rounded-[100px] border border-white/40 px-[12px] py-[4px] text-[13px] font-medium tracking-[-0.26px] lg:mb-[20px] lg:px-[16px] lg:py-[6px] lg:text-[16px]">
           {slide.eyebrow}
         </p>
-        <Heading className="text-[28px] font-bold leading-[1.4] tracking-[-1px] lg:text-[52px] lg:leading-[1.3] lg:tracking-[-2px]">
+        <Heading className="break-keep text-[26px] font-bold leading-[1.4] tracking-[-1px] lg:text-[52px] lg:leading-[1.3] lg:tracking-[-2px]">
           {slide.title[0]}
           <br />
-          <strong className={idx === 0 ? "text-brand" : ""}>
+          <strong className="text-point">
             {slide.title[1]}
           </strong>
         </Heading>
-        <p className="mt-[12px] text-[15px] font-normal leading-[1.6] tracking-[-0.3px] text-white/85 lg:mt-[20px] lg:text-[20px]">
+        <p className="mt-[12px] break-keep text-[15px] font-normal leading-[1.6] tracking-[-0.3px] text-white/85 lg:mt-[20px] lg:text-[20px]">
           {slide.desc}
         </p>
         <div className="mt-[28px] flex flex-wrap justify-center gap-[8px] lg:mt-[44px] lg:justify-start lg:gap-[12px]">

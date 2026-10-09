@@ -2,11 +2,11 @@
  * /service/rental — CCTV 렌탈 탭 콘텐츠 (서버 컴포넌트)
  * - 출처: 기존 홈페이지 "CCTV 렌탈" 페이지 + 홈의 "렌탈 할부 통합 공식 가입 센터" 블록
  * - 구성: 히어로 → 혜택 7가지 → 렌탈 월 요금 슬라이더(원본 표-1.jpg 요금을 대수별로) + 견적 계산기 배너 → 진행 5단계(자동 진행)
- *         → 렌탈 통합 가입 센터 + 파트너 로고 → 일시납(설치) 교차 링크
+ *         → 렌탈 통합 가입 센터 + 파트너 로고(기존 회사 자료 — LEGACY.partners 로 숨김) → 일시납(설치) 교차 링크
  */
 import Placeholder from "@/components/common/Placeholder";
 import Reveal from "@/components/common/Reveal";
-import { SITE } from "@/lib/site";
+import { LEGACY, SITE } from "@/lib/site";
 import RentalSlider from "./RentalSlider";
 import RentalSteps from "./RentalSteps";
 import { RENTAL_BENEFITS, RENTAL_PARTNERS } from "./data";
@@ -16,11 +16,11 @@ export default function RentalTab() {
   return (
     <>
       {/* ===== 히어로: 고객소유 렌탈 할부 서비스 ===== */}
-      <section className="bg-[#fff9f0] px-[16px] py-[56px] lg:px-0 lg:py-[100px]">
+      <section className="bg-point-light px-[16px] py-[56px] lg:px-0 lg:py-[100px]">
         <div className="mx-auto flex w-full max-w-[580px] flex-col items-center gap-[32px] lg:w-[1080px] lg:max-w-none lg:flex-row lg:justify-between lg:gap-[72px]">
           <div className="text-center lg:text-left">
-            <p className="text-[14px] font-bold tracking-[-0.28px] text-[#ff5c00] lg:text-[18px]">CCTV 렌탈</p>
-            <h2 className="mt-[8px] text-[30px] font-bold leading-[1.4] tracking-[-0.6px] text-[#222] lg:text-[46px] lg:tracking-[-2px] [&>strong]:text-[#ff5c00]">
+            <p className="text-[14px] font-bold tracking-[-0.28px] text-point-strong lg:text-[18px]">CCTV 렌탈</p>
+            <h2 className="mt-[8px] text-[30px] font-bold leading-[1.4] tracking-[-0.6px] text-[#222] lg:text-[46px] lg:tracking-[-2px] [&>strong]:text-point-strong">
               <strong>고객소유</strong>의
               <br />
               렌탈 할부 서비스
@@ -28,7 +28,7 @@ export default function RentalTab() {
             <p className="mt-[12px] text-[15px] leading-[1.6] tracking-[-0.3px] text-[#1d1d1f] lg:mt-[16px] lg:text-[20px] lg:tracking-[-0.44px]">
               초기비용 0원과 최저가 월비용으로
               <SpaceOrBreak />
-              전국 어디든 부담없이 설치하세요.
+              목돈 부담 없이 설치하세요.
             </p>
           </div>
           <Placeholder
@@ -47,7 +47,7 @@ export default function RentalTab() {
               <Reveal as="li" key={b.title} delay={(i % 4) * 120} className="overflow-hidden rounded-[14px] bg-[#f6f7fa]">
                 <Placeholder label={`혜택${i + 1} (원본 ${b.img})`} className="aspect-[4/3] w-full border-0" />
                 <div className="px-[14px] pb-[18px] pt-[14px] lg:px-[20px] lg:pb-[24px] lg:pt-[18px]">
-                  <p className="text-[12px] font-bold tracking-[-0.24px] text-[#ff5c00] lg:text-[14px]">혜택 {i + 1}</p>
+                  <p className="text-[12px] font-bold tracking-[-0.24px] text-point-strong lg:text-[14px]">혜택 {i + 1}</p>
                   <h3 className="mt-[4px] text-[15px] font-bold leading-[22px] tracking-[-0.3px] text-[#222] lg:text-[18px] lg:leading-[26px]">
                     {b.title}
                   </h3>
@@ -69,7 +69,9 @@ export default function RentalTab() {
         </div>
       </section>
 
-      {/* ===== 렌탈 할부 통합 공식 가입 센터 + 제휴 브랜드 로고 (원본 홈 블록) ===== */}
+      {/* ===== 렌탈 할부 통합 공식 가입 센터 + 제휴 브랜드 로고 (원본 홈 블록)
+           기존 회사(대한민국CCTV) 제휴 자료 → LEGACY.partners 가 true 일 때만 표시 ===== */}
+      {LEGACY.partners && (
       <section className="bg-[#f6f7fa] px-[16px] py-[60px] lg:px-0 lg:py-[120px]">
         <div className="mx-auto w-full max-w-[580px] lg:w-[1080px] lg:max-w-none">
           <SectionHeading
@@ -101,6 +103,7 @@ export default function RentalTab() {
           </ul>
         </div>
       </section>
+      )}
 
       {/* ===== 교차 링크: 일시납(설치 패키지) ===== */}
       <CrossLink

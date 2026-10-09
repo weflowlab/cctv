@@ -13,11 +13,11 @@ export default function SpeakerTab() {
   return (
     <>
       {/* ===== 히어로: CCTV + 스피커 동시 시공 가능 / 배너 이미지 ===== */}
-      <section className="bg-[#fff9f0] px-[16px] py-[56px] lg:px-0 lg:py-[100px]">
+      <section className="bg-point-light px-[16px] py-[56px] lg:px-0 lg:py-[100px]">
         <div className="mx-auto flex w-full max-w-[580px] flex-col items-center gap-[32px] lg:w-[1080px] lg:max-w-none lg:flex-row lg:justify-between lg:gap-[64px]">
           <div className="text-center lg:text-left">
-            <p className="text-[14px] font-bold tracking-[-0.28px] text-[#ff5c00] lg:text-[18px]">Smart Integrated Solution</p>
-            <h2 className="mt-[8px] text-[30px] font-bold leading-[1.4] tracking-[-0.6px] text-[#222] lg:text-[44px] lg:tracking-[-2px] [&>strong]:text-[#ff5c00]">
+            <p className="text-[14px] font-bold tracking-[-0.28px] text-point-strong lg:text-[18px]">Smart Integrated Solution</p>
+            <h2 className="mt-[8px] text-[30px] font-bold leading-[1.4] tracking-[-0.6px] text-[#222] lg:text-[44px] lg:tracking-[-2px] [&>strong]:text-point-strong">
               <strong>CCTV + 스피커</strong>
               <br />
               동시 시공 가능
@@ -61,7 +61,7 @@ export default function SpeakerTab() {
                   <Placeholder label={`${b.label} 아이콘`} kind="icon" className="h-[32px] w-[32px] lg:h-[48px] lg:w-[48px]" />
                 </div>
                 <div>
-                  <h3 className="text-[14px] font-bold tracking-[-0.28px] text-[#ff5c00] lg:text-[18px]">{b.label}</h3>
+                  <h3 className="text-[14px] font-bold tracking-[-0.28px] text-point-strong lg:text-[18px]">{b.label}</h3>
                   <p className="mt-[4px] text-[17px] font-bold leading-[25px] tracking-[-0.34px] text-[#222] lg:mt-[8px] lg:text-[22px] lg:leading-[32px]">
                     {b.desc[0]}
                     <SpaceOrBreak />

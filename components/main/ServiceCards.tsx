@@ -4,10 +4,10 @@
  * - 카드 4개 (PC: column-count 2 메이슨리 / 모바일: 1열, order 로 설치 → 렌탈 → AS → 스피커 순 재배치)
  *   1. CCTV 설치 (베이지, 큰 카드, 하단 이미지)       → /service/install
  *   2. AS 수리 (회색, 작은 카드)                        → /service/as
- *   3. CCTV+스피커 (주황, 작은 카드)                    → /service/speaker
+ *   3. CCTV+스피커 (브랜드색, 작은 카드)                    → /service/speaker
  *   4. CCTV 렌탈 (배경 이미지 + 상단 어두운 그라데이션, 큰 카드) → /service/rental
  * - 카드 전체가 링크(투명 오버레이), 우하단 원형 화살표는 시각 요소. 카드마다 스크롤 진입 시 slide-in-up.
- * - 카드 문구 출처: kkcctv 설치 패키지 / 렌탈 / AS / 스피커 배너 페이지 요약.
+ * - 카드 문구: 신규 회사 톤(고객 불안 → 해결). 가격·보증기간 같은 구체 조건은 홈에서 빼고 각 서비스 페이지에서 안내.
  */
 import Link from "next/link";
 import Placeholder from "@/components/common/Placeholder";
@@ -45,38 +45,38 @@ export default function ServiceCards() {
       <div className="flex w-full max-w-[1080px] flex-col items-center">
         {/* ===== 섹션 헤더 ===== */}
         <div className="mb-[40px] flex flex-col items-center justify-center gap-[16px] lg:mb-[60px] lg:gap-[20px]">
-          <strong className="rounded-[100px] bg-brand-light px-[12px] py-[8px] text-center text-[13px] font-medium text-brand lg:px-[16px] lg:text-[16px]">
+          <strong className="rounded-[100px] bg-brand-light px-[12px] py-[8px] text-center text-[13px] font-medium text-point-strong lg:px-[16px] lg:text-[16px]">
             서비스 소개
           </strong>
           <h2 className="text-center text-[26px] font-bold leading-[1.35] tracking-[-0.26px] text-[#222] lg:text-[42px] lg:leading-[60px] lg:tracking-[-1px]">
-            설치부터 렌탈, AS까지
+            설치부터 수리까지 원스톱,
             <br />
-            ‘CCTV의 모든 고민’을 <br className="lg:hidden" />
-            <strong className="text-brand">{SITE.name}</strong>가 덜어 드립니다.
+            <strong className="text-point-strong">{SITE.name}</strong>가 <br className="lg:hidden" />
+            끝까지 책임집니다.
           </h2>
         </div>
 
         {/* ===== 카드 그리드: PC 2단 컬럼 / 모바일 1열(order 재배치) ===== */}
         <div className="grid w-full max-w-[480px] grid-cols-1 gap-[16px] lg:block lg:w-[1080px] lg:max-w-none lg:columns-2 lg:gap-[24px]">
           {/* 카드 1: CCTV 설치 — 하단 이미지 */}
-          <Reveal threshold={0.1} className={`${CARD} order-1 h-[396px] bg-[#ffe8d5] lg:h-[584px]`}>
-            <div className={`${CHIP} bg-[rgba(220,175,139,0.67)] text-[#fafafc]`}>{nameOf("install")}</div>
+          <Reveal threshold={0.1} className={`${CARD} order-1 h-[396px] bg-point-light lg:h-[584px]`}>
+            <div className={`${CHIP} bg-point text-white`}>{nameOf("install")}</div>
             <h3 className={`${TITLE} text-[#202020]`}>
-              CCTV 설치 <br className="lg:hidden" />
-              초특가 패키지
+              사각지대 없는 <br className="lg:hidden" />
+              현장 맞춤 설치
             </h3>
             <p className={`${DESC} text-[#1d1d1f]`}>
-              200만 화소 카메라 1대 패키지 45만원부터
+              공간 구조와 동선을 직접 보고
               <br />
-              꼼꼼한 설치 시공 + 기본 자재 포함,
+              카메라 위치와 대수를 설계합니다.
               <br />
-              기계 무상 AS 1년까지 책임집니다.
+              필요한 만큼만, 꼼꼼하게.
             </p>
-            <span className={`${BUTTON} bg-[#dcaf8b]`}>
+            <span className={`${BUTTON} bg-point`}>
               <ArrowRightIcon className={ARROW} />
             </span>
             <Placeholder
-              label="CCTV 설치 패키지 (200만 화소 돔 카메라 + DVR)"
+              label="CCTV 설치 (카메라 + 녹화기 구성)"
               className="absolute bottom-[-20px] left-0 h-[200px] w-full lg:bottom-0 lg:h-[320px]"
             />
             <CardLink slug="install" />
@@ -85,11 +85,11 @@ export default function ServiceCards() {
           {/* 카드 2: AS 수리 — 회색 */}
           <Reveal threshold={0.1} className={`${CARD} order-3 h-[229px] bg-[#efefef] lg:h-[312px]`}>
             <div className={`${CHIP} bg-[#c8c8c8] text-white`}>{nameOf("as")}</div>
-            <h3 className={`${TITLE} text-[#202020]`}>타사 제품도 어디든 방문 수리</h3>
+            <h3 className={`${TITLE} text-[#202020]`}>다른 업체 제품도 방문 수리</h3>
             <p className={`${DESC} text-[#1d1d1f]`}>
-              설치업체 연락 두절·책임회피로 곤란하셨다면,
+              설치 업체와 연락이 끊겨 곤란하셨다면,
               <br />
-              의뢰 후 24시간 이내 방문 진단 및 수리
+              {SITE.hours} 접수 후 찾아가 점검합니다.
             </p>
             <span className={`${BUTTON} bg-[#c8c8c8]`}>
               <ArrowRightIcon className={ARROW} />
@@ -97,17 +97,17 @@ export default function ServiceCards() {
             <CardLink slug="as" />
           </Reveal>
 
-          {/* 카드 3: CCTV+스피커 — 주황 배경 */}
+          {/* 카드 3: CCTV+스피커 — 브랜드색 배경 */}
           <Reveal threshold={0.1} className={`${CARD} order-4 h-[229px] bg-brand text-[#fafafc] lg:h-[312px]`}>
             <div className={`${CHIP} bg-white/15 text-white`}>{nameOf("speaker")}</div>
             <h3 className={TITLE}>
-              음향 시스템과 보안 솔루션을
+              CCTV와 스피커를
               <br />한 번에 동시 시공
             </h3>
             <p className={DESC}>
-              공사 기간 단축, 중복 공사비 절약,
+              공사는 한 번, 중복 비용은 줄이고
               <br />
-              일괄 관리로 유지보수까지 편리하게
+              관리는 한 곳에서 편하게
             </p>
             <span className={`${BUTTON} bg-white/30`}>
               <ArrowRightIcon className={ARROW} />
@@ -120,20 +120,21 @@ export default function ServiceCards() {
             <span className="absolute left-0 top-0 z-[1] h-[247px] w-full bg-[linear-gradient(180deg,#0b0908_0%,rgba(11,9,8,0)_100%)] lg:h-[366px]" />
             <div className={`${CHIP} bg-white/10 text-white`}>{nameOf("rental")}</div>
             <h3 className={TITLE}>
-              초기비용 0원, <br className="lg:hidden" />
-              고객 소유 렌탈
+              목돈 없이 <br className="lg:hidden" />
+              월 렌탈로 시작
             </h3>
             <p className={`${DESC} opacity-85`}>
-              설치비·가입비·보증료 면제
+              초기 설치비 부담은 줄이고
               <br />
-              카메라 소유권 처음부터 이전, A/S 완벽 제공
+              사용 중 AS까지 함께 관리합니다.
             </p>
             <span className={`${BUTTON} bg-black/[0.68]`}>
               <ArrowRightIcon className={ARROW} />
             </span>
             <Placeholder
+              quiet
               dark
-              label="CCTV 렌탈 (초기비용 0원 / 최저가 월비용)"
+              label="CCTV 렌탈 (월 이용료로 설치)"
               className="absolute bottom-0 left-0 z-0 h-full w-full"
             />
             <CardLink slug="rental" />

@@ -89,7 +89,7 @@ export default function CountSlider({ value, onChange, min = 1, max = 16, classN
         <div ref={trackRef} className="relative h-[16px] w-full rounded-[24px] bg-[#e5e9f1] lg:h-[22px] lg:rounded-[32px]">
           {/* 채움 바 (오른쪽 끝에 핸들) */}
           <div
-            className="absolute inset-y-0 left-0 rounded-[24px] bg-[#ffc2a0] transition-[width] duration-150 ease-out lg:rounded-[32px]"
+            className="absolute inset-y-0 left-0 rounded-[24px] bg-point/40 transition-[width] duration-150 ease-out lg:rounded-[32px]"
             style={{ width: `${progress}%` }}
           >
             <div
@@ -101,7 +101,7 @@ export default function CountSlider({ value, onChange, min = 1, max = 16, classN
               aria-valuenow={value}
               aria-valuetext={`${value}대`}
               onKeyDown={onKeyDown}
-              className="absolute right-[-14px] top-1/2 h-[28px] w-[28px] -translate-y-1/2 rounded-full bg-[#ff5c00] outline-offset-2 before:absolute before:left-1/2 before:top-1/2 before:h-[10px] before:w-[10px] before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:bg-white before:content-[''] focus-visible:outline-2 focus-visible:outline-[#ff5c00] lg:right-[-20px] lg:h-[40px] lg:w-[40px] lg:before:h-[14px] lg:before:w-[14px]"
+              className="absolute right-[-14px] top-1/2 h-[28px] w-[28px] -translate-y-1/2 rounded-full bg-brand outline-offset-2 before:absolute before:left-1/2 before:top-1/2 before:h-[10px] before:w-[10px] before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:bg-white before:content-[''] focus-visible:outline-2 focus-visible:outline-point lg:right-[-20px] lg:h-[40px] lg:w-[40px] lg:before:h-[14px] lg:before:w-[14px]"
             >
               {/* 핸들 위 말풍선 "N대" */}
               <div className="pointer-events-none absolute bottom-[calc(100%+10px)] left-1/2 -translate-x-1/2 whitespace-nowrap rounded-[4px] bg-[#333] px-[8px] pb-[4px] pt-[3px] text-[14px] font-medium leading-[20px] tracking-[-0.28px] text-[#f5f5f5] before:absolute before:left-1/2 before:top-[calc(100%-1px)] before:h-0 before:w-0 before:-translate-x-1/2 before:border-[6px] before:border-transparent before:border-t-[#333] before:content-[''] lg:bottom-[calc(100%+12px)] lg:rounded-[8px] lg:px-[10px] lg:pb-[6px] lg:pt-[5px] lg:text-[20px] lg:leading-[28px] lg:tracking-[-0.4px] lg:before:border-[8px] lg:before:border-t-[#333]">

@@ -10,6 +10,8 @@
  *   → 두 값 조합으로 INSTALL_PRICES 에서 1~4대 가격을 골라 카드 4장 렌더.
  *   토글이 바뀌면 카드 묶음을 key 로 다시 마운트해 0.5s fade-in.
  * - 각 카드의 [문의하기] → /contact
+ * - 카드 아래 "풀세트 구성품": 설치 장소 토글에 따라 실내 9종 ↔ 실외 10종 (01 카메라 교체 + 실외는 10 방수 하이박스 추가).
+ *   원본의 실내·실외 구성품 묶음 2개를 토글 하나로 합침.
  * - 가격 카드 박스 아래에 견적 계산기 유도 배너 (CalculatorBanner)
  */
 import Link from "next/link";
@@ -18,6 +20,9 @@ import Placeholder from "@/components/common/Placeholder";
 import CalculatorBanner from "./CalculatorBanner";
 import {
   CAMERA_NAME,
+  FULLSET_CAMERA,
+  FULLSET_COMMON,
+  FULLSET_OUTDOOR_ONLY,
   INSTALL_PRICES,
   PACKAGE_COMMON_ITEMS,
   PACKAGE_IMAGES,
@@ -71,6 +76,12 @@ export default function InstallPackages() {
   const prices = INSTALL_PRICES[resolution][placement];
   const resolutionLabel = resolution === "2MP" ? "200만 화소" : "500만 화소";
   const equipment = `1TB HDD/4CH DVR/${resolutionLabel} ${CAMERA_NAME[placement]}`;
+  // 풀세트 구성품: 카메라(화소·설치 장소 반영) + 공통 8종 (+ 실외는 방수 하이박스)
+  const fullset = [
+    { name: `${resolutionLabel} ${FULLSET_CAMERA[placement].name}`, image: FULLSET_CAMERA[placement].image },
+    ...FULLSET_COMMON,
+    ...(placement === "outdoor" ? FULLSET_OUTDOOR_ONLY : []),
+  ];
 
   return (
     <section className="bg-white px-[16px] py-[60px] lg:px-0 lg:py-[120px]">
@@ -102,7 +113,7 @@ export default function InstallPackages() {
                 />
                 <div className="flex flex-1 flex-col px-[20px] pb-[20px] pt-[18px]">
                   <h3 className="text-[18px] font-bold leading-[26px] tracking-[-0.36px] text-[#222] lg:text-[20px] lg:leading-[28px]">
-                    CCTV <span className="text-[#ff5c00]">{i + 1}대</span> 패키지
+                    CCTV <span className="text-point-strong">{i + 1}대</span> 패키지
                   </h3>
                   <ul className="mt-[10px] flex-1 space-y-[4px] text-[13px] leading-[20px] tracking-[-0.26px] text-[#666] lg:text-[14px]">
                     {[equipment, ...PACKAGE_COMMON_ITEMS].map((item) => (
@@ -118,7 +129,7 @@ export default function InstallPackages() {
                   </p>
                   <Link
                     href="/contact"
-                    className="mt-[12px] flex h-[44px] items-center justify-center rounded-[8px] bg-[#fff6f1] text-[15px] font-bold tracking-[-0.3px] text-[#ff5c00] transition-colors hover:bg-[#ff5c00] hover:text-white"
+                    className="mt-[12px] flex h-[44px] items-center justify-center rounded-[8px] bg-brand-light text-[15px] font-bold tracking-[-0.3px] text-point-strong transition-colors hover:bg-brand hover:text-white"
                   >
                     문의하기
                   </Link>
@@ -126,6 +137,32 @@ export default function InstallPackages() {
               </li>
             ))}
           </ul>
+
+          {/* ===== 풀세트 구성품: 실내 9종 / 실외 10종 (설치 장소 토글 연동) ===== */}
+          {/* id="fullset": 홈 "풀세트 구성품" 카드에서 바로 이동하는 앵커 (고정 헤더에 가리지 않게 scroll-margin) */}
+          <div
+            id="fullset"
+            className="mt-[28px] scroll-mt-[140px] border-t border-[#e5e9f1] pt-[24px] lg:mt-[40px] lg:scroll-mt-[160px] lg:pt-[36px]"
+          >
+            <h3 className="text-[16px] font-bold leading-[24px] tracking-[-0.32px] text-[#222] lg:text-[20px] lg:leading-[30px]">
+              패키지 풀세트 구성품{" "}
+              <span className="text-point-strong">{fullset.length}종</span>
+            </h3>
+            <ul className="mt-[12px] grid grid-cols-3 gap-[8px] lg:mt-[16px] lg:grid-cols-5 lg:gap-[12px]">
+              {fullset.map((item, i) => (
+                <li key={item.name} className="overflow-hidden rounded-[12px] bg-white">
+                  <Placeholder
+                    label={`${item.name} (원본 ${item.image})`}
+                    className="aspect-square w-full border-0 border-b"
+                  />
+                  <p className="flex gap-[4px] px-[8px] py-[8px] text-[12px] font-medium leading-[17px] tracking-[-0.24px] text-[#222] lg:gap-[6px] lg:px-[12px] lg:py-[12px] lg:text-[14px] lg:leading-[20px]">
+                    <span className="font-bold text-point-strong">{String(i + 1).padStart(2, "0")}</span>
+                    {item.name}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           {/* ===== 안내 문구 (원본 * 주석 2줄) ===== */}
           <ul className="mt-[20px] space-y-[4px] text-[12px] leading-[18px] tracking-[-0.24px] text-[#888] lg:mt-[28px] lg:text-[14px] lg:leading-[22px]">

@@ -13,6 +13,8 @@ type PlaceholderProps = {
   kind?: "image" | "video" | "icon";
   /** 어두운 섹션 위에 놓일 때 */
   dark?: boolean;
+  /** 배경 이미지 자리처럼 위에 글자가 올라가는 경우 — 안내 글씨를 숨김 (스크린리더용 label 은 유지) */
+  quiet?: boolean;
 };
 
 export default function Placeholder({
@@ -20,6 +22,7 @@ export default function Placeholder({
   className = "",
   kind = "image",
   dark = false,
+  quiet = false,
 }: PlaceholderProps) {
   const tone = dark
     ? "bg-white/10 border-white/30 text-white/70"
@@ -31,8 +34,8 @@ export default function Placeholder({
       aria-label={label}
       className={`flex items-center justify-center overflow-hidden border border-dashed text-center ${tone} ${className}`}
     >
-      {/* 아이콘 크기 자리에는 텍스트를 숨기고 툴팁만 남김 */}
-      {kind === "icon" ? (
+      {/* 아이콘 크기 자리에는 텍스트를 숨기고 툴팁만 남김 / quiet 면 글씨 없이 자리만 */}
+      {quiet ? null : kind === "icon" ? (
         <span title={label} className="text-[10px]">IMG</span>
       ) : (
         <span className="px-3 text-[12px] leading-[1.4] tracking-normal">

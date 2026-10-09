@@ -5,7 +5,7 @@
  * - 필드: 성함*, 연락처*, 서비스 선택(칩형 다중선택), 희망 서비스일(date), 전달 내용(textarea),
  *         [필수] 개인정보 수집 및 이용 동의 (약관보기 → /terms/personal 새 창)
  * - 동작 (keeper 폼과 동일):
- *   · 제출 시 유효성 검사 → 첫 에러 필드로 포커스, 필드 아래 주황 에러 문구, 에러 입력칸 테두리 주황
+ *   · 제출 시 유효성 검사 → 첫 에러 필드로 포커스, 필드 아래 브랜드색 에러 문구, 에러 입력칸 테두리 브랜드색
  *   · 한 번 제출한 뒤부터는 입력할 때마다 재검사
  *   · 연락처는 숫자만 남기고 3-4-4 자동 하이픈 (maxLength 13)
  *   · 제출 중 버튼 문구 "전송 중..." + 비활성
@@ -56,10 +56,10 @@ function formatPhone(raw: string) {
     .replace(/-{1,2}$/g, "");
 }
 
-/** 입력칸 공통 스타일 (에러 시 테두리 주황, 포커스 시 주황) */
+/** 입력칸 공통 스타일 (에러 시 테두리 브랜드색, 포커스 시 브랜드색) */
 const inputClass = (hasError: boolean) =>
-  `h-[52px] w-full rounded-[8px] border bg-white px-[12px] py-[16px] text-[14px] font-normal leading-[140%] tracking-[-0.32px] text-[#4a5565] outline-0 placeholder:text-[#999] focus:border-[#ff5c00] lg:h-[54px] lg:px-[18px] lg:text-[16px] ${
-    hasError ? "border-[#ff5c00]" : "border-[#dadde5]"
+  `h-[52px] w-full rounded-[8px] border bg-white px-[12px] py-[16px] text-[14px] font-normal leading-[140%] tracking-[-0.32px] text-[#4a5565] outline-0 placeholder:text-[#999] focus:border-brand lg:h-[54px] lg:px-[18px] lg:text-[16px] ${
+    hasError ? "border-brand" : "border-[#dadde5]"
   }`;
 
 const labelClass =
@@ -68,7 +68,7 @@ const labelClass =
 /** 필드 아래 에러 문구 */
 function ErrorText({ children, className = "" }: { children?: string; className?: string }) {
   if (!children) return null;
-  return <p className={`mt-[6px] text-[12px] text-[#ff5c00] ${className}`}>{children}</p>;
+  return <p className={`mt-[6px] text-[12px] text-point-strong ${className}`}>{children}</p>;
 }
 
 /** 체크 아이콘 (keeper 체크박스 내부 SVG) */
@@ -153,7 +153,7 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
           <div className="flex w-full flex-col p-[24px] lg:p-[44px]">
             {/* ===== 제목: 기존 사이트 문구 ===== */}
             <div className="mb-[24px] flex flex-col lg:mb-[32px]">
-              <p className="mb-[4px] text-[14px] font-bold leading-[140%] tracking-[-0.3px] text-[#ff5c00] lg:mb-[8px] lg:text-[16px]">
+              <p className="mb-[4px] text-[14px] font-bold leading-[140%] tracking-[-0.3px] text-point-strong lg:mb-[8px] lg:text-[16px]">
                 행복한 만남을 기대합니다
               </p>
               <h1 className="text-[24px] font-bold leading-[140%] tracking-[-0.64px] text-[#222] lg:text-[32px]">
@@ -200,7 +200,7 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
               <ErrorText>{errors.phone}</ErrorText>
             </div>
 
-            {/* ===== 서비스 선택: 칩형 다중 선택 (선택 시 주황 테두리/글자) ===== */}
+            {/* ===== 서비스 선택: 칩형 다중 선택 (선택 시 브랜드색 테두리/글자) ===== */}
             <fieldset className="mb-[16px] flex w-full flex-col lg:mb-[20px]">
               <legend className={labelClass}>서비스 선택</legend>
               <div className="flex flex-wrap gap-[8px]">
@@ -214,8 +214,8 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
                       aria-pressed={selected}
                       className={`h-[40px] cursor-pointer rounded-[50px] border px-[16px] text-[14px] font-medium tracking-[-0.3px] transition-colors duration-200 lg:h-[44px] lg:px-[20px] lg:text-[15px] ${
                         selected
-                          ? "border-[#ff5c00] bg-[#fff6f1] text-[#ff5c00]"
-                          : "border-[#dadde5] bg-white text-[#666] hover:border-[#ff5c00]"
+                          ? "border-brand bg-brand-light text-point-strong"
+                          : "border-[#dadde5] bg-white text-[#666] hover:border-brand"
                       }`}
                     >
                       {s}
@@ -269,8 +269,8 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
                     className="peer absolute h-0 w-0 opacity-0"
                   />
                   <div
-                    className={`flex h-[20px] w-[20px] items-center justify-center rounded-full transition-all duration-200 ease-in-out peer-focus-visible:outline-2 peer-focus-visible:outline-[#ff5c00] lg:h-[22px] lg:w-[22px] ${
-                      values.agree ? "bg-[#FF5C00]" : "border-2 border-[#EEE] bg-white"
+                    className={`flex h-[20px] w-[20px] items-center justify-center rounded-full transition-all duration-200 ease-in-out peer-focus-visible:outline-2 peer-focus-visible:outline-point lg:h-[22px] lg:w-[22px] ${
+                      values.agree ? "bg-brand" : "border-2 border-[#EEE] bg-white"
                     }`}
                   >
                     <CheckMark visible={values.agree} />
@@ -285,7 +285,7 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
                 <button
                   type="button"
                   onClick={() => window.open("/terms/personal", "_blank")}
-                  className="ml-auto flex h-full cursor-pointer items-center text-[12px] font-normal tracking-[-0.28px] text-[#999] underline outline-none focus-visible:text-[#ff5c00] lg:ml-[8px] lg:translate-y-[2px] lg:text-[14px]"
+                  className="ml-auto flex h-full cursor-pointer items-center text-[12px] font-normal tracking-[-0.28px] text-[#999] underline outline-none focus-visible:text-point-strong lg:ml-[8px] lg:translate-y-[2px] lg:text-[14px]"
                 >
                   약관보기
                 </button>
@@ -297,7 +297,7 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full cursor-pointer rounded-[8px] bg-[#ff5c00] p-[18px] text-white focus-visible:outline-offset-2 focus-visible:outline-[#ff5c00] disabled:opacity-70"
+              className="w-full cursor-pointer rounded-[8px] bg-brand p-[18px] text-white focus-visible:outline-offset-2 focus-visible:outline-point disabled:opacity-70"
             >
               <div className="text-[16px] font-bold leading-[1.4] tracking-[-0.36px] lg:text-[20px]">
                 {isSubmitting ? "전송 중..." : "신청하기"}

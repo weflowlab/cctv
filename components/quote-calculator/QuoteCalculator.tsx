@@ -10,17 +10,42 @@
  *   · 6개 모두 고르면 [결과 보기] 활성 + 버튼 위치로 스크롤
  * - [결과 보기] → keeper 계산식으로 추천 대수 계산 → 결과 화면으로 전환하고 맨 위로 부드럽게 스크롤
  * - 결과의 [다시 계산하기] → 선택 초기화 후 질문 화면(STEP 01 펼침)으로
+ * - 장소 미리 선택: /calculator?place=<slug> (시공사례 장소 소개의 [이 공간 견적 계산하기])
+ *   → STEP 01(공간 종류)을 해당 장소로 선택하고 STEP 02 를 펼친 상태로 시작. 잘못된 slug·쿼리 없음 = 기존과 동일.
+ *   useSearchParams 는 Suspense 안(CalculatorFromParams)에서만 읽고, 대기 중엔 미선택 상태 계산기를 보여준다.
  */
-import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { PLACES, type PlaceSlug } from "@/lib/site";
 import QuestionStep from "./QuestionStep";
 import QuoteResult from "./QuoteResult";
 import { INITIAL_DATA, QUESTIONS, calcRecommendedCount, type QuoteData } from "./data";
 
 const INITIAL_EXPANDED = QUESTIONS.map((_, i) => i === 0);
+/** 장소가 미리 선택된 경우: STEP 02 만 펼침 */
+const PRESELECTED_EXPANDED = QUESTIONS.map((_, i) => i === 1);
 
 export default function QuoteCalculator() {
-  const [data, setData] = useState<QuoteData>(INITIAL_DATA);
-  const [expanded, setExpanded] = useState<boolean[]>(INITIAL_EXPANDED);
+  return (
+    <Suspense fallback={<Calculator initialPlace={null} />}>
+      <CalculatorFromParams />
+    </Suspense>
+  );
+}
+
+/** ?place=<slug> 를 읽어 계산기에 전달 (PLACES 에 없는 값은 무시) */
+function CalculatorFromParams() {
+  const raw = useSearchParams().get("place");
+  const place = PLACES.find((p) => p.slug === raw)?.slug ?? null;
+  // key: 같은 페이지에서 쿼리만 바뀌어도 초기 상태를 다시 잡도록
+  return <Calculator key={place ?? "none"} initialPlace={place} />;
+}
+
+function Calculator({ initialPlace }: { initialPlace: PlaceSlug | null }) {
+  const [data, setData] = useState<QuoteData>(() =>
+    initialPlace ? { ...INITIAL_DATA, place: initialPlace } : INITIAL_DATA,
+  );
+  const [expanded, setExpanded] = useState<boolean[]>(initialPlace ? PRESELECTED_EXPANDED : INITIAL_EXPANDED);
   // 결과 화면의 추천 대수 (null 이면 질문 화면)
   const [recommended, setRecommended] = useState<number | null>(null);
   const submitRef = useRef<HTMLDivElement>(null);
@@ -73,7 +98,7 @@ export default function QuoteCalculator() {
     <div className="mx-auto w-full max-w-[580px] px-[16px] pb-[100px] pt-[40px] lg:w-[1080px] lg:max-w-none lg:px-0 lg:pb-[132px] lg:pt-[88px]">
       {/* ===== 타이틀 ===== */}
       <header className="text-center">
-        <h1 className="text-[16px] font-bold leading-[28px] tracking-[-0.5px] text-[#ff5c00] lg:text-[20px]">견적 계산기</h1>
+        <h1 className="text-[16px] font-bold leading-[28px] tracking-[-0.5px] text-point-strong lg:text-[20px]">견적 계산기</h1>
         <p className="mt-[6px] text-[26px] font-bold leading-[36px] tracking-[-1px] text-[#222] lg:text-[36px] lg:leading-[48px]">
           우리 공간에 맞는 CCTV 수량과
           <br />
@@ -102,7 +127,7 @@ export default function QuoteCalculator() {
           type="button"
           disabled={!isComplete}
           onClick={() => setRecommended(calcRecommendedCount(data))}
-          className="mx-auto flex h-[60px] w-full cursor-pointer items-center justify-center rounded-[8px] bg-[#ff5c00] text-[16px] font-bold tracking-[-0.3px] text-white transition-colors hover:bg-[#e83b05] disabled:cursor-default disabled:bg-[#eee] disabled:text-[#bbb] lg:h-[72px] lg:w-[420px] lg:text-[20px] lg:tracking-[-0.4px]"
+          className="mx-auto flex h-[60px] w-full cursor-pointer items-center justify-center rounded-[8px] bg-brand text-[16px] font-bold tracking-[-0.3px] text-white transition-colors hover:bg-brand-strong disabled:cursor-default disabled:bg-[#eee] disabled:text-[#bbb] lg:h-[72px] lg:w-[420px] lg:text-[20px] lg:tracking-[-0.4px]"
         >
           결과 보기
         </button>

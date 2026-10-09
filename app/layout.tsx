@@ -6,7 +6,7 @@ import { SITE } from "@/lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: `${SITE.name} | CCTV 설치·렌탈·AS 전국 인프라`,
+  title: `${SITE.name} | CCTV 설치·렌탈·AS ${SITE.hours}`,
   description: "CCTV 설치부터 렌탈, AS 출장수리, CCTV+스피커 동시 시공까지. 전국 어디든 빠른 설치와 AS.",
 };
 

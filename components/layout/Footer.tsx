@@ -74,7 +74,7 @@ export default async function Footer() {
 
             {/* ===== 통합콜센터 번호 ===== */}
             <div className="mt-[20px] grow space-y-[8px] lg:mt-0">
-              <ContactLine label="통합콜센터" phone={SITE.phone} href={SITE.phoneHref} />
+              <ContactLine label="대표전화" phone={SITE.phone} href={SITE.phoneHref} note={SITE.hours} />
             </div>
           </div>
 

@@ -11,5 +11,5 @@ export const locationTerms: TermsBlock[] = [
   { t: "h", level: 1, align: "center", runs: [{ b: "위치정보 이용약관" }] },
   { t: "gap" },
   { t: "p", align: "center", runs: ["위치정보 이용약관은(는) 현재 준비 중입니다."] },
-  { t: "p", align: "center", runs: [`문의: 통합 콜센터 ${SITE.phone}`] },
+  { t: "p", align: "center", runs: [`문의: 대표전화 ${SITE.phone}`] },
 ];

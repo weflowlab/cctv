@@ -3,6 +3,7 @@
  * - 화살표/체크: keeper components/home/icons.tsx 에서 복사.
  * - 장소 아이콘(가정/매장/사무실/공장·창고/기관): 단순 라인 아이콘 (stroke=currentColor, 24x24).
  * - 스피커 혜택 아이콘(시간/비용/통합관리): 단순 라인 아이콘.
+ * - 홈 "한눈에 보는" 장점 아이콘(설계/수리/스피커/구성품): 단순 라인 아이콘.
  */
 import type { SVGProps } from "react";
 
@@ -32,11 +33,11 @@ export function ArrowLeftIcon(props: IconProps) {
   );
 }
 
-/** 주황 체크 (24x25) — 리스트 체크 */
+/** 브랜드색 체크 (24x25) — 리스트 체크 */
 export function OrangeCheckIcon(props: IconProps) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={24} height={25} fill="none" aria-hidden="true" {...props}>
-      <path fill="#FF5C00" d="M10.546 18.5a2.25 2.25 0 0 1-1.53-.672L5.067 13.77c-.608-.623-.762-1.551-.29-2.266.783-1.199 2.503-1.276 3.43-.329l2.291 2.353 5.177-6.224c.555-.667 1.519-.98 2.382-.7 1.44.473 1.852 1.995 1.01 3.005l-6.743 8.1c-.38.459-.963.753-1.593.787h-.19z" />
+      <path fill="#00A7AB" d="M10.546 18.5a2.25 2.25 0 0 1-1.53-.672L5.067 13.77c-.608-.623-.762-1.551-.29-2.266.783-1.199 2.503-1.276 3.43-.329l2.291 2.353 5.177-6.224c.555-.667 1.519-.98 2.382-.7 1.44.473 1.852 1.995 1.01 3.005l-6.743 8.1c-.38.459-.963.753-1.593.787h-.19z" />
     </svg>
   );
 }
@@ -145,6 +146,46 @@ export function LayersIcon(props: IconProps) {
       <path d="m12 3 9 5-9 5-9-5 9-5Z" />
       <path d="m3 12 9 5 9-5" />
       <path d="m3 16 9 5 9-5" />
+    </LineIcon>
+  );
+}
+
+/** 현장 맞춤 설계 — 도면 위 카메라 위치 표시 */
+export function BlueprintIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d="M3 10h7v10M10 14h11" />
+      <circle cx="16" cy="9" r="1.6" />
+    </LineIcon>
+  );
+}
+
+/** 타사 제품 AS — 렌치 */
+export function WrenchIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3.5 17.5a1.4 1.4 0 0 0 2 2l5.8-5.8a4 4 0 0 0 5.4-5.4l-2.4 2.4-2-2 2.4-2.4Z" />
+    </LineIcon>
+  );
+}
+
+/** CCTV+스피커 — 스피커 */
+export function SpeakerIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4v-5Z" />
+      <path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" />
+    </LineIcon>
+  );
+}
+
+/** 풀세트 구성품 — 상자 */
+export function BoxIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <path d="m12 3 8 4v10l-8 4-8-4V7l8-4Z" />
+      <path d="m4 7 8 4 8-4M12 11v10" />
     </LineIcon>
   );
 }

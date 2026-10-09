@@ -1,97 +1,190 @@
 /**
- * 시공사례 데이터 (기존 사이트 https://kkcctv.co.kr 시공사례 페이지 → kk/cases.txt)
- * - 원본은 썸네일 이미지 + 네이버 블로그 글 링크만 있고 제목/장소 분류가 없다.
- *   → 제목: 링크된 네이버 블로그 글의 og:title 을 가져와 옮김 (2026-10 기준)
- *   → 장소(place): 제목으로 추정. 추정 불가한 것은 null (TODO) — "전체" 탭에서만 보인다.
- * - 이미지는 Placeholder 로 대체, label 에 원본 경로를 남긴다.
- *   (원본 URL = https://kkcctv.co.kr/wp-content/uploads/<image>)
- * - 상세 페이지 없음: 카드 클릭 시 네이버 블로그 글을 새 탭으로 연다.
+ * 시공사례 데이터
+ * - 샘플 데이터 — 관리자 페이지(DB) 도입 시 교체, 필드는 DB 컬럼과 1:1
+ *   (추후 Neon Postgres 테이블 + Vercel Blob 이미지로 대표가 직접 등록)
+ * - images: 지금은 Placeholder label(사진 자리 설명). DB 도입 후 Vercel Blob URL 로 교체.
+ * - date: 표시용 문자열 "YYYY-MM" (Date 객체 쓰지 않음 — 프리렌더 안전)
+ * - CASES 는 최신순으로 유지.
  */
 import type { PlaceSlug } from "@/lib/site";
 
 export type CaseItem = {
-  /** 네이버 블로그 글 번호 (+ 중복 링크 구분용 접미사) */
+  /** slug 겸 id (예: "gangnam-cafe-2026-09") */
   id: string;
+  /** 예: "강남 카페 CCTV 8대 설치" */
   title: string;
-  /** 장소 분류 — 추정 불가 시 null */
-  place: PlaceSlug | null;
-  /** 원본 썸네일 경로 (wp-content/uploads 기준) */
-  image: string;
-  /** 네이버 블로그 글 URL (새 탭) */
-  href: string;
+  /** PLACES 분류 */
+  place: PlaceSlug;
+  /** "서울 강남구" */
+  region: string;
+  /** 설치 대수 */
+  cameraCount: number;
+  service: "install" | "rental" | "as" | "speaker";
+  /** 한두 문장 */
+  summary: string;
+  /** 이미지 자리 설명(Placeholder label). 추후 Vercel Blob URL */
+  images: string[];
+  /** "2026-09" (표시용 문자열) */
+  date: string;
+  /** 메인 노출 */
+  featured: boolean;
 };
 
-/** 상단 "전체 시공사례 확인" 버튼 3개 (원본 순서 그대로) */
-export const CASE_BLOG_LINKS = [
-  { label: "전체 시공사례 확인 1", href: "https://blog.naver.com/PostList.naver?blogId=guy82guy&from=postList&categoryNo=6&parentCategoryNo=6" },
-  { label: "전체 시공사례 확인 2", href: "https://blog.naver.com/kkcctv77" },
-  { label: "전체 시공사례 확인 3", href: "https://blog.naver.com/PostList.naver?blogId=yonghyup81&from=postList&categoryNo=5&parentCategoryNo=5" },
-];
-
-/** 시공사례 카드 9개 (원본 노출 순서 그대로) */
+/** 샘플 시공사례 11건 (최신순) */
 export const CASES: CaseItem[] = [
   {
-    id: "223909617928",
-    title: "홍천CCTV시공 농막주택 씨씨티비 설치 곳곳의 현장을 실시간으로 감시하는 든든한 보안카메라로만 제공해 드립니다",
-    place: "home", // 추정: 농막주택 → 가정
-    image: "2025/07/16-e1753091097791.jpg",
-    href: "https://blog.naver.com/guy82guy/223909617928",
-  },
-  {
-    id: "223916349192",
-    title: "영덕CCTV 설치 선박 보안카메라를 통해 각 구역의 보안을 높여드립니다",
-    place: null, // TODO: 선박 — PLACES 5개 중 해당 분류 없음 (사장님 확인 필요)
-    image: "2025/07/4-e1753090863799.jpg",
-    href: "https://blog.naver.com/guy82guy/223916349192",
-  },
-  {
-    id: "223895925862",
-    title: "농막 CCTV 비닐하우스 방범카메라 설치를 통해 각 구역에 사각지대가 생기지 않도록 꼼꼼하게 시공해 드려요",
-    place: "factory", // 추정: 비닐하우스(농업시설) → 공장·창고(축사 포함 분류). 사장님 확인 필요
-    image: "2025/07/20250715_074324-e1753091547389.jpg",
-    href: "https://blog.naver.com/guy82guy/223895925862",
-  },
-  {
-    id: "223916355850",
-    title: "안양 CCTV 쓰레기무단투기 방지를 위한 좋은 품질의 보안 카메라로 설치해 드립니다",
-    place: null, // TODO: 쓰레기 무단투기 방지 — 설치 장소(주택가/관공서 등) 불명확
-    image: "2025/07/20250715_075824-e1753091212211.jpg",
-    href: "https://blog.naver.com/guy82guy/223916355850",
-  },
-  {
-    id: "223909645207",
-    title: "군산 CCTV 설치 병원 보안카메라 설치를 통해 다양하게 일어나는 사고들을 미리 예방해요",
-    place: "store", // 병원 → 매장 (PLACES.store.includes 에 병원 포함)
-    image: "2025/07/7-1-e1753090681532.jpg",
-    href: "https://blog.naver.com/guy82guy/223909645207",
-  },
-  {
-    id: "223889678117",
-    title: "옥천 CCTV설치 공장 보안카메라 사각지대 없는 공간으로 만들어 드립니다",
-    place: "factory",
-    image: "2025/07/SE-8f43f01b-ec61-4569-af59-5ac127ef5584-e1753091475356.jpg",
-    href: "https://blog.naver.com/guy82guy/223889678117",
-  },
-  {
-    id: "223912226591",
-    title: "신안 CCTV설치 선박 방범카메라 설치 강한 내구성과 적외선 기능으로 모든 구역의 보안을 강화시켜드립니다",
-    place: null, // TODO: 선박 — PLACES 5개 중 해당 분류 없음
-    image: "2025/07/20250715_075643-e1753091314940.jpg",
-    href: "https://blog.naver.com/guy82guy/223912226591",
-  },
-  {
-    // TODO: 원본에서 첫 번째 카드와 같은 글(223909617928)로 링크됨 — 이미지만 다름. 원래 의도한 글 확인 필요
-    id: "223909617928-2",
-    title: "홍천CCTV시공 농막주택 씨씨티비 설치 곳곳의 현장을 실시간으로 감시하는 든든한 보안카메라로만 제공해 드립니다",
-    place: "home",
-    image: "2025/07/20250715_075428-e1753090487261.jpg",
-    href: "https://blog.naver.com/guy82guy/223909617928",
-  },
-  {
-    id: "223881858053",
-    title: "대구 CCTV설치 매장 씨씨티비 시공으로 모든 분들의 보안을 지켜주는 든든한 지원군이 되어드립니다",
+    id: "gangnam-cafe-2026-09",
+    title: "강남 카페 CCTV 8대 설치",
     place: "store",
-    image: "2025/07/20250721_160359-e1753091403948.jpg",
-    href: "https://blog.naver.com/guy82guy/223881858053",
+    region: "서울 강남구",
+    cameraCount: 8,
+    service: "install",
+    summary:
+      "카운터·홀·테라스·창고까지 사각지대 없이 8대를 배치했습니다. 사장님 휴대폰으로 매장 상황을 실시간 확인하실 수 있게 설정해 드렸습니다.",
+    images: ["카운터 상단 카메라", "홀 전경 카메라", "테라스 출입구 카메라", "녹화기·모니터 설치 모습"],
+    date: "2026-09",
+    featured: true,
+  },
+  {
+    id: "suwon-apartment-2026-09",
+    title: "수원 아파트 CCTV 2대 렌탈",
+    place: "home",
+    region: "경기 수원시",
+    cameraCount: 2,
+    service: "rental",
+    summary:
+      "현관과 거실에 실내용 카메라 2대를 렌탈로 설치했습니다. 초기 비용 없이 월 요금으로 이용하시고, 고장 시 무상 점검을 받으실 수 있습니다.",
+    images: ["현관 카메라", "거실 카메라", "휴대폰 앱 화면"],
+    date: "2026-09",
+    featured: true,
+  },
+  {
+    id: "incheon-warehouse-2026-08",
+    title: "인천 물류창고 CCTV 16대 설치",
+    place: "factory",
+    region: "인천 서구",
+    cameraCount: 16,
+    service: "install",
+    summary:
+      "넓은 적재 구역과 상하차장, 외곽 담장까지 16대로 촘촘히 감시합니다. 야간에도 선명한 적외선 카메라를 사용했습니다.",
+    images: ["창고 내부 적재 구역", "상하차장 카메라", "외곽 담장 카메라", "관제 모니터 화면", "배선 정리 모습"],
+    date: "2026-08",
+    featured: true,
+  },
+  {
+    id: "seongnam-office-2026-08",
+    title: "성남 사무실 CCTV 6대 설치",
+    place: "office",
+    region: "경기 성남시 분당구",
+    cameraCount: 6,
+    service: "install",
+    summary:
+      "출입구·사무 공간·서버실을 중심으로 6대를 설치했습니다. 업무 공간 특성상 천장 배선을 깔끔하게 숨겨 마감했습니다.",
+    images: ["출입구 카메라", "사무 공간 전경", "서버실 카메라"],
+    date: "2026-08",
+    featured: true,
+  },
+  {
+    id: "daejeon-public-2026-07",
+    title: "대전 주민센터 CCTV 10대 설치",
+    place: "public",
+    region: "대전 유성구",
+    cameraCount: 10,
+    service: "install",
+    summary:
+      "민원실·주차장·건물 외곽에 10대를 설치했습니다. 기관 요청에 맞춰 녹화 보관 기간을 넉넉하게 설정했습니다.",
+    images: ["민원실 카메라", "주차장 카메라", "건물 외곽 카메라", "녹화기 설치 모습"],
+    date: "2026-07",
+    featured: true,
+  },
+  {
+    id: "busan-restaurant-2026-07",
+    title: "부산 음식점 CCTV 4대 + 스피커 설치",
+    place: "store",
+    region: "부산 해운대구",
+    cameraCount: 4,
+    service: "speaker",
+    summary:
+      "홀과 주방을 확인하는 카메라 4대에 매장 스피커를 함께 설치했습니다. 배경 음악과 안내 방송을 한 번에 해결했습니다.",
+    images: ["홀 카메라", "주방 카메라", "천장 스피커", "앰프 설치 모습"],
+    date: "2026-07",
+    featured: true,
+  },
+  {
+    id: "yongin-house-2026-06",
+    title: "용인 단독주택 CCTV 5대 설치",
+    place: "home",
+    region: "경기 용인시",
+    cameraCount: 5,
+    service: "install",
+    summary:
+      "대문·마당·주차 공간·뒷마당까지 집 둘레 5곳을 지킵니다. 외부 방수형 카메라로 비·눈에도 안심입니다.",
+    images: ["대문 카메라", "마당 전경", "주차 공간 카메라"],
+    date: "2026-06",
+    featured: false,
+  },
+  {
+    id: "hwaseong-factory-2026-06",
+    title: "화성 공장 CCTV 12대 AS 점검",
+    place: "factory",
+    region: "경기 화성시",
+    cameraCount: 12,
+    service: "as",
+    summary:
+      "화면이 끊기던 기존 카메라 12대를 점검하고, 노후 케이블과 고장 카메라 3대를 교체했습니다.",
+    images: ["점검 전 화면 끊김", "케이블 교체 작업", "교체 후 정상 화면"],
+    date: "2026-06",
+    featured: false,
+  },
+  {
+    id: "seoul-mapo-office-2026-05",
+    title: "서울 마포 사무실 CCTV 3대 렌탈",
+    place: "office",
+    region: "서울 마포구",
+    cameraCount: 3,
+    service: "rental",
+    summary:
+      "소규모 사무실에 카메라 3대를 렌탈로 설치했습니다. 목돈 부담 없이 월 요금으로 시작하셨습니다.",
+    images: ["출입문 카메라", "사무실 전경", "휴대폰 앱 화면"],
+    date: "2026-05",
+    featured: false,
+  },
+  {
+    id: "cheongju-school-2026-05",
+    title: "청주 공공도서관 CCTV 8대 설치",
+    place: "public",
+    region: "충북 청주시",
+    cameraCount: 8,
+    service: "install",
+    summary:
+      "열람실·로비·출입구·주차장에 8대를 설치했습니다. 이용자 동선을 고려해 시야를 가리지 않는 위치에 배치했습니다.",
+    images: ["로비 카메라", "열람실 카메라", "주차장 카메라", "출입구 카메라"],
+    date: "2026-05",
+    featured: false,
+  },
+  {
+    id: "goyang-store-2026-04",
+    title: "고양 편의점 CCTV 6대 AS 교체",
+    place: "store",
+    region: "경기 고양시",
+    cameraCount: 6,
+    service: "as",
+    summary:
+      "녹화가 되지 않던 녹화기를 교체하고, 흐릿한 구형 카메라 6대를 고화질 카메라로 바꿨습니다.",
+    images: ["계산대 카메라", "진열대 카메라", "새 녹화기 설치 모습"],
+    date: "2026-04",
+    featured: false,
   },
 ];
+
+/** 메인 노출용 — featured 우선, 부족하면 최신순으로 채움 */
+export function getFeaturedCases(limit = 6): CaseItem[] {
+  const featured = CASES.filter((c) => c.featured);
+  const rest = CASES.filter((c) => !c.featured);
+  return [...featured, ...rest].slice(0, limit);
+}
+
+/** id 로 사례 1건 조회 (없으면 undefined) */
+export function getCase(id: string): CaseItem | undefined {
+  return CASES.find((c) => c.id === id);
+}

@@ -1,6 +1,6 @@
 /**
- * CCTV + 스피커 동시 시공 섹션 (keeper ProductTech 틀 — 다크 배경 + 하단 갈색 radial 글로우)
- * - 내용 출처: 기존 kkcctv 메인 하단 스피커 배너 ("좋은 품질의 음향 시스템과 보안 솔루션을 한 번에").
+ * CCTV + 스피커 동시 시공 섹션 (keeper ProductTech 틀 — 다크 배경 + 하단 틸 radial 글로우)
+ * - 카피: 문제(CCTV·스피커 공사를 따로 하면 두 번 뚫고 두 번 부른다) → 해결(동시 시공).
  * - 큰 카드: 시공 이미지 위에 "CCTV + 스피커 동시 시공 가능" + 설명 (PC 는 이미지 위 오버레이 / 모바일은 이미지 아래로 흐름).
  * - 작은 카드 3개: 혜택(시간 단축 / 비용 절감 / 통합 관리).
  * - 하단 버튼 → /service/speaker.
@@ -13,9 +13,9 @@ import Reveal from "@/components/common/Reveal";
 import { ClockIcon, CoinIcon, LayersIcon } from "./icons";
 
 const BENEFITS: { title: string; desc: string; Icon: ComponentType<SVGProps<SVGSVGElement>> }[] = [
-  { title: "시간 단축", desc: "동시 작업으로 공사 기간 단축", Icon: ClockIcon },
-  { title: "비용 절감", desc: "중복되는 공사비용 절약", Icon: CoinIcon },
-  { title: "통합 관리", desc: "일괄 관리로 유지보수 편의성", Icon: LayersIcon },
+  { title: "공사 기간 단축", desc: "배선 작업을 한 번에 진행", Icon: ClockIcon },
+  { title: "중복 비용 절감", desc: "따로 부르는 출장·공사비 절약", Icon: CoinIcon },
+  { title: "관리 창구 하나", desc: "고장·점검 문의도 한 곳에서", Icon: LayersIcon },
 ];
 
 export default function SpeakerPromo() {
@@ -29,9 +29,9 @@ export default function SpeakerPromo() {
           threshold={0.1}
           className="text-center text-[26px] font-bold leading-[36px] text-white lg:text-[42px] lg:leading-[60px]"
         >
-          좋은 품질의 음향 시스템과
+          CCTV 따로, 스피커 따로
           <br />
-          보안 솔루션을 한 번에
+          두 번 공사할 필요 없습니다
         </Reveal>
 
         <div className="my-[40px] w-full lg:my-[80px]">
@@ -42,6 +42,7 @@ export default function SpeakerPromo() {
             className="relative w-full overflow-hidden rounded-[20px] border border-[#3c3a3a] bg-[#1d1c1c] text-white lg:bg-[#242324]"
           >
             <Placeholder
+              quiet
               dark
               label="CCTV + 스피커 동시 시공 현장 (원본 2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg)"
               className="aspect-[343/220] w-full border-0 lg:aspect-auto lg:h-[480px]"
@@ -50,12 +51,12 @@ export default function SpeakerPromo() {
             <span className="absolute inset-0 hidden bg-[linear-gradient(90deg,rgba(28,28,28,0.92)_0%,rgba(28,28,28,0.6)_50%,rgba(28,28,28,0)_100%)] lg:block" />
             <div className="relative flex h-full w-full flex-col justify-center px-[24px] pb-[28px] pt-[28px] lg:absolute lg:top-0 lg:p-0 lg:pl-[83px]">
               <p className="text-[15px] font-medium leading-[24px] text-white/70 lg:text-[20px] lg:leading-[30px]">
-                두 가지 전문성을 하나의 신뢰로 완성합니다
+                매장 안내 방송·배경음악까지 함께
               </p>
               <h3 className="mt-[8px] text-[28px] font-bold leading-[38px] lg:mt-[12px] lg:text-[42px] lg:leading-[58px]">
                 CCTV + 스피커
                 <br />
-                <strong className="text-brand">동시 시공 가능</strong>
+                <strong className="text-point">동시 시공 가능</strong>
               </h3>
             </div>
           </Reveal>
@@ -67,7 +68,7 @@ export default function SpeakerPromo() {
                 key={title}
                 className="flex items-center gap-[16px] rounded-[20px] border border-white/[0.09] bg-[#ffffff0f] px-[24px] py-[24px] lg:flex-col lg:items-center lg:gap-0 lg:py-[48px] lg:text-center"
               >
-                <span className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand lg:h-[72px] lg:w-[72px]">
+                <span className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-brand/15 text-point lg:h-[72px] lg:w-[72px]">
                   <Icon className="h-[26px] w-[26px] lg:h-[34px] lg:w-[34px]" />
                 </span>
                 <div>
@@ -92,8 +93,8 @@ export default function SpeakerPromo() {
         </Link>
       </div>
 
-      {/* ===== 하단 갈색 radial 글로우 (keeper ProductTech 그대로) ===== */}
-      <div className="pointer-events-none absolute bottom-0 left-1/2 z-0 h-[35%] w-[200%] -translate-x-1/2 bg-[radial-gradient(ellipse_at_bottom,#502b1a_0%,#502b1a00_70%)] lg:h-1/2 lg:bg-[radial-gradient(ellipse_60%_100%_at_bottom,#502b1a_0%,#502b1a00_70%)]" />
+      {/* ===== 하단 틸 radial 글로우 (keeper ProductTech 틀, 브랜드 컬러) ===== */}
+      <div className="pointer-events-none absolute bottom-0 left-1/2 z-0 h-[35%] w-[200%] -translate-x-1/2 bg-[radial-gradient(ellipse_at_bottom,rgba(0,167,171,0.28)_0%,rgba(0,167,171,0)_70%)] lg:h-1/2 lg:bg-[radial-gradient(ellipse_60%_100%_at_bottom,rgba(0,167,171,0.28)_0%,rgba(0,167,171,0)_70%)]" />
     </section>
   );
 }

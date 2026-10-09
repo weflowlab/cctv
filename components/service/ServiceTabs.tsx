@@ -2,7 +2,7 @@
 
 /**
  * 서비스 페이지 상단 탭 바 [CCTV 설치 · CCTV 렌탈 · AS 수리 · CCTV+스피커]
- * - 탭마다 별도 URL(/service/<slug>) 로 이동하는 Link. 현재 탭은 오렌지 글자 + 하단 오렌지 밑줄.
+ * - 탭마다 별도 URL(/service/<slug>) 로 이동하는 Link. 현재 탭은 브랜드색 글자 + 하단 틸 밑줄.
  * - sticky: 스크롤하면 고정 헤더 바로 아래(top = 헤더 높이)에 붙는다.
  *   (부모가 <main> 이고 overflow hidden 조상이 없어야 sticky 가 동작 → 페이지 최상위 형제로 렌더)
  * - 모바일: 가로 스크롤(스크롤바 숨김). 진입 시 현재 탭이 화면 안에 보이도록 컨테이너 scrollLeft 를 맞춤
@@ -66,7 +66,7 @@ function TabsBar({ active }: { active: ServiceSlug | null }) {
                   aria-current={isActive ? "page" : undefined}
                   className={`relative flex h-[52px] items-center whitespace-nowrap text-[16px] leading-[24px] tracking-[-0.32px] transition-colors lg:h-[64px] lg:text-[20px] lg:tracking-[-0.4px] ${
                     isActive
-                      ? "font-bold text-[#ff5c00] after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:rounded-full after:bg-[#ff5c00] after:content-['']"
+                      ? "font-bold text-point-strong after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:rounded-full after:bg-point after:content-['']"
                       : "font-medium text-[#888] hover:text-[#222]"
                   }`}
                 >

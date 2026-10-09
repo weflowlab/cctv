@@ -1,22 +1,56 @@
 /**
- * /about (회사소개) 페이지 섹션 모음 — 서버 컴포넌트
- * - keeper /story(components/story/StorySections.tsx) 의 틀(뱃지 · 큰 제목 · pre-line 본문)을 복사해 재구성.
- * - 내용 출처: 기존 홈페이지 kkcctv.co.kr 회사소개(인사말·조직도) / AS(강점 9가지) / 홈(수상·전국 지사)
- * - 구성: ① 회사 소개(인사말 전문) ② 강점 9가지(카드 그리드, Reveal 순차 등장)
- *         ③ 한국브랜드 선호도 3년 연속 1위 ④ 조직도 ⑤ 전국 지사 요약
- * - 회사명은 추후 변경 예정 → 화면 텍스트의 회사명은 모두 {SITE.name}
+ * /about (회사소개) 페이지 섹션 모음 — 서버 컴포넌트 (등장 애니메이션만 클라이언트 Reveal 로 감쌈)
+ * - keeper /story 페이지(Why Keeper → 브랜드 철학 → "그리고 우리는 믿습니다") 의 레이아웃·수치를 따르고
+ *   색만 브랜드 토큰(brand 네이비 / point 틸)으로 바꿈. 카피는 회사소개 스토리 카피(about_copy) 기준.
+ * - 구성: ① 브랜드 스토리(문제 제기 → 네이비 배경 위 "하나로 묶기로 했습니다" → 만든 이유)
+ *         ② 브랜드 철학(Unite Technology / Responsibility / with You 3카드, 지그재그)
+ *         ③ 마무리("우리는 고객의 현장을 지키는 사람들입니다." → 배경 위 "그리고 우리는 믿습니다.")
+ *         ④ 강점 9가지(카드 그리드, Reveal 순차 등장)
+ *         ⑤ 한국브랜드 선호도 3년 연속 1위 ⑥ 조직도 ⑦ 전국 지사 요약
+ * - ⑤⑥⑦ 은 기존 회사(대한민국CCTV) 자료 → 숨김 처리(지우지 않음).
+ *   ⑤ LEGACY.award / ⑦ LEGACY.branches (@/lib/site) / ⑥ 파일 내 SHOW_ORG_CHART 가 false 면 null 반환.
+ * - 회사명·슬로건·운영시간은 추후 변경 가능 → 화면 텍스트는 모두 SITE.name / SITE.slogan / SITE.hours
+ * - 줄바꿈: 카피의 줄 단위는 <br />, PC 에서만 끊을 곳은 <PcBr />, 모바일에서만 끊을 곳은 <MoBr />
+ *   (keeper 의 PC/모바일 전용 <br> 패턴). 나머지는 break-keep 으로 어절 단위 자연 줄바꿈.
  * - 반응형: Tailwind 기본(모바일) + lg:(PC)
  */
 import type { ReactNode } from "react";
 import Placeholder from "@/components/common/Placeholder";
 import Reveal from "@/components/common/Reveal";
-import { SITE } from "@/lib/site";
+import { LEGACY, SITE } from "@/lib/site";
+import { PHILOSOPHY } from "./philosophy";
+
+/**
+ * 조직도 노출 여부 — 현재 조직도 이미지는 기존 회사(대한민국CCTV) 자료라 숨김 (LEGACY.branches 와 같은 취지).
+ * 신규 회사 조직도가 준비되면 이미지 교체 후 true.
+ */
+const SHOW_ORG_CHART = false;
 
 /* ------------------------------------------------------------------ */
 /* 공통 조각 (keeper story 와 동일 수치)                                  */
 /* ------------------------------------------------------------------ */
 
-/** 회색 라벨 뱃지 — "회사소개 ㅣ 인사말" */
+/** PC 에서만 줄바꿈 (모바일은 공백으로 이어서 자연 줄바꿈) */
+function PcBr() {
+  return (
+    <>
+      {" "}
+      <br className="hidden lg:inline" />
+    </>
+  );
+}
+
+/** 모바일에서만 줄바꿈 (PC 는 공백으로 이어짐) */
+function MoBr() {
+  return (
+    <>
+      {" "}
+      <br className="lg:hidden" />
+    </>
+  );
+}
+
+/** 회색 라벨 뱃지 — "브랜드 스토리 ㅣ Why 유니텍CCTV?" */
 function SectionBadge({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="rounded-[8px] bg-[#f8f8f8] px-[24px] py-[14px] text-[14px] font-medium text-[#202020e0] lg:text-[24px]">
@@ -25,84 +59,372 @@ function SectionBadge({ label, children }: { label: string; children: ReactNode 
   );
 }
 
-/** 큰 제목 — strong 은 주황색, 모바일에서 span 은 block 줄바꿈 */
-function Title({ as: Tag = "h2", children }: { as?: "h1" | "h2"; children: ReactNode }) {
+/**
+ * 큰 제목 — 모바일에서 span 은 block 줄바꿈, PC 에서는 inline
+ * - tone: dark(흰 배경, strong = point-strong) / white(네이비 배경, strong = point)
+ */
+function Title({
+  as: Tag = "h2",
+  tone = "dark",
+  children,
+}: {
+  as?: "h1" | "h2";
+  tone?: "dark" | "white";
+  children: ReactNode;
+}) {
+  const toneCls =
+    tone === "white" ? "text-white [&_strong]:text-point" : "text-[#202020] [&_strong]:text-point-strong";
   return (
-    <Tag className="max-w-[320px] text-center text-[26px] font-bold leading-[40px] tracking-[-0.28px] text-[#202020] [&_span]:block [&_strong]:text-[#ff5c00] lg:mb-[16px] lg:max-w-none lg:text-[46px] lg:leading-[68px] lg:tracking-[-0.36px] lg:[&_span]:inline">
+    <Tag
+      className={`max-w-[320px] break-keep text-center text-[26px] font-bold leading-[40px] tracking-[-0.28px] [&_span]:block [&_strong]:whitespace-nowrap lg:mb-[16px] lg:max-w-none lg:text-[46px] lg:leading-[68px] lg:tracking-[-0.36px] lg:[&_span]:inline ${toneCls}`}
+    >
       {children}
     </Tag>
   );
 }
 
-/** 본문 문단 — white-space:pre-line 으로 원본 줄바꿈 유지 */
-function Body({ children }: { children: ReactNode }) {
+/**
+ * 본문 문단 — 가운데 정렬 + 넉넉한 행간
+ * - size "md": 모바일 14/24, PC 24/40 (keeper 24/36 보다 행간 여유) / "lg": 모바일 20/30, PC 36/50
+ * - tone: gray(#787878) / white(흰 90%) / soft(#20202099)
+ * - [&_b] 는 강조 문단(그래서·그리고·그게…) 볼드 + 진한 색
+ */
+function Body({
+  tone = "gray",
+  size = "md",
+  children,
+}: {
+  tone?: "gray" | "white" | "soft";
+  size?: "md" | "lg";
+  children: ReactNode;
+}) {
+  const sizeCls =
+    size === "lg"
+      ? "text-[20px] leading-[30px] lg:text-[36px] lg:leading-[50px]"
+      : "text-[14px] leading-[24px] lg:text-[24px] lg:leading-[40px]";
+  const toneCls = {
+    gray: "text-[#787878] [&_b]:text-[#202020]",
+    white: "text-white/90 [&_b]:text-white",
+    soft: "text-[#20202099] [&_b]:text-[#202020]",
+  }[tone];
   return (
-    <p className="whitespace-pre-line break-keep text-center text-[14px] leading-[24px] text-[#787878] lg:text-[22px] lg:leading-[38px]">
-      {children}
-    </p>
+    <p className={`break-keep text-center font-normal [&_b]:font-bold ${sizeCls} ${toneCls}`}>{children}</p>
+  );
+}
+
+/** 네이비 배경(이미지 자리) 위에 흰 글씨가 올라가는 블록 — keeper ImageBackdrop 과 동일 수치 */
+function ImageBackdrop({
+  label,
+  minHeightPc,
+  children,
+}: {
+  label: string;
+  minHeightPc: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className={`relative flex h-auto w-full items-center justify-center ${minHeightPc}`}>
+      {/* 실제 배경 사진 대신 플레이스홀더 — 흰 글씨 가독성을 위해 브랜드 네이비 위에 dark 플레이스홀더 */}
+      <div className="absolute inset-0 bg-brand">
+        <Placeholder label={label} dark quiet className="h-full w-full border-0" />
+      </div>
+      <div className="relative z-[1] flex flex-col items-center justify-center gap-[14px] px-[20px] py-[100px] lg:gap-[24px] lg:py-[200px]">
+        {children}
+      </div>
+    </div>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* ① 회사 소개 (인사말)                                                  */
+/* ① 브랜드 스토리 (Why 유니텍CCTV?)                                      */
 /* ------------------------------------------------------------------ */
 
-export function GreetingSection() {
+export function StorySection() {
   return (
-    <section className="flex w-full flex-col items-center justify-center gap-[14px] px-[20px] pb-[100px] pt-[40px] lg:gap-[24px] lg:pb-[160px] lg:pt-[140px]">
-      {/* ===== 인사말: 뱃지 + 대표 문구 + 인사말 전문(원본 그대로) / 정적 ===== */}
-      <SectionBadge label="회사소개">인사말</SectionBadge>
-      <Title as="h1">
-        <span>대한민국 CCTV 1등 브랜드,</span> 보안 솔루션 전문 기업 <strong>{SITE.name}</strong>
-      </Title>
-      <Placeholder
-        label="회사 대표 이미지 (원본 없음 — 사무실/시공 현장 사진 권장)"
-        className="my-[10px] aspect-[1081/450] w-full max-w-[1082px] rounded-[4px] lg:my-[24px] lg:rounded-[20px]"
-      />
-      <Body>
-        {`안녕하세요,
-${SITE.name} 홈페이지를 방문해 주셔서 감사드립니다.
+    <section className="w-full">
+      {/* ===== 문제 제기: 뱃지 + "왜 CCTV는 설치한 날이 가장 좋은 날일까요?" + 3문단 / 문단 Reveal 순차 등장 ===== */}
+      <div className="flex flex-col items-center justify-center gap-[14px] px-[20px] pb-[120px] pt-[40px] lg:gap-[24px] lg:pb-[200px] lg:pt-[180px]">
+        <Reveal>
+          <SectionBadge label="브랜드 스토리">Why {SITE.name}?</SectionBadge>
+        </Reveal>
+        <Reveal delay={100}>
+          <Title as="h1">
+            <span>왜 CCTV는 설치한 날이</span> 가장 좋은 날일까요?
+          </Title>
+        </Reveal>
+        <div className="flex flex-col items-center gap-[24px] lg:gap-[40px]">
+          <Reveal delay={200}>
+            <Body>
+              설치할 때는 그렇게 친절하던 업체가,
+              <br />
+              막상 고장이 나면 연락이 닿지 않습니다.
+              <br />
+              &ldquo;그건 저희가 설치한 제품이 아니라서요.&rdquo;
+              <br />
+              &ldquo;기사님 일정이 한참 밀려 있어요.&rdquo;
+            </Body>
+          </Reveal>
+          <Reveal delay={300}>
+            <Body>
+              카메라는 이 회사, 녹화기는 저 회사,
+              <MoBr />
+              설치는 또 다른 업체.
+              <br />
+              문제가 생기면 누구에게 연락해야 할지조차 알기 어렵습니다.
+            </Body>
+          </Reveal>
+          <Reveal delay={400}>
+            <Body>
+              안심하려고 달았는데,
+              <MoBr />
+              정작 필요한 순간에 멈춰 있는 CCTV.
+              <br />
+              과연 이게 맞는 걸까요?
+            </Body>
+          </Reveal>
+        </div>
+      </div>
 
-고객이 신뢰하고 믿을 수 있는
-CCTV 전문 업체 ${SITE.name}입니다.
+      {/* ===== 네이비 배경(이미지 자리) 위 "그래서, 우리는 하나로 묶기로 했습니다" + "그리고 알게 되었습니다" / PC min-height 826px ===== */}
+      <ImageBackdrop
+        label="스토리 상단 배경 이미지 — 기사님이 현장에서 CCTV를 설치하는 모습"
+        minHeightPc="lg:min-h-[826px]"
+      >
+        <Reveal>
+          <Title tone="white">
+            <span>그래서, 우리는</span> 하나로 묶기로 했습니다.
+          </Title>
+        </Reveal>
+        <div className="flex flex-col items-center gap-[24px] lg:gap-[40px]">
+          <Reveal delay={100}>
+            <Body tone="white">
+              상담부터 설계, 설치, 수리, 유지보수까지
+              <br />
+              한 팀이 처음부터 끝까지 책임지는 방식으로.
+              <br />
+              우리가 설치하지 않은 CCTV라도,
+              <MoBr />
+              고장 났다면 찾아가 고치는 방식으로.
+            </Body>
+          </Reveal>
+          <Reveal delay={200}>
+            <Body tone="white">
+              <b>그리고 알게 되었습니다.</b>
+              <br />
+              고객이 원하는 건 더 비싼 카메라가 아니라,
+              <br />
+              문제가 생겼을 때 바로 연락되는 &lsquo;한 사람&rsquo;이라는 것을.
+            </Body>
+          </Reveal>
+        </div>
+      </ImageBackdrop>
 
-이제 보안은 선택이 아니라 필수입니다.
-지난 시간 동안 소비자에게 인정받는 CCTV 전문 회사로 성장해 왔습니다.
-소중한 우리 가족과 재산을 지키려는 고객님들께 시간과 비용을 낭비하지 않게
-최선을 다하여 질 높은 CCTV를 설치해 드리고 있습니다.
-
-전국 어디든 빠른 설치와 AS가 가능한 인프라는 물론이고
-전문가의 가장 효율적인 설치 컨설팅부터 꼼꼼한 유지 보수까지 모든 고민을 덜어 드립니다.
-
-저희 ${SITE.name}는 신뢰받는 최적의 기술 및 케어 서비스로
-고객의 만족을 위하여 서비스 리더가 될 것을 약속드립니다.
-
-감사합니다.`}
-      </Body>
+      {/* ===== 만든 이유: 연한 틸 배경 + 세로 구분선 + "그게 우리가 유니텍CCTV를 만든 이유입니다." ===== */}
+      <div className="flex h-auto w-full flex-col items-center justify-center gap-[32px] bg-point-light px-[20px] py-[100px] lg:py-[200px]">
+        <Reveal>
+          <Body tone="soft" size="lg">
+            기술을 하나로, 책임을 하나로,
+            <MoBr />
+            고객과 하나로.
+          </Body>
+        </Reveal>
+        <Reveal delay={150}>
+          <div className="h-[67px] w-px bg-brand lg:h-[162px]" />
+        </Reveal>
+        <Reveal delay={300}>
+          <Title>
+            <span>그게 우리가</span> <strong>{SITE.name}를 만든 이유</strong>입니다.
+          </Title>
+        </Reveal>
+      </div>
     </section>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* ② 강점 9가지                                                          */
+/* ② 브랜드 철학 (우리가 지키고 싶은 것)                                   */
 /* ------------------------------------------------------------------ */
 
-/** 강점 카드 데이터 — 원본 AS 페이지 "1~9" 순서/문구 그대로, icon 은 원본 아이콘 파일 경로 */
+/** Unite ○○ 카드 데이터는 홈 "왜 {SITE.name}인가" 섹션과 공유 → ./philosophy.tsx */
+
+export function PhilosophySection() {
+  return (
+    <section className="flex w-full flex-col items-center justify-center gap-[14px] overflow-hidden px-[20px] pb-[100px] pt-[100px] lg:max-w-[1082px] lg:gap-[24px] lg:overflow-visible lg:px-0 lg:pb-[140px] lg:pt-[200px]">
+      {/* ===== 섹션 타이틀: 브랜드 철학 뱃지 + "유니텍CCTV는 단순한 설치 업체가 아닙니다." + 대표 이미지 ===== */}
+      <Reveal>
+        <SectionBadge label="브랜드 철학">우리가 지키고 싶은 것</SectionBadge>
+      </Reveal>
+      <Reveal delay={100}>
+        <Title>
+          <span>
+            <strong>{SITE.name}</strong>는 단순한
+          </span>{" "}
+          설치 업체가 아닙니다.
+        </Title>
+      </Reveal>
+      <Reveal delay={200} className="w-full">
+        <Placeholder
+          label={`${SITE.name} 시공팀 대표 이미지 (현장에서 함께 일하는 모습)`}
+          className="aspect-[1920/760] w-full rounded-[4px] lg:rounded-[20px]"
+        />
+      </Reveal>
+
+      {/* ===== 철학 본문: 좌측 슬로건 / 우측 이름 뜻(UNITECH) 설명 → Unite 3카드 (지그재그) / 카드 Reveal 순차 등장 ===== */}
+      <article className="flex w-full flex-col items-center justify-start gap-[100px] pt-[5px] lg:gap-[140px] lg:pt-[16px]">
+        <Reveal className="block w-full lg:flex lg:items-center lg:justify-center lg:gap-[40px]">
+          <h3 className="flex-1 break-keep pb-[10px] pt-[5px] text-center text-[20px] font-bold leading-[32px] text-[#202020] lg:p-0 lg:text-left lg:text-[42px] lg:leading-[64px]">
+            {SITE.slogan}
+          </h3>
+          <p className="flex-1 break-keep text-center text-[13px] leading-[21px] text-[#787878] lg:text-left lg:text-[24px] lg:leading-[36px]">
+            UNITECH는 Unite(하나로)와 Technology(기술)를 합친 이름입니다.
+            <PcBr />
+            흩어진 장비와 책임을 하나로 묶어, 고객의 공간과 일상을 끝까지 지키겠다는 약속,
+            그것이 우리의 철학입니다.
+          </p>
+        </Reveal>
+
+        <div className="flex w-full flex-col items-center justify-start gap-[40px] lg:gap-[80px]">
+          {PHILOSOPHY.map((item) => {
+            // 카드: 이미지 자리(Placeholder) 위에 네이비 오버레이 + 큰 영문 "Unite ○○"
+            const card = (
+              <div className="relative flex h-[152px] w-full items-center justify-center overflow-hidden rounded-[12px] bg-brand lg:h-[244px] lg:rounded-[20px]">
+                <Placeholder label={item.image} dark quiet className="absolute inset-0 h-full w-full border-0" />
+                <div className="absolute inset-0 bg-brand/70" />
+                <p className="relative whitespace-nowrap text-[24px] font-bold leading-[38px] text-white lg:text-[32px] lg:leading-normal">
+                  Unite&nbsp;<span className="text-point">{item.keyword}</span>
+                </p>
+              </div>
+            );
+            const text = (
+              <div className="flex w-full flex-col items-center justify-center gap-[4px] p-0 lg:items-start lg:gap-[20px]">
+                <h4 className="text-[16px] font-bold text-[#202020] lg:text-[30px]">
+                  <span className="text-point-strong">{item.highlight}</span>
+                  {item.titleRest}
+                </h4>
+                <p className="break-keep text-center text-[13px] font-normal leading-[21px] text-[#878d99] lg:text-left lg:text-[22px] lg:leading-[34px]">
+                  {item.desc}
+                </p>
+              </div>
+            );
+            return (
+              <Reveal
+                key={item.keyword}
+                className={`relative flex w-full items-center justify-center gap-[14px] lg:static lg:flex-row lg:justify-normal lg:gap-[53px] ${
+                  item.reverse ? "flex-col-reverse" : "flex-col"
+                }`}
+              >
+                {item.reverse ? (
+                  <>
+                    {text}
+                    {card}
+                  </>
+                ) : (
+                  <>
+                    {card}
+                    {text}
+                  </>
+                )}
+              </Reveal>
+            );
+          })}
+        </div>
+      </article>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* ③ 마무리: 우리는 고객의 현장을 지키는 사람들입니다 / 그리고 우리는 믿습니다 */
+/* ------------------------------------------------------------------ */
+
+export function ClosingSection() {
+  return (
+    <section className="flex w-full flex-col items-center">
+      {/* ===== 사람들 소개: 제목 + 팀 이미지 + 2문단 / 문단 Reveal 순차 등장 ===== */}
+      <div className="flex w-full flex-col items-center gap-[14px] px-[20px] pb-[100px] pt-[60px] lg:max-w-[1082px] lg:gap-[24px] lg:px-0 lg:pb-[200px] lg:pt-[100px]">
+        <Reveal>
+          <Title>
+            <span>우리는 고객의 현장을</span> 지키는 사람들입니다.
+          </Title>
+        </Reveal>
+        <Reveal delay={100} className="w-full">
+          <Placeholder
+            label="현장을 지키는 사람들 — 시공·AS 기사님 단체 사진"
+            className="aspect-[1081/450] w-full rounded-[4px] lg:rounded-[20px]"
+          />
+        </Reveal>
+        <div className="flex flex-col items-center gap-[24px] lg:gap-[40px]">
+          <Reveal delay={200}>
+            <Body tone="soft">
+              우리는 현장에서 직접 CCTV를 설치하고, 고치고, 관리해 온 사람들입니다.
+              {/* TODO: 고객 확인 후 "○○년간 ○○건의 현장을…" 같은 실적 문장으로 교체 가능 */}
+              <br />
+              수많은 현장에서 고객이 가장 답답해한 건 장비가 아니라,
+              <PcBr />
+              끝까지 책임지는 사람이 없다는 것이었습니다.
+            </Body>
+          </Reveal>
+          <Reveal delay={300}>
+            <Body tone="soft">
+              그래서 우리는 {SITE.name}를 만들었습니다.
+              <br />
+              <b>복잡한 보안은 쉽게, 사후관리는 확실하게.</b>
+            </Body>
+          </Reveal>
+        </div>
+      </div>
+
+      {/* ===== 네이비 배경(이미지 자리) 위 "그리고 우리는 믿습니다." / PC min-height 407px ===== */}
+      <div className="w-full lg:pb-[200px]">
+        <ImageBackdrop
+          label="스토리 하단 배경 이미지 — 안심하고 일상을 보내는 고객의 공간"
+          minHeightPc="lg:min-h-[407px]"
+        >
+          <Reveal>
+            <Title tone="white">그리고 우리는 믿습니다.</Title>
+          </Reveal>
+          <Reveal delay={150}>
+            <Body tone="white">
+              고객이 안심해야, 우리가 존재할 이유가 생긴다고.
+              <br />
+              {SITE.name}는 현장에 꼭 맞는 설계, 끝까지 책임지는 시공,
+              <br />
+              언제든 연락되는 사후관리로
+              <MoBr />
+              고객의 믿을 수 있는 기술 파트너가 되겠습니다.
+            </Body>
+          </Reveal>
+        </ImageBackdrop>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* ④ 강점 9가지                                                          */
+/* ------------------------------------------------------------------ */
+
+/**
+ * 강점 카드 데이터 — 원본 AS 페이지 "1~9" 순서/문구 기준, icon 은 원본 아이콘 파일 경로
+ * TODO: 신규 회사 정책 확인 — 무상 AS 1년 / 24시간 원격 감시 / 1:1 담당자 / 정기 점검 / 24시간 이내 방문 / 직영 공사팀은
+ *       기존 회사(대한민국CCTV) 정책 수치. 유니텍CCTV 도 동일한지 고객 확인 필요.
+ * - 02번 원문 "전국 인프라 구성으로 어디든 설치가 가능" 은 신규 회사가 단정할 수 없는 실적이라 브랜드 스토리 문구로 교체.
+ */
 const STRENGTHS = [
-  { title: "당사 설치 시\n모든 부품 무상 AS 1년", icon: "2024/03/010.png" },
-  { title: "전국 인프라 구성으로\n어디든 설치가 가능", icon: "2024/03/011.png" },
+  { title: "당사 설치 시\n모든 부품 무상 AS 1년", icon: "2024/03/010.png" }, // TODO: 신규 회사 정책 확인
+  { title: "설치부터 수리까지\n한 곳에서 책임 시공", icon: "2024/03/011.png" },
   { title: "스마트폰 24시간\n원격 감시 무료 제공", icon: "2024/03/012.png" },
   { title: "1:1 유지 보수\n담당자 배정", icon: "2024/03/015.png" },
   { title: "합리적인 견적의\n최저가 솔루션", icon: "2024/03/014.png" },
   { title: "정기적인 점검", icon: "2024/03/018.png" },
-  { title: "의뢰 후 24시간 이내\n방문 진단 및 수리", icon: "2024/03/017.png" },
+  { title: "의뢰 후 24시간 이내\n방문 진단 및 수리", icon: "2024/03/017.png" }, // TODO: 신규 회사 정책 확인
   { title: "직영 공사팀의\n치밀한 공사와 맞춤 컨설팅", icon: "2024/03/013.png" },
   { title: "증설 및 이전\n전문 서비스", icon: "2024/03/019.png" },
 ];
 
 export function StrengthsSection() {
   return (
-    <section className="flex w-full flex-col items-center bg-[#fffaf7] px-[20px] py-[100px] lg:py-[160px]">
+    <section className="flex w-full flex-col items-center bg-[#f4f7fb] px-[20px] py-[100px] lg:py-[160px]">
       <div className="flex w-full max-w-[1082px] flex-col items-center gap-[14px] lg:gap-[24px]">
         {/* ===== 섹션 타이틀 ===== */}
         <SectionBadge label="왜 선택할까요">{SITE.name}의 강점</SectionBadge>
@@ -117,7 +439,7 @@ export function StrengthsSection() {
           {STRENGTHS.map((item, i) => (
             <Reveal as="li" key={item.icon} delay={(i % 3) * 100} className="h-full">
               <div className="flex h-full flex-col items-center gap-[12px] rounded-[12px] bg-white px-[12px] py-[24px] text-center shadow-[0_4px_20px_rgba(0,0,0,0.05)] lg:gap-[20px] lg:rounded-[20px] lg:px-[24px] lg:py-[40px]">
-                <span className="text-[13px] font-bold text-[#ff5c00] lg:text-[18px]">
+                <span className="text-[13px] font-bold text-point-strong lg:text-[18px]">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <Placeholder
@@ -138,10 +460,12 @@ export function StrengthsSection() {
 }
 
 /* ------------------------------------------------------------------ */
-/* ③ 수상: 한국브랜드 선호도 3년 연속 1위                                  */
+/* ⑤ 수상: 한국브랜드 선호도 3년 연속 1위                                  */
 /* ------------------------------------------------------------------ */
 
 export function AwardSection() {
+  // 기존 회사 수상 내역 — 신규 회사 명의 사용 확인 전까지 숨김
+  if (!LEGACY.award) return null;
   return (
     <section className="flex w-full flex-col items-center gap-[14px] px-[20px] py-[100px] lg:gap-[24px] lg:py-[160px]">
       {/* ===== 수상 메달 이미지 + 문구 / 정적 ===== */}
@@ -164,10 +488,12 @@ ${SITE.name}의 검증된 제품과 서비스를 확인해보세요.`}
 }
 
 /* ------------------------------------------------------------------ */
-/* ④ 조직도                                                              */
+/* ⑥ 조직도                                                              */
 /* ------------------------------------------------------------------ */
 
 export function OrgChartSection() {
+  // 기존 회사 조직도 이미지 — 숨김 (상단 SHOW_ORG_CHART 참고)
+  if (!SHOW_ORG_CHART) return null;
   return (
     <section className="flex w-full flex-col items-center gap-[14px] bg-[#f8f8f8] px-[20px] py-[100px] lg:gap-[24px] lg:py-[160px]">
       {/* ===== 조직도 이미지 / 정적 ===== */}
@@ -182,7 +508,7 @@ export function OrgChartSection() {
 }
 
 /* ------------------------------------------------------------------ */
-/* ⑤ 전국 지사 요약                                                      */
+/* ⑦ 전국 지사 요약                                                      */
 /* ------------------------------------------------------------------ */
 
 /** 본사 + 6개 지사 — 원본 홈 "전국 서비스 구축 현황" 주소 그대로 (첫 주소가 대표 주소) */
@@ -242,6 +568,8 @@ const BRANCHES = [
 ];
 
 export function BranchesSection() {
+  // 기존 회사 전국 지사 — 신규 회사 명의 사용 확인 전까지 숨김
+  if (!LEGACY.branches) return null;
   return (
     <section className="flex w-full flex-col items-center px-[20px] py-[100px] lg:py-[160px]">
       <div className="flex w-full max-w-[1082px] flex-col items-center gap-[14px] lg:gap-[24px]">
@@ -252,7 +580,7 @@ export function BranchesSection() {
         </Title>
         <Body>
           통합 콜센터 운영{" "}
-          <a href={SITE.phoneHref} className="font-bold text-[#ff5c00]">
+          <a href={SITE.phoneHref} className="font-bold text-point-strong">
             {SITE.phone}
           </a>
         </Body>
@@ -263,10 +591,10 @@ export function BranchesSection() {
             <li
               key={b.name}
               className={`rounded-[12px] border border-[#eee] p-[20px] lg:rounded-[20px] lg:p-[32px] ${
-                b.name === "본사" ? "lg:col-span-2 border-[#ff5c00] bg-[#fffaf7]" : ""
+                b.name === "본사" ? "lg:col-span-2 border-brand bg-[#f4f7fb]" : ""
               }`}
             >
-              <h3 className="text-[16px] font-bold text-[#ff5c00] lg:text-[22px]">{b.name}</h3>
+              <h3 className="text-[16px] font-bold text-point-strong lg:text-[22px]">{b.name}</h3>
               <p className="mt-[6px] break-keep text-[14px] font-bold leading-[22px] text-[#202020] lg:mt-[10px] lg:text-[18px] lg:leading-[28px]">
                 {b.addresses[0]}
               </p>

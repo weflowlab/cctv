@@ -79,7 +79,7 @@ export default function ServiceNetwork() {
           </h2>
           <p className="text-[16px] font-medium text-[#666] lg:text-[22px]">
             통합 콜 센터 운영{" "}
-            <a href={SITE.phoneHref} className="font-bold text-brand">
+            <a href={SITE.phoneHref} className="font-bold text-point-strong">
               {SITE.phone}
             </a>
           </p>
@@ -110,7 +110,7 @@ export default function ServiceNetwork() {
                       "h-[36px] cursor-pointer rounded-[100px] border px-[14px] text-[14px] font-medium tracking-[-0.2px] transition-colors duration-150 lg:h-[44px] lg:px-[20px] lg:text-[16px]",
                       selected
                         ? "border-brand bg-brand text-white"
-                        : "border-[#e2e2e2] bg-white text-[#555] hover:border-brand hover:text-brand",
+                        : "border-[#e2e2e2] bg-white text-[#555] hover:border-brand hover:text-point-strong",
                     ].join(" ")}
                   >
                     {branch.name}

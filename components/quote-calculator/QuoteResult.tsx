@@ -49,15 +49,15 @@ export default function QuoteResult({ data, recommended, onReset }: Props) {
   const query = { count, place, resolution, placement };
 
   return (
-    <div className="bg-[#fff6f1] px-[16px] pb-[100px] pt-[40px] lg:px-0 lg:pb-[132px] lg:pt-[88px]">
+    <div className="bg-brand-light px-[16px] pb-[100px] pt-[40px] lg:px-0 lg:pb-[132px] lg:pt-[88px]">
       <div className="mx-auto w-full max-w-[580px] lg:w-[1080px] lg:max-w-none">
         {/* ===== 결과 타이틀: 추천 대수 ===== */}
         <header className="text-center opacity-0 [animation:slideInUp_0.6s_ease-out_forwards]">
-          <p className="text-[16px] font-bold leading-[28px] tracking-[-0.5px] text-[#ff5c00] lg:text-[20px]">견적 계산 결과</p>
+          <p className="text-[16px] font-bold leading-[28px] tracking-[-0.5px] text-point-strong lg:text-[20px]">견적 계산 결과</p>
           <h1 className="mt-[6px] text-[26px] font-bold leading-[36px] tracking-[-1px] text-[#222] lg:text-[42px] lg:leading-[56px]">
             {answerLabel("place", place)}에 맞는
             <br />
-            <strong className="text-[#ff5c00]">추천 CCTV {recommended}대</strong>
+            <strong className="text-point-strong">추천 CCTV {recommended}대</strong>
           </h1>
           <p className="mt-[8px] text-[15px] leading-[24px] tracking-[-0.3px] text-[#666] lg:mt-[12px] lg:text-[20px] lg:leading-[30px]">
             출입구부터 추가 공간까지, 사각지대 없이 계산했어요
@@ -79,7 +79,7 @@ export default function QuoteResult({ data, recommended, onReset }: Props) {
           <button
             type="button"
             onClick={onReset}
-            className="flex cursor-pointer items-center gap-[4px] text-[14px] font-medium tracking-[-0.28px] text-[#888] underline underline-offset-[3px] hover:text-[#ff5c00] lg:text-[16px]"
+            className="flex cursor-pointer items-center gap-[4px] text-[14px] font-medium tracking-[-0.28px] text-[#888] underline underline-offset-[3px] hover:text-point-strong lg:text-[16px]"
           >
             다시 계산하기
           </button>
@@ -98,18 +98,18 @@ export default function QuoteResult({ data, recommended, onReset }: Props) {
           <div className="mt-[28px] grid grid-cols-1 gap-[12px] lg:mt-[40px] lg:grid-cols-2 lg:gap-[16px]">
             {/* ===== 렌탈 카드: 월 요금 + 타사 대비 절약액 ===== */}
             <section className={cardCls}>
-              <p className={`${tagCls} bg-[#ff5c00] text-white`}>렌탈</p>
+              <p className={`${tagCls} bg-brand text-white`}>렌탈</p>
               <p className="mt-[8px] text-[14px] tracking-[-0.28px] text-[#888] lg:text-[16px]">설치비·가입비·보증료 면제</p>
               <p className={priceCls}>
                 <span className={unitCls}>월 </span>
                 <AnimatedWon value={rental.ours} />
                 <span className={unitCls}>원</span>
               </p>
-              <p className="mt-[8px] w-fit rounded-[40px] bg-[#fff6f1] px-[12px] py-[4px] text-[13px] font-bold tracking-[-0.26px] text-[#ff5c00] lg:text-[15px]">
+              <p className="mt-[8px] w-fit rounded-[40px] bg-brand-light px-[12px] py-[4px] text-[13px] font-bold tracking-[-0.26px] text-point-strong lg:text-[15px]">
                 타사 렌탈 대비 매월 <AnimatedWon value={rental.other - rental.ours} />원 절약
               </p>
               <div className="flex-1" />
-              <Link href={buildContactHref({ ...query, service: "rental" })} className={`${btnCls} bg-[#ff5c00] text-white hover:bg-[#e83b05]`}>
+              <Link href={buildContactHref({ ...query, service: "rental" })} className={`${btnCls} bg-brand text-white hover:bg-brand-strong`}>
                 이 견적으로 상담 신청
               </Link>
             </section>
@@ -138,7 +138,7 @@ export default function QuoteResult({ data, recommended, onReset }: Props) {
               <div className="flex-1" />
               <Link
                 href={buildContactHref({ ...query, service: "install" })}
-                className={`${btnCls} bg-[#fff6f1] text-[#ff5c00] hover:bg-[#ff5c00] hover:text-white`}
+                className={`${btnCls} bg-brand-light text-point-strong hover:bg-brand hover:text-white`}
               >
                 이 견적으로 상담 신청
               </Link>

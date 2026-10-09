@@ -4,7 +4,7 @@
  * 모바일 헤더 (≤1023px)
  * - 높이 72px 바: 로고 + (홈에서만) "상담 신청" 버튼 + 햄버거/X 토글 버튼.
  * - 햄버거 클릭 → 전체화면 흰 메뉴 펼침, html overflow hidden 으로 배경 스크롤 잠금.
- * - 메뉴 5개는 단순 링크(현재 메뉴는 오렌지 글자). 하단: "상담 신청하기"(/contact) / "전화 상담"(tel).
+ * - 메뉴 5개는 단순 링크(현재 메뉴는 브랜드색 글자). 하단: "상담 신청하기"(/contact) / "전화 상담"(tel).
  * - 경로가 바뀌면 메뉴 닫힘.
  */
 import Link from "next/link";
@@ -61,7 +61,7 @@ export default function MobileHeader() {
             {isHome && !isOpen && (
               <Link
                 href={PRIMARY_CTA.href}
-                className="flex h-[32px] items-center justify-center rounded-[8px] bg-[#fff6f1] px-[16px] text-[14px] font-medium text-[#ff5c00] visited:text-[#ff5c00]"
+                className="flex h-[32px] items-center justify-center rounded-[8px] bg-brand-light px-[16px] text-[14px] font-medium text-point-strong visited:text-point-strong"
               >
                 상담 신청
               </Link>
@@ -106,7 +106,7 @@ export default function MobileHeader() {
                     >
                       <span
                         className={`text-[16px] font-medium leading-[26px] tracking-[-0.5px] ${
-                          selected ? "text-[#ff5c00]" : "text-[#333]"
+                          selected ? "text-point-strong" : "text-[#333]"
                         }`}
                       >
                         {menu.name}
@@ -122,7 +122,7 @@ export default function MobileHeader() {
               <Link
                 href={PRIMARY_CTA.href}
                 onClick={() => setIsOpen(false)}
-                className="flex h-[48px] w-full items-center justify-center rounded-[8px] bg-[#fff6f1] px-[16px] pb-[10px] pt-[8px] text-[16px] font-medium text-[#ff5c00] transition-colors duration-300 visited:text-[#ff5c00] hover:bg-[#ffe2d1]"
+                className="flex h-[48px] w-full items-center justify-center rounded-[8px] bg-brand-light px-[16px] pb-[10px] pt-[8px] text-[16px] font-medium text-point-strong transition-colors duration-300 visited:text-point-strong hover:bg-point-light"
               >
                 {PRIMARY_CTA.name}
               </Link>

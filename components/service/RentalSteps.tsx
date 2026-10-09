@@ -3,7 +3,7 @@
 /**
  * 렌탈 서비스 진행 과정 5단계 (클라이언트 컴포넌트)
  * - keeper employee UsageGuideSection 의 자동 진행(useStepProgress) 틀을 5단계용으로 단순화.
- * - 동작: 2.5초마다 다음 단계가 활성화(오렌지)되고, 활성 단계 아래 진행 바가 0→100% 로 채워짐.
+ * - 동작: 2.5초마다 다음 단계가 활성화(브랜드색)되고, 활성 단계 아래 진행 바가 0→100% 로 채워짐.
  *   5단계 뒤에는 1단계로 순환. 단계를 클릭하면 그 단계부터 타이머를 다시 잰다.
  * - 화면 밖에 있을 땐 멈춤(IntersectionObserver) — 보이기 시작할 때 1단계부터 재생.
  * - PC: 가로 5칸 + 단계 사이 연결선 / 모바일: 세로 목록.
@@ -61,7 +61,7 @@ export default function RentalSteps() {
               <span
                 aria-hidden
                 className={`absolute left-[calc(100%+2px)] top-1/2 hidden h-[2px] w-[12px] -translate-y-1/2 lg:block ${
-                  isDone ? "bg-[#ff5c00]" : "bg-[#dedede]"
+                  isDone ? "bg-brand" : "bg-[#dedede]"
                 }`}
               />
             )}
@@ -70,12 +70,12 @@ export default function RentalSteps() {
               onClick={() => goTo(i)}
               aria-current={isActive ? "step" : undefined}
               className={`relative flex w-full cursor-pointer items-center gap-[14px] overflow-hidden rounded-[14px] border px-[20px] py-[18px] text-left transition-colors duration-300 lg:flex-col lg:gap-[12px] lg:px-[12px] lg:py-[32px] lg:text-center ${
-                isActive ? "border-[#ff5c00] bg-[#fff6f1]" : "border-[#eee] bg-white"
+                isActive ? "border-brand bg-brand-light" : "border-[#eee] bg-white"
               }`}
             >
               <span
                 className={`flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-full text-[15px] font-bold transition-colors duration-300 lg:h-[52px] lg:w-[52px] lg:text-[20px] ${
-                  isActive || isDone ? "bg-[#ff5c00] text-white" : "bg-[#f5f5f5] text-[#888]"
+                  isActive || isDone ? "bg-brand text-white" : "bg-[#f5f5f5] text-[#888]"
                 }`}
               >
                 {i + 1}
@@ -84,7 +84,7 @@ export default function RentalSteps() {
                 <span className="text-[12px] font-medium tracking-[-0.24px] text-[#888] lg:text-[14px]">Service {i + 1}</span>
                 <span
                   className={`text-[17px] font-bold leading-[26px] tracking-[-0.34px] lg:text-[20px] lg:leading-[30px] ${
-                    isActive ? "text-[#ff5c00]" : "text-[#222]"
+                    isActive ? "text-point-strong" : "text-[#222]"
                   }`}
                 >
                   {title}
@@ -94,7 +94,7 @@ export default function RentalSteps() {
               {isActive && (
                 <span
                   aria-hidden
-                  className="absolute bottom-0 left-0 h-[3px] bg-[#ff5c00]"
+                  className="absolute bottom-0 left-0 h-[3px] bg-brand"
                   style={{ width: `${ratio * 100}%` }}
                 />
               )}

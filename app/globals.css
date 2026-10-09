@@ -48,8 +48,14 @@
 
 @theme inline {
   --font-sans: Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
-  --color-brand: #ff5c00; /* 메인 오렌지 (keeper 틀에서 유지, 브랜드 컬러 확정 시 교체) */
-  --color-brand-light: #fff6f1; /* 오렌지 배경 버튼 */
+  /* 브랜드 컬러 — 유니텍CCTV 브랜드 가이드 */
+  --color-brand: #0a2d5b; /* Deep Navy: 신뢰·전문성 — 주 버튼, 선택 상태, 진한 강조 */
+  --color-brand-strong: #071f40; /* 네이비 hover/눌림 */
+  --color-brand-light: #edf2f8; /* 네이비 옅은 배경 (보조 버튼·카드 배경) */
+  --color-point: #00a7ab; /* Teal: 기술·연결·혁신 — 밑줄·아이콘·포인트 장식 */
+  --color-point-strong: #00838a; /* 흰 배경 위 강조 글자용 틸 (가독성 확보한 진한 톤) */
+  --color-point-light: #e6f6f6; /* 틸 옅은 배경 */
+  --color-silver: #b7bec7; /* Silver Gray: 보조 라인·비활성 */
   --color-ink: #111; /* 본문 진한 텍스트 */
   --color-sub: #666; /* 보조 텍스트 */
   --color-line: #f0f0f0; /* 구분선 */

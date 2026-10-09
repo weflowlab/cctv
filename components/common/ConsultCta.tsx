@@ -1,6 +1,6 @@
 /**
  * 공통 하단 상담 CTA 배너 (모든 페이지 맨 아래에 <ConsultCta /> 하나만 배치)
- * - keeper 홈 하단 CTA(components/home/BottomCta) 틀 그대로: 주황(#ff6418) 배경 + 노란빛 radial 오버레이 2개.
+ * - keeper 홈 하단 CTA(components/home/BottomCta) 틀: 딥네이비 배경 + 틸 빛 radial 오버레이 2개 (브랜드 컬러).
  * - 카피 "우리 공간 보안, / 지금 바로 {SITE.name}에 맡기세요." + "상담 신청하기" 버튼(→ /contact) + 보조 전화번호.
  * - 우측(모바일은 하단) 이미지 자리는 Placeholder. keeper 앱스토어 버튼은 제거.
  * - 서버 컴포넌트 (등장 애니메이션만 클라이언트 Reveal 사용).
@@ -12,20 +12,20 @@ import { SITE } from "@/lib/site";
 
 export default function ConsultCta() {
   return (
-    // ===== 하단 CTA: 주황 배경 =====
-    <div className="relative flex w-full justify-center overflow-hidden bg-[#ff6418] px-[16px] pb-0 pt-[60px] lg:px-0 lg:py-[150px]">
+    // ===== 하단 CTA: 딥네이비 배경 =====
+    <div className="relative flex w-full justify-center overflow-hidden bg-brand px-[16px] pb-0 pt-[60px] lg:px-0 lg:py-[150px]">
       <section className="relative flex w-full max-w-[1080px] flex-col items-center gap-[40px] pb-0 lg:block lg:pb-0">
-        {/* 장식 오버레이 1: 좌상단 큰 노란 radial */}
-        <div className="absolute left-[-100px] top-[-342px] z-0 h-[564px] w-[564px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(255,240,188,0.5)_0%,rgba(255,240,188,0)_100%)] opacity-60 lg:left-[-880px] lg:top-[-860px] lg:h-[1436px] lg:w-[1436px]" />
+        {/* 장식 오버레이 1: 좌상단 큰 틸 radial */}
+        <div className="absolute left-[-100px] top-[-342px] z-0 h-[564px] w-[564px] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(0,167,171,0.55)_0%,rgba(0,167,171,0)_100%)] opacity-60 lg:left-[-880px] lg:top-[-860px] lg:h-[1436px] lg:w-[1436px]" />
         {/* 장식 오버레이 2: 우측 원 (PC 전용) */}
-        <div className="absolute right-[-180px] top-0 z-0 hidden h-[801px] w-[801px] rounded-full bg-[linear-gradient(180deg,rgba(255,219,198,0.2)_0%,rgba(255,219,198,0)_50.06%)] opacity-[0.24] lg:block" />
+        <div className="absolute right-[-180px] top-0 z-0 hidden h-[801px] w-[801px] rounded-full bg-[linear-gradient(180deg,rgba(183,190,199,0.35)_0%,rgba(183,190,199,0)_50.06%)] opacity-[0.24] lg:block" />
 
         {/* ===== 카피 + 상담 신청하기 버튼 + 전화번호: 스크롤 진입 시 slide-in-up ===== */}
         <div className="relative z-[1] flex w-full flex-col items-center gap-[24px] text-center lg:items-start lg:text-left">
           <Reveal
             as="h3"
             threshold={0.1}
-            className="text-[28px] font-bold leading-[1.4] tracking-[-0.28px] text-[#ffef9e] lg:text-[42px] lg:leading-[1.38] lg:tracking-[-0.42px]"
+            className="text-[28px] font-bold leading-[1.4] tracking-[-0.28px] text-[#7fe0e2] lg:text-[42px] lg:leading-[1.38] lg:tracking-[-0.42px]"
           >
             우리 공간 보안,
             <br />

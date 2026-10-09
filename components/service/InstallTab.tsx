@@ -15,11 +15,11 @@ export default function InstallTab() {
   return (
     <>
       {/* ===== 히어로: 초특가 패키지 카피 (keeper employee 히어로 톤, 크림 배경) ===== */}
-      <section className="bg-[#fff9f0] px-[16px] py-[56px] lg:px-0 lg:py-[100px]">
+      <section className="bg-point-light px-[16px] py-[56px] lg:px-0 lg:py-[100px]">
         <div className="mx-auto flex w-full max-w-[580px] flex-col items-center gap-[32px] lg:w-[1080px] lg:max-w-none lg:flex-row lg:justify-between lg:gap-[72px]">
           <div className="text-center lg:text-left">
-            <p className="text-[14px] font-bold tracking-[-0.28px] text-[#ff5c00] lg:text-[18px]">CCTV 설치</p>
-            <h2 className="mt-[8px] text-[30px] font-bold leading-[1.4] tracking-[-0.6px] text-[#222] lg:text-[46px] lg:tracking-[-2px] [&>strong]:text-[#ff5c00]">
+            <p className="text-[14px] font-bold tracking-[-0.28px] text-point-strong lg:text-[18px]">CCTV 설치</p>
+            <h2 className="mt-[8px] text-[30px] font-bold leading-[1.4] tracking-[-0.6px] text-[#222] lg:text-[46px] lg:tracking-[-2px] [&>strong]:text-point-strong">
               CCTV 설치
               <br />
               <strong>초특가 패키지</strong>
@@ -52,7 +52,7 @@ export default function InstallTab() {
               <Reveal as="li" key={step.title} delay={i * 150} className="overflow-hidden rounded-[16px] bg-white">
                 <Placeholder label={`STEP${i + 1}. ${step.title} (원본 ${step.img})`} className="aspect-[3/2] w-full border-0 border-b" />
                 <div className="px-[20px] pb-[24px] pt-[18px]">
-                  <p className="text-[13px] font-bold tracking-[-0.26px] text-[#ff5c00] lg:text-[15px]">STEP {i + 1}</p>
+                  <p className="text-[13px] font-bold tracking-[-0.26px] text-point-strong lg:text-[15px]">STEP {i + 1}</p>
                   <h3 className="mt-[4px] text-[18px] font-bold leading-[26px] tracking-[-0.36px] text-[#222] lg:text-[22px] lg:leading-[32px]">
                     {step.title}
                   </h3>
@@ -70,7 +70,7 @@ export default function InstallTab() {
       <section className="bg-white px-[16px] pb-[24px] pt-[60px] lg:px-0 lg:pb-[40px] lg:pt-[120px]">
         <div className="mx-auto flex w-full max-w-[580px] flex-col items-center gap-[20px] rounded-[20px] bg-[#222] px-[24px] py-[36px] text-center lg:w-[1080px] lg:max-w-none lg:flex-row lg:justify-between lg:px-[64px] lg:py-[56px] lg:text-left">
           <div>
-            <p className="text-[14px] font-bold tracking-[-0.28px] text-[#ff5c00] lg:text-[16px]">제휴 · 대량 도입 문의</p>
+            <p className="text-[14px] font-bold tracking-[-0.28px] text-point-strong lg:text-[16px]">제휴 · 대량 도입 문의</p>
             <h2 className="mt-[8px] text-[22px] font-bold leading-[32px] tracking-[-0.44px] text-white lg:text-[32px] lg:leading-[46px] lg:tracking-[-0.8px]">
               프랜차이즈 · 기업 대량 설치는
               <SpaceOrBreak />
@@ -82,7 +82,7 @@ export default function InstallTab() {
           </div>
           <Link
             href="/contact?type=business"
-            className="inline-flex shrink-0 items-center justify-center gap-[8px] rounded-[100px] bg-[#ff5c00] py-[14px] pl-[24px] pr-[22px] text-[16px] font-bold leading-[1.2] tracking-[-0.32px] text-white transition-colors hover:bg-[#e83b05] lg:text-[18px]"
+            className="inline-flex shrink-0 items-center justify-center gap-[8px] rounded-[100px] bg-brand py-[14px] pl-[24px] pr-[22px] text-[16px] font-bold leading-[1.2] tracking-[-0.32px] text-white transition-colors hover:bg-brand-strong lg:text-[18px]"
           >
             <span>대량 도입 문의하기</span>
             <ArrowIcon className="h-[14px] w-[14px]" />
