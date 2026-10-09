@@ -10,10 +10,12 @@
  *   → 두 값 조합으로 INSTALL_PRICES 에서 1~4대 가격을 골라 카드 4장 렌더.
  *   토글이 바뀌면 카드 묶음을 key 로 다시 마운트해 0.5s fade-in.
  * - 각 카드의 [문의하기] → /contact
+ * - 가격 카드 박스 아래에 견적 계산기 유도 배너 (CalculatorBanner)
  */
 import Link from "next/link";
 import { useState } from "react";
 import Placeholder from "@/components/common/Placeholder";
+import CalculatorBanner from "./CalculatorBanner";
 import {
   CAMERA_NAME,
   INSTALL_PRICES,
@@ -132,6 +134,9 @@ export default function InstallPackages() {
             ))}
           </ul>
         </div>
+
+        {/* ===== 견적 계산기 유도 배너 → /calculator ===== */}
+        <CalculatorBanner className="mt-[24px] lg:mt-[40px]" />
       </div>
     </section>
   );

@@ -1,18 +1,18 @@
 /**
  * /service/[slug] — 서비스 탭 페이지 (서버 컴포넌트)
  * - slug: install(CCTV 설치) / rental(CCTV 렌탈) / as(AS 수리) / speaker(CCTV+스피커) — @/lib/site SERVICES
- * - 구성: 페이지 타이틀 → 탭 바(sticky, 헤더 아래 고정) → 탭별 콘텐츠 → 상담 신청 CTA 배너(공통)
+ * - 이 파일은 탭별 콘텐츠만 담당. 타이틀·탭 바·CTA 는 app/service/layout.tsx.
+ * - params 를 읽는 부분은 <Suspense> 안에 둔다 → 탭 이동 시 레이아웃은 즉시 보이고 콘텐츠만 교체
+ *   (Cache Components 의 Instant Navigation 검증 요구사항). 4개 탭 모두 프리렌더되므로 첫 로드엔 대기 화면이 안 보임.
  * - 4개 slug 모두 generateStaticParams 로 빌드 시 프리렌더, 목록에 없는 slug 는 notFound().
  * - 헤더: 흰 배경(white) — 경로별 기본값
  */
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import type { ReactNode } from "react";
-import ConsultCta from "@/components/common/ConsultCta";
+import { Suspense, type ReactNode } from "react";
 import AsTab from "@/components/service/AsTab";
 import InstallTab from "@/components/service/InstallTab";
 import RentalTab from "@/components/service/RentalTab";
-import ServiceTabs from "@/components/service/ServiceTabs";
 import SpeakerTab from "@/components/service/SpeakerTab";
 import { SERVICES, SITE, type ServiceSlug } from "@/lib/site";
 
@@ -57,32 +57,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ServicePage({ params }: Props) {
+type Params = Props["params"];
+
+export default function ServicePage({ params }: Props) {
+  return (
+    // 탭 콘텐츠 로딩 중엔 높이만 잡아 두어 아래 CTA 가 튀지 않게
+    <Suspense fallback={<div className="min-h-[60vh] w-full" />}>
+      <ServiceContent params={params} />
+    </Suspense>
+  );
+}
+
+/** URL 의 slug 로 탭 콘텐츠 선택 (없는 slug → 404) */
+async function ServiceContent({ params }: { params: Params }) {
   const { slug } = await params;
   const service = findService(slug);
   if (!service) notFound();
-
-  return (
-    <>
-      {/* ===== 페이지 타이틀: "서비스" + 안내 문구 ===== */}
-      <section className="bg-white px-[16px] pb-[24px] pt-[40px] text-center lg:pb-[40px] lg:pt-[80px]">
-        <h1 className="text-[28px] font-bold leading-[40px] tracking-[-0.56px] text-[#202020] lg:text-[44px] lg:leading-[60px] lg:tracking-[-1px]">
-          서비스
-        </h1>
-        {/* TODO: 문구 확정 (원본에 없는 안내 문구) */}
-        <p className="mt-[8px] text-[15px] leading-[24px] tracking-[-0.3px] text-[#666] lg:mt-[12px] lg:text-[20px] lg:leading-[30px]">
-          설치부터 렌탈, AS까지 {SITE.name}가 책임집니다.
-        </p>
-      </section>
-
-      {/* ===== 탭 바: 설치 / 렌탈 / AS / 스피커 — 스크롤 시 헤더 아래 sticky ===== */}
-      <ServiceTabs active={service.slug} />
-
-      {/* ===== 탭 콘텐츠 ===== */}
-      {TAB_CONTENT[service.slug].content}
-
-      {/* ===== 상담 신청 CTA 배너 (공통) ===== */}
-      <ConsultCta />
-    </>
-  );
+  return <>{TAB_CONTENT[service.slug].content}</>;
 }

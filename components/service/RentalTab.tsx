@@ -1,39 +1,16 @@
 /**
  * /service/rental — CCTV 렌탈 탭 콘텐츠 (서버 컴포넌트)
  * - 출처: 기존 홈페이지 "CCTV 렌탈" 페이지 + 홈의 "렌탈 할부 통합 공식 가입 센터" 블록
- * - 구성: 히어로 → 혜택 7가지 → 렌탈 월 요금표(원본 이미지 표를 텍스트로) → 진행 5단계(자동 진행)
+ * - 구성: 히어로 → 혜택 7가지 → 렌탈 월 요금 슬라이더(원본 표-1.jpg 요금을 대수별로) + 견적 계산기 배너 → 진행 5단계(자동 진행)
  *         → 렌탈 통합 가입 센터 + 파트너 로고 → 일시납(설치) 교차 링크
  */
 import Placeholder from "@/components/common/Placeholder";
 import Reveal from "@/components/common/Reveal";
 import { SITE } from "@/lib/site";
+import RentalSlider from "./RentalSlider";
 import RentalSteps from "./RentalSteps";
-import { RENTAL_BENEFITS, RENTAL_MONTHLY, RENTAL_PARTNERS, formatWon } from "./data";
+import { RENTAL_BENEFITS, RENTAL_PARTNERS } from "./data";
 import { CrossLink, SectionHeading, SpaceOrBreak } from "./ui";
-
-/** 월 요금표 한 묶음 (PC 에서는 1~8대 / 9~16대 두 표를 나란히) */
-function PriceTable({ rows }: { rows: typeof RENTAL_MONTHLY }) {
-  return (
-    <table className="w-full table-fixed border-collapse text-center text-[14px] tracking-[-0.28px] lg:text-[17px]">
-      <thead>
-        <tr className="bg-[#222] text-white">
-          <th scope="col" className="h-[44px] w-[30%] font-bold lg:h-[56px]">카메라 대수</th>
-          <th scope="col" className="font-bold">타사 월요금</th>
-          <th scope="col" className="bg-[#ff5c00] font-bold">{SITE.name} 월요금</th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((r) => (
-          <tr key={r.count} className="border-b border-[#eee] bg-white">
-            <th scope="row" className="h-[44px] font-medium text-[#333] lg:h-[52px]">{r.count}대</th>
-            <td className="text-[#bbb] line-through decoration-[#ff3b30]">{formatWon(r.other)}</td>
-            <td className="font-bold text-[#222]">{formatWon(r.ours)}원</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-}
 
 export default function RentalTab() {
   return (
@@ -81,16 +58,8 @@ export default function RentalTab() {
         </div>
       </section>
 
-      {/* ===== 렌탈 월 요금표: 1~16대 타사 대비 월요금 (원본 2024/05/표-1.jpg 를 텍스트 표로) ===== */}
-      <section className="bg-[#f6f7fa] px-[16px] py-[60px] lg:px-0 lg:py-[120px]">
-        <div className="mx-auto w-full max-w-[580px] lg:w-[1080px] lg:max-w-none">
-          <SectionHeading eyebrow="PRICE" title="CCTV 렌탈 패키지" desc="카메라 대수별 월 요금" />
-          <div className="mt-[32px] grid grid-cols-1 gap-0 overflow-hidden rounded-[14px] lg:mt-[56px] lg:grid-cols-2 lg:gap-[2px] lg:rounded-[20px]">
-            <PriceTable rows={RENTAL_MONTHLY.slice(0, 8)} />
-            <PriceTable rows={RENTAL_MONTHLY.slice(8)} />
-          </div>
-        </div>
-      </section>
+      {/* ===== 렌탈 월 요금: 대수 슬라이더 + 자사/타사 비교 + 견적 계산기 배너 (클라이언트) ===== */}
+      <RentalSlider />
 
       {/* ===== 진행 과정 5단계: 자동 진행 하이라이트 (클라이언트) ===== */}
       <section className="bg-white px-[16px] py-[60px] lg:px-0 lg:py-[120px]">

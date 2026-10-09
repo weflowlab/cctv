@@ -1,5 +1,9 @@
+"use client";
+
 /**
- * 장소 선택 칩 바 — 서버 컴포넌트 (현재 장소는 props 로 받음)
+ * 장소 선택 칩 바 — 현재 장소는 URL(usePathname)에서 판단
+ * - app/places/layout.tsx 에서 params 없이 렌더 (즉시 이동/Instant Navigation 대응).
+ *   usePathname 미확정 시를 위해 Suspense 로 감싸고, 대기 중엔 선택 없는 칩 바를 보여준다.
  * - PLACES 5개를 Link 칩으로 나열, 현재 칩은 오렌지 채움
  * - 칩 아래에 현재 장소가 포함하는 업종(includes)을 작게 표시
  * - 인터랙션:
@@ -8,9 +12,27 @@
  *   · 모바일에서 칩이 넘치면 가로 스크롤
  */
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Suspense } from "react";
 import { PLACES, type PlaceSlug } from "@/lib/site";
 
-export default function PlaceChips({ current }: { current: PlaceSlug }) {
+export default function PlaceChips() {
+  return (
+    <Suspense fallback={<ChipsBar current={null} />}>
+      <ActiveChips />
+    </Suspense>
+  );
+}
+
+/** URL 의 /places/<slug> 에서 현재 장소 추출 */
+function ActiveChips() {
+  const pathname = usePathname();
+  const slug = pathname.split("/")[2];
+  const current = PLACES.find((p) => p.slug === slug)?.slug ?? null;
+  return <ChipsBar current={current} />;
+}
+
+function ChipsBar({ current }: { current: PlaceSlug | null }) {
   const currentPlace = PLACES.find((p) => p.slug === current);
 
   return (

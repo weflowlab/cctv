@@ -7,12 +7,32 @@
  *   (부모가 <main> 이고 overflow hidden 조상이 없어야 sticky 가 동작 → 페이지 최상위 형제로 렌더)
  * - 모바일: 가로 스크롤(스크롤바 숨김). 진입 시 현재 탭이 화면 안에 보이도록 컨테이너 scrollLeft 를 맞춤
  *   (scrollIntoView 는 페이지 세로 스크롤까지 건드릴 수 있어 사용하지 않음).
+ * - 현재 탭은 URL(usePathname)에서 직접 판단 → app/service/layout.tsx 에서 params 없이 렌더 가능.
+ *   usePathname 이 아직 확정되지 않는 경우(빌드 시 알 수 없는 slug)를 위해 Suspense 로 감싸고,
+ *   대기 중에는 선택 없는 탭 바를 보여준다.
  */
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
+import { Suspense, useEffect, useRef } from "react";
 import { SERVICES, type ServiceSlug } from "@/lib/site";
 
-export default function ServiceTabs({ active }: { active: ServiceSlug }) {
+export default function ServiceTabs() {
+  return (
+    <Suspense fallback={<TabsBar active={null} />}>
+      <ActiveTabs />
+    </Suspense>
+  );
+}
+
+/** URL 의 /service/<slug> 에서 현재 탭 추출 */
+function ActiveTabs() {
+  const pathname = usePathname();
+  const slug = pathname.split("/")[2];
+  const active = SERVICES.find((s) => s.slug === slug)?.slug ?? null;
+  return <TabsBar active={active} />;
+}
+
+function TabsBar({ active }: { active: ServiceSlug | null }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLAnchorElement>(null);
 

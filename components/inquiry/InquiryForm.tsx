@@ -10,13 +10,22 @@
  *   · 연락처는 숫자만 남기고 3-4-4 자동 하이픈 (maxLength 13)
  *   · 제출 중 버튼 문구 "전송 중..." + 비활성
  *   · 성공 시 폼 초기화 + 화면 가운데 성공 팝업 2초 노출 (keeper 와 달리 페이지 이동 없음)
+ * - 견적 계산기 연동: /contact?service=rental|install&count=N&place=slug&res=200|500 로 들어오면
+ *   서비스 칩 자동 선택 + "전달 내용"에 견적 요약을 미리 채움 (사용자가 수정 가능)
+ *   · useSearchParams 는 정적 프리렌더 시 가장 가까운 Suspense 까지 클라이언트 렌더로 넘어가므로,
+ *     Suspense fallback 으로 빈 폼을 그려 두어 초기 HTML 은 기존과 동일하게 유지
  */
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useRef, useState, type FormEvent } from "react";
+import { parseQuoteQuery, type QuoteService } from "@/components/quote-calculator/data";
 import { SITE } from "@/lib/site";
 
 /** 서비스 선택지 (기존 사이트 3개 + CCTV+스피커) */
 const SERVICE_OPTIONS = ["CCTV 설치", "CCTV 수리", "CCTV 렌탈", "CCTV+스피커"] as const;
 type ServiceOption = (typeof SERVICE_OPTIONS)[number];
+
+/** 견적 계산기 쿼리 service 값 → 서비스 칩 */
+const QUOTE_SERVICE_CHIP: Record<QuoteService, ServiceOption> = { rental: "CCTV 렌탈", install: "CCTV 설치" };
 
 type Values = {
   name: string;
@@ -77,8 +86,9 @@ function CheckMark({ visible }: { visible: boolean }) {
   );
 }
 
-export default function InquiryForm() {
-  const [values, setValues] = useState<Values>(INITIAL);
+/** 폼 본체 — initial 로 받은 값으로 시작 (쿼리 없으면 빈 폼) */
+function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
+  const [values, setValues] = useState<Values>({ ...INITIAL, ...initial });
   const [errors, setErrors] = useState<Errors>({});
   // 한 번이라도 제출을 시도했는지 (이후 입력마다 재검사)
   const [submitted, setSubmitted] = useState(false);
@@ -318,5 +328,24 @@ export default function InquiryForm() {
         </p>
       </div>
     </>
+  );
+}
+
+/** URL 쿼리(견적 계산기)를 읽어 초기값을 만든 뒤 폼 본체 렌더 — 쿼리가 바뀌면 key 로 다시 마운트 */
+function InquiryFormFromQuery() {
+  const searchParams = useSearchParams();
+  const quote = parseQuoteQuery(searchParams);
+  const initial: Partial<Values> | undefined = quote
+    ? { services: quote.service ? [QUOTE_SERVICE_CHIP[quote.service]] : [], message: quote.message }
+    : undefined;
+  return <InquiryFormBody key={searchParams.toString()} initial={initial} />;
+}
+
+export default function InquiryForm() {
+  return (
+    // 프리렌더/초기 HTML: 빈 폼(fallback) → 브라우저: 쿼리 반영된 폼
+    <Suspense fallback={<InquiryFormBody />}>
+      <InquiryFormFromQuery />
+    </Suspense>
   );
 }

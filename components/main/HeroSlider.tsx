@@ -5,7 +5,7 @@
  * - 투명 헤더 밑으로 깔리도록 음수 margin-top(헤더 높이만큼) 적용. 헤더 투명/흰색 전환은 HomeHeaderScroll 담당.
  * - 높이 640px(PC·모바일 동일), 배경은 슬라이드별 Placeholder + 어두운 그라데이션, 카피는 그 위에 표시.
  * - Swiper 옵션: loop, autoplay 5초(사용자 조작 후에도 계속), Pagination(clickable, 커스텀 원형 불릿).
- * - 슬라이드 4장: 메인(설치가격 안내 / 상담 신청하기) → 렌탈 → CCTV+스피커 → AS 출장수리.
+ * - 슬라이드 4장: 메인(내 공간 견적 계산하기 / 상담 신청하기) → 렌탈 → CCTV+스피커 → AS 출장수리.
  * - 초기화 전에는 opacity 0 → onBeforeInit 에서 1 로 페이드 인 (레이아웃 깜빡임 방지).
  * - Swiper Autoplay 는 렌더 중 현재 시각을 읽어 정적 프리렌더(Cache Components)와 충돌한다.
  *   → 서버/프리렌더에서는 첫 슬라이드만 정적 HTML 로 그리고, 브라우저에서 Swiper 로 교체한다.
@@ -41,7 +41,7 @@ const SLIDES: Slide[] = [
     title: ["대한민국 CCTV 1등 브랜드", "보안 솔루션 전문 기업"],
     desc: "전국 인프라 구성으로 발빠른 대응과 설치가 가능합니다.",
     buttons: [
-      { label: "설치가격 안내", href: "/service/install" },
+      { label: "내 공간 견적 계산하기", href: "/calculator" },
       { label: "상담 신청하기", href: "/contact" },
     ],
     bg: "메인 히어로 배경 (CCTV 설치 현장 / 원본 메인 상단 배경)",
