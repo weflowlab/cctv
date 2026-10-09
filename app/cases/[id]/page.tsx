@@ -17,6 +17,7 @@ import { CASES, getCase } from "@/components/cases/data";
 import { formatCaseDate, placeName, serviceName } from "@/components/cases/format";
 import ConsultCta from "@/components/common/ConsultCta";
 import { SITE } from "@/lib/site";
+import Eyebrow from "@/components/common/Eyebrow";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -43,8 +44,11 @@ export default function CaseDetailPage({ params }: Props) {
         <CaseDetail params={params} />
       </Suspense>
 
-      {/* ===== 상담 신청 CTA 배너 ===== */}
-      <ConsultCta />
+      {/* ===== 하단 상담 CTA: 시공사례 상세 ===== */}
+      <ConsultCta
+        lead="이 현장처럼,"
+        title="우리 공간도 맞춤 설계해 드립니다."
+      />
     </>
   );
 }
@@ -68,7 +72,7 @@ async function CaseDetail({ params }: { params: Props["params"] }) {
   return (
     <article className="w-full pb-[100px] lg:pb-[160px]">
       <div className="mx-auto max-w-[1112px] px-[16px]">
-        {/* ===== 상단: 목록으로 / 장소 칩 / 제목 ===== */}
+        {/* ===== 상단: 목록으로 / CASE STUDY 라벨 / 장소 칩 / 제목 ===== */}
         <div className="mb-[24px] mt-[32px] lg:mb-[40px] lg:mt-[64px]">
           <Link
             href="/cases"
@@ -77,6 +81,7 @@ async function CaseDetail({ params }: { params: Props["params"] }) {
             ← 시공사례 목록
           </Link>
           <div className="mt-[20px] lg:mt-[28px]">
+            <Eyebrow align="left" className="mb-[14px] lg:mb-[18px]">Case Study</Eyebrow>
             <Link
               href={`/cases/place/${item.place}`}
               className="inline-block rounded-[50px] bg-brand-light px-[12px] py-[4px] text-[13px] font-semibold tracking-[-0.3px] text-brand lg:text-[14px]"

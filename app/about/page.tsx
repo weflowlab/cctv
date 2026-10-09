@@ -40,8 +40,11 @@ export default function AboutPage() {
       <OrgChartSection />
       {/* ===== 섹션7 전국 지사 요약: 본사 + 6개 지사 (LEGACY 숨김) ===== */}
       <BranchesSection />
-      {/* ===== 상담 신청 CTA 배너 (공통) ===== */}
-      <ConsultCta />
+      {/* ===== 하단 상담 CTA: 회사소개 — 브랜드 철학에서 이어지는 문구 ===== */}
+      <ConsultCta
+        lead="복잡한 보안은 쉽게,"
+        title={`지금 ${SITE.name}와 시작하세요.`}
+      />
     </div>
   );
 }

@@ -10,9 +10,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import Placeholder from "@/components/common/Placeholder";
 import { SITE } from "@/lib/site";
 import { useHeaderStyle } from "./HeaderStyleContext";
+import Logo from "./Logo";
 import { MENUS, PRIMARY_CTA, isMenuSelected } from "./menus";
 
 export default function MobileHeader() {
@@ -50,13 +50,7 @@ export default function MobileHeader() {
             barStyle === "white" ? "bg-white" : "bg-transparent"
           }`}
         >
-          <Link href="/" aria-label={`${SITE.name} 홈`} className="relative flex items-start">
-            <Placeholder
-              label={`${SITE.name} 로고`}
-              className="h-[26px] w-[110px] rounded-[4px]"
-              dark={barStyle === "transparent"}
-            />
-          </Link>
+          <Logo light={barStyle === "transparent"} />
           <div className="flex items-center gap-[10px]">
             {isHome && !isOpen && (
               <Link
@@ -105,7 +99,7 @@ export default function MobileHeader() {
                       className="flex h-[62px] w-full items-center justify-between border-b border-[#eee] px-[20px]"
                     >
                       <span
-                        className={`text-[16px] font-medium leading-[26px] tracking-[-0.5px] ${
+                        className={`text-[18px] font-medium leading-[28px] tracking-[-0.5px] ${
                           selected ? "text-point-strong" : "text-[#333]"
                         }`}
                       >

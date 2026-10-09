@@ -10,6 +10,7 @@
  * - 카드 클릭 → 라이트박스(크게 보기): ESC·배경 클릭·닫기 버튼으로 닫기, 좌우 버튼·방향키로 이동, 열린 동안 배경 스크롤 잠금.
  */
 import { useCallback, useEffect, useState } from "react";
+import Eyebrow from "@/components/common/Eyebrow";
 import type { Swiper as SwiperInstance } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -115,9 +116,8 @@ export default function Reviews() {
       <div className="flex w-full max-w-[1080px] flex-col items-center">
         {/* ===== 섹션 헤더 ===== */}
         <Reveal threshold={0.1} className="flex flex-col items-center gap-[16px] px-[16px] text-center lg:gap-[20px] lg:px-0">
-          <strong className="rounded-[100px] bg-brand-light px-[12px] py-[8px] text-[13px] font-medium text-point-strong lg:px-[16px] lg:text-[16px]">
-            고객 후기
-          </strong>
+          {/* 섹션 라벨: 고객 후기 */}
+          <Eyebrow>REVIEWS</Eyebrow>
           <h2 className="text-[26px] font-bold leading-[1.35] tracking-[-0.26px] text-[#222] lg:text-[42px] lg:leading-[60px] lg:tracking-[-1px]">
             설치 후 고객님이
             <br />

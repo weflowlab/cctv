@@ -10,13 +10,14 @@ import { SITE } from "@/lib/site";
 import InstallPackages from "./InstallPackages";
 import { INSTALL_STEPS } from "./data";
 import { ArrowIcon, CrossLink, SectionHeading, SpaceOrBreak } from "./ui";
+import Eyebrow from "@/components/common/Eyebrow";
 
 /** 시공절차 4단계 카드 사진 (INSTALL_STEPS 순서와 동일) — 스톡 사진(CC0), 실제 사진 확보 시 교체 */
 const STEP_PHOTOS = [
-  { src: "/images/stock/install-step1-phone-call.jpg", alt: "휴대폰으로 상담 전화를 하는 남성" },
-  { src: "/images/stock/install-step2-consulting.jpg", alt: "테이블에 모여 자료를 보며 상담하는 모습" },
-  { src: "/images/stock/install-step3-electrician-panel.jpg", alt: "안전모를 쓴 기사가 배선반에서 작업하는 뒷모습" },
-  { src: "/images/stock/install-step4-wall-camera.jpg", alt: "건물 벽에 설치를 마친 CCTV 카메라와 안내 표지" },
+  { src: "/images/stock/install-step1-phone-call.webp", alt: "휴대폰으로 상담 전화를 하는 남성" },
+  { src: "/images/stock/install-step2-consulting.webp", alt: "테이블에 모여 자료를 보며 상담하는 모습" },
+  { src: "/images/stock/install-step3-electrician-panel.webp", alt: "안전모를 쓴 기사가 배선반에서 작업하는 뒷모습" },
+  { src: "/images/stock/install-step4-wall-camera.webp", alt: "건물 벽에 설치를 마친 CCTV 카메라와 안내 표지" },
 ];
 
 export default function InstallTab() {
@@ -26,7 +27,7 @@ export default function InstallTab() {
       <section className="bg-point-light px-[16px] py-[56px] lg:px-0 lg:py-[100px]">
         <div className="mx-auto flex w-full max-w-[580px] flex-col items-center gap-[32px] lg:w-[1080px] lg:max-w-none lg:flex-row lg:justify-between lg:gap-[72px]">
           <div className="text-center lg:text-left">
-            <p className="text-[14px] font-bold tracking-[-0.28px] text-point-strong lg:text-[18px]">CCTV 설치</p>
+            <Eyebrow align="left" className="mb-[6px] max-lg:items-center">Installation</Eyebrow>
             <h2 className="mt-[8px] text-[30px] font-bold leading-[1.4] tracking-[-0.6px] text-[#222] lg:text-[46px] lg:tracking-[-2px] [&>strong]:text-point-strong">
               CCTV 설치
               <br />
@@ -41,10 +42,10 @@ export default function InstallTab() {
               큰 규모의 공사 및 정보통신공사는 별도 문의 부탁드립니다.
             </p>
           </div>
-          {/* 스톡 사진(CC0): public/images/stock/install-hero-technician-wall.jpg — 실제 사진 확보 시 교체 */}
+          {/* 스톡 사진(CC0): public/images/stock/install-hero-technician-wall.webp — 실제 사진 확보 시 교체 */}
           <div className="relative aspect-[4/3] w-full max-w-[480px] shrink-0 overflow-hidden rounded-[20px] lg:w-[480px]">
             <Image
-              src="/images/stock/install-hero-technician-wall.jpg"
+              src="/images/stock/install-hero-technician-wall.webp"
               alt="안전모를 쓴 기사가 벽면에 장비를 설치하는 모습"
               fill
               sizes="(min-width: 1024px) 480px, (min-width: 512px) 480px, 100vw"
@@ -64,7 +65,7 @@ export default function InstallTab() {
           <ol className="mt-[32px] grid grid-cols-1 gap-[12px] sm:grid-cols-2 lg:mt-[64px] lg:grid-cols-4 lg:gap-[20px]">
             {INSTALL_STEPS.map((step, i) => (
               <Reveal as="li" key={step.title} delay={i * 150} className="overflow-hidden rounded-[16px] bg-white">
-                {/* 스톡 사진(CC0): public/images/stock/install-step{1~4}-*.jpg — 실제 사진 확보 시 교체 */}
+                {/* 스톡 사진(CC0): public/images/stock/install-step{1~4}-*.webp — 실제 사진 확보 시 교체 */}
                 <div className="relative aspect-[3/2] w-full">
                   <Image
                     src={STEP_PHOTOS[i].src}
@@ -93,7 +94,7 @@ export default function InstallTab() {
       <section className="bg-white px-[16px] pb-[24px] pt-[60px] lg:px-0 lg:pb-[40px] lg:pt-[120px]">
         <div className="mx-auto flex w-full max-w-[580px] flex-col items-center gap-[20px] rounded-[20px] bg-[#222] px-[24px] py-[36px] text-center lg:w-[1080px] lg:max-w-none lg:flex-row lg:justify-between lg:px-[64px] lg:py-[56px] lg:text-left">
           <div>
-            <p className="text-[14px] font-bold tracking-[-0.28px] text-point-strong lg:text-[16px]">제휴 · 대량 도입 문의</p>
+            <Eyebrow dark align="left" className="max-lg:items-center">Partnership</Eyebrow>
             <h2 className="mt-[8px] text-[22px] font-bold leading-[32px] tracking-[-0.44px] text-white lg:text-[32px] lg:leading-[46px] lg:tracking-[-0.8px]">
               프랜차이즈 · 기업 대량 설치는
               <SpaceOrBreak />

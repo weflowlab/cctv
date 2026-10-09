@@ -10,9 +10,8 @@
  */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Placeholder from "@/components/common/Placeholder";
-import { SITE } from "@/lib/site";
 import { useHeaderStyle, type HeaderStyle } from "./HeaderStyleContext";
+import Logo from "./Logo";
 import { MENUS, PRIMARY_CTA, isMenuSelected } from "./menus";
 
 /** 헤더 스타일별 메뉴 글자색 */
@@ -32,13 +31,7 @@ export default function DesktopHeader() {
       >
         <div className="mx-auto flex h-full max-w-[1112px] items-center justify-between gap-[16px] px-[16px]">
           {/* ===== 로고: 홈으로 이동 ===== */}
-          <Link href="/" aria-label={`${SITE.name} 홈`} className="relative flex items-start">
-            <Placeholder
-              label={`${SITE.name} 로고`}
-              className="h-[26px] w-[120px] rounded-[4px]"
-              dark={headerStyle === "transparent"}
-            />
-          </Link>
+          <Logo light={headerStyle === "transparent"} />
 
           {/* ===== 메뉴 5개: hover/선택 시 틸 밑줄 ===== */}
           <nav className="inline-flex items-center gap-[56px]">
@@ -49,7 +42,7 @@ export default function DesktopHeader() {
                   key={key}
                   href={menu.href ?? key}
                   aria-current={selected ? "page" : undefined}
-                  className={`relative block select-none py-[8px] text-[15px] font-medium leading-[23px] tracking-[-1px] no-underline transition-colors duration-[250ms] ${textColor(
+                  className={`relative block select-none py-[8px] text-[17px] font-medium leading-[26px] tracking-[-0.5px] no-underline transition-colors duration-[250ms] ${textColor(
                     headerStyle,
                   )} after:absolute after:bottom-0 after:left-0 after:block after:h-[2px] after:w-full after:origin-left after:bg-point after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100 ${
                     selected ? "after:scale-x-100" : "after:scale-x-0"
@@ -64,7 +57,7 @@ export default function DesktopHeader() {
           {/* ===== 상담 신청하기 버튼 (→ /contact) ===== */}
           <Link
             href={PRIMARY_CTA.href}
-            className="flex h-[42px] items-center justify-center rounded-[8px] bg-brand-light px-[16px] py-[8px] text-[14px] font-medium text-point-strong transition-colors duration-300 visited:text-point-strong hover:bg-point-light"
+            className="flex h-[42px] items-center justify-center rounded-[8px] bg-brand-light px-[18px] py-[8px] text-[15px] font-medium text-point-strong transition-colors duration-300 visited:text-point-strong hover:bg-point-light"
           >
             {PRIMARY_CTA.name}
           </Link>

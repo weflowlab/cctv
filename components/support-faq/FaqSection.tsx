@@ -5,6 +5,7 @@
  * - 섹션이 헤더 아래까지 깔리도록 헤더 높이만큼 음수 margin-top + padding-top.
  */
 import FaqAccordion from "./FaqAccordion";
+import Eyebrow from "@/components/common/Eyebrow";
 
 export default function FaqSection() {
   return (
@@ -18,10 +19,9 @@ export default function FaqSection() {
       </div>
 
       <div className="z-[2] flex w-full flex-col items-center py-[64px] text-white lg:py-[140px]">
-        {/* ===== 제목: "자주 묻는 질문 (FAQ)" — (FAQ) 만 브랜드색 ===== */}
-        <h1 className="text-center text-[26px] font-bold leading-[144%] tracking-[-1px] lg:text-[42px]">
-          자주 묻는 질문 <b className="text-point-strong">(FAQ)</b>
-        </h1>
+        {/* ===== 제목: FAQ 라벨(공용 Eyebrow) + "자주 묻는 질문" ===== */}
+        <Eyebrow dark className="mb-[14px] lg:mb-[18px]">FAQ</Eyebrow>
+        <h1 className="text-center text-[26px] font-bold leading-[144%] tracking-[-1px] lg:text-[42px]">자주 묻는 질문</h1>
 
         {/* ===== 카테고리 탭 + 아코디언 (클라이언트 컴포넌트) ===== */}
         <FaqAccordion />

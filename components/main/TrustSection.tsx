@@ -3,14 +3,14 @@
  * - 상단: 한국브랜드 선호도 3년 연속 1위 수상 (메달 이미지 자리 + 원본 문구). PC 좌 메달 / 우 문구, 모바일 세로.
  * - 하단: "많은 기업이 {SITE.name}를 선택해 주셨습니다." + 고객사 로고 29개 그리드 (PC 5열 / 모바일 3열).
  * - 기존 회사(대한민국CCTV) 자료 → 홈에서 LEGACY.award / LEGACY.clients 스위치로 각각 켜고 끔 (props showAward / showClients).
- * - 고객사 로고 이미지: public/images/clients/*.png (기존 사이트 kkcctv.co.kr 홈에서 가져옴, 흰 배경 PNG 로 변환).
+ * - 고객사 로고 이미지: public/images/clients/*.webp (기존 사이트 kkcctv.co.kr 홈에서 가져옴, 흰 배경 PNG 로 변환).
  */
 import Image from "next/image";
 import Placeholder from "@/components/common/Placeholder";
 import Reveal from "@/components/common/Reveal";
 import { SITE } from "@/lib/site";
 
-/** 고객사 로고 (기존 사이트 화면 순서) — file: public/images/clients/<file>.png */
+/** 고객사 로고 (기존 사이트 화면 순서) — file: public/images/clients/<file>.webp */
 const CLIENTS = [
   { name: "서울대학교", file: "snu" },
   { name: "한국도로공사", file: "ex" },
@@ -110,7 +110,7 @@ export default function TrustSection({
                   {/* 로고: 박스 안에 비율 유지(contain) */}
                   <div className="relative h-full w-full">
                     <Image
-                      src={`/images/clients/${file}.png`}
+                      src={`/images/clients/${file}.webp`}
                       alt={`${name} 로고`}
                       fill
                       sizes="(min-width: 1024px) 200px, 30vw"

@@ -26,8 +26,10 @@ export default function HeaderScrollStyle({
   const { setHeaderStyle } = useHeaderStyle();
 
   useEffect(() => {
+    // 이 컴포넌트가 붙은 페이지 경로 (마운트 시점에 고정) — 페이지를 떠난 뒤 늦게 도착한 요청은 무시됨
+    const ownerPath = window.location.pathname;
     // 스크롤 위치 판정 → 헤더 스타일 반영
-    const apply = () => setHeaderStyle(window.scrollY < threshold ? topStyle : scrolledStyle);
+    const apply = () => setHeaderStyle(window.scrollY < threshold ? topStyle : scrolledStyle, ownerPath);
 
     // 원본 lodash throttle(100ms) 대응: 마지막 이벤트도 놓치지 않도록 trailing 호출 포함
     let last = 0;

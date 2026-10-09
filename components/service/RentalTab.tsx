@@ -12,16 +12,17 @@ import RentalSlider from "./RentalSlider";
 import RentalSteps from "./RentalSteps";
 import { RENTAL_BENEFITS, RENTAL_PARTNERS } from "./data";
 import { CrossLink, SectionHeading, SpaceOrBreak } from "./ui";
+import Eyebrow from "@/components/common/Eyebrow";
 
 /** 렌탈 혜택 7가지 카드 사진 (RENTAL_BENEFITS 순서와 동일) — 스톡 사진(CC0), 실제 사진 확보 시 교체 */
 const BENEFIT_PHOTOS = [
-  { src: "/images/stock/rental-benefit1-coins.jpg", alt: "테이블 위에 쌓인 동전" }, // 설치비/가입비/보증료 면제
-  { src: "/images/stock/rental-benefit2-handshake.jpg", alt: "악수를 청하며 손을 내민 정장 차림의 남성" }, // 소유권 이전
-  { src: "/images/stock/rental-benefit3-toolkit.jpg", alt: "나무 바닥 위에 가지런히 놓인 공구들" }, // A/S 서비스
-  { src: "/images/stock/rental-benefit4-dome-camera.jpg", alt: "무늬 천장에 설치된 돔형 카메라" }, // 국내 인증 제품
-  { src: "/images/stock/rental-benefit5-bullet-cameras.jpg", alt: "기둥에 나란히 설치된 CCTV 카메라 두 대" }, // FULL HD 카메라
-  { src: "/images/stock/rental-benefit6-smartphone.jpg", alt: "커피 옆에서 두 손으로 스마트폰을 보는 모습" }, // 전용 앱 모니터링
-  { src: "/images/stock/rental-benefit7-control-room.jpg", alt: "여러 화면이 걸린 밝은 관제실" }, // 24시간 영상 확인
+  { src: "/images/stock/rental-benefit1-coins.webp", alt: "테이블 위에 쌓인 동전" }, // 설치비/가입비/보증료 면제
+  { src: "/images/stock/rental-benefit2-handshake.webp", alt: "악수를 청하며 손을 내민 정장 차림의 남성" }, // 소유권 이전
+  { src: "/images/stock/rental-benefit3-toolkit.webp", alt: "나무 바닥 위에 가지런히 놓인 공구들" }, // A/S 서비스
+  { src: "/images/stock/rental-benefit4-dome-camera.webp", alt: "무늬 천장에 설치된 돔형 카메라" }, // 국내 인증 제품
+  { src: "/images/stock/rental-benefit5-bullet-cameras.webp", alt: "기둥에 나란히 설치된 CCTV 카메라 두 대" }, // FULL HD 카메라
+  { src: "/images/stock/rental-benefit6-smartphone.webp", alt: "커피 옆에서 두 손으로 스마트폰을 보는 모습" }, // 전용 앱 모니터링
+  { src: "/images/stock/rental-benefit7-control-room.webp", alt: "여러 화면이 걸린 밝은 관제실" }, // 24시간 영상 확인
 ];
 
 export default function RentalTab() {
@@ -31,7 +32,7 @@ export default function RentalTab() {
       <section className="bg-point-light px-[16px] py-[56px] lg:px-0 lg:py-[100px]">
         <div className="mx-auto flex w-full max-w-[580px] flex-col items-center gap-[32px] lg:w-[1080px] lg:max-w-none lg:flex-row lg:justify-between lg:gap-[72px]">
           <div className="text-center lg:text-left">
-            <p className="text-[14px] font-bold tracking-[-0.28px] text-point-strong lg:text-[18px]">CCTV 렌탈</p>
+            <Eyebrow align="left" className="mb-[6px] max-lg:items-center">Rental</Eyebrow>
             <h2 className="mt-[8px] text-[30px] font-bold leading-[1.4] tracking-[-0.6px] text-[#222] lg:text-[46px] lg:tracking-[-2px] [&>strong]:text-point-strong">
               <strong>고객소유</strong>의
               <br />
@@ -43,10 +44,10 @@ export default function RentalTab() {
               목돈 부담 없이 설치하세요.
             </p>
           </div>
-          {/* 스톡 사진(CC0): public/images/stock/rental-hero-white-wall-camera.jpg — 실제 사진 확보 시 교체 */}
+          {/* 스톡 사진(CC0): public/images/stock/rental-hero-white-wall-camera.webp — 실제 사진 확보 시 교체 */}
           <div className="relative aspect-[4/3] w-full max-w-[480px] shrink-0 overflow-hidden rounded-[20px] lg:w-[480px]">
             <Image
-              src="/images/stock/rental-hero-white-wall-camera.jpg"
+              src="/images/stock/rental-hero-white-wall-camera.webp"
               alt="밝은 흰 벽에 설치된 CCTV 카메라"
               fill
               sizes="(min-width: 512px) 480px, 100vw"
@@ -63,7 +64,7 @@ export default function RentalTab() {
           <ul className="mt-[32px] grid grid-cols-2 gap-[10px] lg:mt-[64px] lg:grid-cols-4 lg:gap-[20px]">
             {RENTAL_BENEFITS.map((b, i) => (
               <Reveal as="li" key={b.title} delay={(i % 4) * 120} className="overflow-hidden rounded-[14px] bg-[#f6f7fa]">
-                {/* 스톡 사진(CC0): public/images/stock/rental-benefit{1~7}-*.jpg — 실제 사진 확보 시 교체 */}
+                {/* 스톡 사진(CC0): public/images/stock/rental-benefit{1~7}-*.webp — 실제 사진 확보 시 교체 */}
                 <div className="relative aspect-[4/3] w-full">
                   <Image
                     src={BENEFIT_PHOTOS[i].src}

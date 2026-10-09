@@ -19,6 +19,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState, type FormEvent } from "react";
 import { parseQuoteQuery, type QuoteService } from "@/components/quote-calculator/data";
 import { SITE } from "@/lib/site";
+import Eyebrow from "@/components/common/Eyebrow";
 
 /** 서비스 선택지 (기존 사이트 3개 + CCTV+스피커) */
 const SERVICE_OPTIONS = ["CCTV 설치", "CCTV 수리", "CCTV 렌탈", "CCTV+스피커"] as const;
@@ -26,6 +27,8 @@ type ServiceOption = (typeof SERVICE_OPTIONS)[number];
 
 /** 견적 계산기 쿼리 service 값 → 서비스 칩 */
 const QUOTE_SERVICE_CHIP: Record<QuoteService, ServiceOption> = { rental: "CCTV 렌탈", install: "CCTV 설치" };
+/** 견적 계산기 외 경로(AS·스피커 탭 하단 CTA)에서 넘어오는 서비스 값 → 칩 */
+const EXTRA_SERVICE_CHIP: Record<string, ServiceOption> = { as: "CCTV 수리", speaker: "CCTV+스피커" };
 
 type Values = {
   name: string;
@@ -153,9 +156,7 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
           <div className="flex w-full flex-col p-[24px] lg:p-[44px]">
             {/* ===== 제목: 기존 사이트 문구 ===== */}
             <div className="mb-[24px] flex flex-col lg:mb-[32px]">
-              <p className="mb-[4px] text-[14px] font-bold leading-[140%] tracking-[-0.3px] text-point-strong lg:mb-[8px] lg:text-[16px]">
-                행복한 만남을 기대합니다
-              </p>
+              <Eyebrow align="left" className="mb-[12px] lg:mb-[16px]">Contact</Eyebrow>
               <h1 className="text-[24px] font-bold leading-[140%] tracking-[-0.64px] text-[#222] lg:text-[32px]">
                 언제든 부담 없이 <span className="whitespace-nowrap">견적 문의해 주세요</span>
               </h1>
@@ -335,9 +336,12 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
 function InquiryFormFromQuery() {
   const searchParams = useSearchParams();
   const quote = parseQuoteQuery(searchParams);
+  const extraChip = EXTRA_SERVICE_CHIP[searchParams.get("service") ?? ""];
   const initial: Partial<Values> | undefined = quote
     ? { services: quote.service ? [QUOTE_SERVICE_CHIP[quote.service]] : [], message: quote.message }
-    : undefined;
+    : extraChip
+      ? { services: [extraChip] }
+      : undefined;
   return <InquiryFormBody key={searchParams.toString()} initial={initial} />;
 }
 

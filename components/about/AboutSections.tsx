@@ -15,6 +15,7 @@
  * - 반응형: Tailwind 기본(모바일) + lg:(PC)
  */
 import type { ReactNode } from "react";
+import Eyebrow from "@/components/common/Eyebrow";
 import Image from "next/image";
 import Placeholder from "@/components/common/Placeholder";
 import Reveal from "@/components/common/Reveal";
@@ -52,12 +53,9 @@ function MoBr() {
 }
 
 /** 회색 라벨 뱃지 — "브랜드 스토리 ㅣ Why 유니텍CCTV?" */
-function SectionBadge({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div className="rounded-[8px] bg-[#f8f8f8] px-[24px] py-[14px] text-[14px] font-medium text-[#202020e0] lg:text-[24px]">
-      <span className="text-[#20202066]">{label} ㅣ</span> {children}
-    </div>
-  );
+/** 섹션 머리 라벨 — 영문 대문자 + 틸 라인 (브랜드 가이드 스타일, 공용 Eyebrow) */
+function SectionBadge({ children }: { children: ReactNode }) {
+  return <Eyebrow>{children}</Eyebrow>;
 }
 
 /**
@@ -122,7 +120,7 @@ function ImageBackdrop({
 }: {
   /** 실제 사진 확보 시 들어갈 사진 설명 (현재 스톡 사진의 alt 로 사용) */
   label: string;
-  /** 배경 사진 경로 — 스톡 사진(CC0): public/images/stock/*.jpg — 실제 사진 확보 시 교체 */
+  /** 배경 사진 경로 — 스톡 사진(CC0): public/images/stock/*.webp — 실제 사진 확보 시 교체 */
   photo: string;
   minHeightPc: string;
   children: ReactNode;
@@ -148,72 +146,70 @@ function ImageBackdrop({
 export function StorySection() {
   return (
     <section className="w-full">
-      {/* ===== 문제 제기: 뱃지 + "왜 CCTV는 설치한 날이 가장 좋은 날일까요?" + 3문단 / 문단 Reveal 순차 등장 ===== */}
+      {/* ===== 문제 제기: 뱃지 + "CCTV, 막상 달려고 하면 왜 이렇게 어려울까요?" + 3문단 / 문단 Reveal 순차 등장
+           주제: 브랜드 가이드 문구 "복잡한 보안은 쉽게, 사후관리는 확실하게" — 처음 CCTV를 알아보는 사람의 막막함에서 출발
+           (홈·AS 탭의 "고장 나면 연락 두절" 이야기와 겹치지 않게, 다른 업체를 깎아내리지 않는 실제 고민으로) ===== */}
       <div className="flex flex-col items-center justify-center gap-[14px] px-[20px] pb-[120px] pt-[40px] lg:gap-[24px] lg:pb-[200px] lg:pt-[180px]">
         <Reveal>
-          <SectionBadge label="브랜드 스토리">Why {SITE.name}?</SectionBadge>
+          <SectionBadge>Brand Story</SectionBadge>
         </Reveal>
         <Reveal delay={100}>
           <Title as="h1">
-            <span>왜 CCTV는 설치한 날이</span> 가장 좋은 날일까요?
+            <span>CCTV, 막상 달려고 하면</span> 왜 이렇게 어려울까요?
           </Title>
         </Reveal>
         <div className="flex flex-col items-center gap-[24px] lg:gap-[40px]">
           <Reveal delay={200}>
             <Body>
-              설치할 때는 그렇게 친절하던 업체가,
+              몇 대가 필요할까?
+              <MoBr />
+              어디에 달아야 사각지대가 없을까?
               <br />
-              막상 고장이 나면 연락이 닿지 않습니다.
-              <br />
-              &ldquo;그건 저희가 설치한 제품이 아니라서요.&rdquo;
-              <br />
-              &ldquo;기사님 일정이 한참 밀려 있어요.&rdquo;
+              200만 화소면 될까, 500만 화소가 필요할까?
             </Body>
           </Reveal>
           <Reveal delay={300}>
             <Body>
-              카메라는 이 회사, 녹화기는 저 회사,
-              <MoBr />
-              설치는 또 다른 업체.
+              렌탈이 나을지, 구매가 나을지.
               <br />
-              문제가 생기면 누구에게 연락해야 할지조차 알기 어렵습니다.
+              설치하고 나면 휴대폰으로는
+              <MoBr />
+              어떻게 보는 건지.
             </Body>
           </Reveal>
           <Reveal delay={400}>
             <Body>
-              안심하려고 달았는데,
+              우리 공간을 지키려는 건데,
               <MoBr />
-              정작 필요한 순간에 멈춰 있는 CCTV.
-              <br />
-              과연 이게 맞는 걸까요?
+              알아볼수록 고민만 늘어납니다.
             </Body>
           </Reveal>
         </div>
       </div>
 
-      {/* ===== 네이비 배경(이미지 자리) 위 "그래서, 우리는 하나로 묶기로 했습니다" + "그리고 알게 되었습니다" / PC min-height 826px ===== */}
+      {/* ===== 네이비 배경(이미지 자리) 위 "그래서, 우리는 쉽게 만들기로 했습니다" + "그리고 알게 되었습니다" / PC min-height 826px ===== */}
       <ImageBackdrop
         label="벽면을 따라 정리된 배선 전선관과 분전함"
-        // 스톡 사진(CC0): public/images/stock/about-story-cable-conduits.jpg — 실제 사진 확보 시 교체
+        // 스톡 사진(CC0): public/images/stock/about-story-cable-conduits.webp — 실제 사진 확보 시 교체
         // (원래 자리: 기사님이 현장에서 CCTV를 설치하는 모습)
-        photo="/images/stock/about-story-cable-conduits.jpg"
+        photo="/images/stock/about-story-cable-conduits.webp"
         minHeightPc="lg:min-h-[826px]"
       >
         <Reveal>
           <Title tone="white">
-            <span>그래서, 우리는</span> 하나로 묶기로 했습니다.
+            <span>그래서, 우리는</span> 쉽게 만들기로 했습니다.
           </Title>
         </Reveal>
         <div className="flex flex-col items-center gap-[24px] lg:gap-[40px]">
           <Reveal delay={100}>
             <Body tone="white">
-              상담부터 설계, 설치, 수리, 유지보수까지
-              <br />
-              한 팀이 처음부터 끝까지 책임지는 방식으로.
-              <br />
-              우리가 설치하지 않은 CCTV라도,
+              어려운 용어 대신, 직접 와서 보고
               <MoBr />
-              고장 났다면 찾아가 고치는 방식으로.
+              필요한 만큼만 설계하는 방식으로.
+              <br />
+              설치가 끝나면 휴대폰 연결과 사용법까지
+              <MoBr />
+              하나하나 알려 드리는 방식으로.
             </Body>
           </Reveal>
           <Reveal delay={200}>
@@ -222,7 +218,7 @@ export function StorySection() {
               <br />
               고객이 원하는 건 더 비싼 카메라가 아니라,
               <br />
-              문제가 생겼을 때 바로 연락되는 &lsquo;한 사람&rsquo;이라는 것을.
+              믿고 맡겨도 된다는 &lsquo;안심&rsquo;이라는 것을.
             </Body>
           </Reveal>
         </div>
@@ -232,9 +228,9 @@ export function StorySection() {
       <div className="flex h-auto w-full flex-col items-center justify-center gap-[32px] bg-point-light px-[20px] py-[100px] lg:py-[200px]">
         <Reveal>
           <Body tone="soft" size="lg">
-            기술을 하나로, 책임을 하나로,
+            복잡한 보안은 쉽게,
             <MoBr />
-            고객과 하나로.
+            사후관리는 확실하게.
           </Body>
         </Reveal>
         <Reveal delay={150}>
@@ -261,7 +257,7 @@ export function PhilosophySection() {
     <section className="flex w-full flex-col items-center justify-center gap-[14px] overflow-hidden px-[20px] pb-[100px] pt-[100px] lg:max-w-[1082px] lg:gap-[24px] lg:overflow-visible lg:px-0 lg:pb-[140px] lg:pt-[200px]">
       {/* ===== 섹션 타이틀: 브랜드 철학 뱃지 + "유니텍CCTV는 단순한 설치 업체가 아닙니다." + 대표 이미지 ===== */}
       <Reveal>
-        <SectionBadge label="브랜드 철학">우리가 지키고 싶은 것</SectionBadge>
+        <SectionBadge>Philosophy</SectionBadge>
       </Reveal>
       <Reveal delay={100}>
         <Title>
@@ -285,9 +281,9 @@ export function PhilosophySection() {
             {SITE.slogan}
           </h3>
           <p className="flex-1 break-keep text-center text-[13px] leading-[21px] text-[#787878] lg:text-left lg:text-[24px] lg:leading-[36px]">
-            UNITECH는 Unite(하나로)와 Technology(기술)를 합친 이름입니다.
+            하나된 기술과 책임 있는 시공으로
             <PcBr />
-            흩어진 장비와 책임을 하나로 묶어, 고객의 공간과 일상을 끝까지 지키겠다는 약속,
+            고객의 공간과 일상을 끝까지 지키겠다는 약속,
             그것이 우리의 철학입니다.
           </p>
         </Reveal>
@@ -297,7 +293,7 @@ export function PhilosophySection() {
             // 카드: 배경 사진 위에 네이비 오버레이 + 큰 영문 "Unite ○○"
             const card = (
               <div className="relative flex h-[152px] w-full items-center justify-center overflow-hidden rounded-[12px] bg-brand lg:h-[244px] lg:rounded-[20px]">
-                {/* 스톡 사진(CC0): public/images/stock/about-*.jpg (philosophy.tsx photo) — 실제 사진 확보 시 교체 */}
+                {/* 스톡 사진(CC0): public/images/stock/about-*.webp (philosophy.tsx photo) — 실제 사진 확보 시 교체 */}
                 <Image
                   src={item.photo}
                   alt={item.photoAlt}
@@ -375,9 +371,9 @@ export function ClosingSection() {
               우리는 현장에서 직접 CCTV를 설치하고, 고치고, 관리해 온 사람들입니다.
               {/* TODO: 고객 확인 후 "○○년간 ○○건의 현장을…" 같은 실적 문장으로 교체 가능 */}
               <br />
-              수많은 현장에서 고객이 가장 답답해한 건 장비가 아니라,
+              수많은 현장에서 고객이 가장 어려워한 건 장비가 아니라,
               <PcBr />
-              끝까지 책임지는 사람이 없다는 것이었습니다.
+              무엇을 골라야 할지 모르는 막막함이었습니다.
             </Body>
           </Reveal>
           <Reveal delay={300}>
@@ -394,9 +390,9 @@ export function ClosingSection() {
       <div className="w-full lg:pb-[200px]">
         <ImageBackdrop
           label="햇빛이 드는 밝고 깔끔한 사무 공간"
-          // 스톡 사진(CC0): public/images/stock/about-closing-bright-interior.jpg — 실제 사진 확보 시 교체
+          // 스톡 사진(CC0): public/images/stock/about-closing-bright-interior.webp — 실제 사진 확보 시 교체
           // (원래 자리: 안심하고 일상을 보내는 고객의 공간)
-          photo="/images/stock/about-closing-bright-interior.jpg"
+          photo="/images/stock/about-closing-bright-interior.webp"
           minHeightPc="lg:min-h-[407px]"
         >
           <Reveal>
@@ -446,7 +442,7 @@ export function StrengthsSection() {
     <section className="flex w-full flex-col items-center bg-[#f4f7fb] px-[20px] py-[100px] lg:py-[160px]">
       <div className="flex w-full max-w-[1082px] flex-col items-center gap-[14px] lg:gap-[24px]">
         {/* ===== 섹션 타이틀 ===== */}
-        <SectionBadge label="왜 선택할까요">{SITE.name}의 강점</SectionBadge>
+        <SectionBadge>Strengths</SectionBadge>
         <Title>
           <span>믿고 맡길 수 있는</span> <strong>9가지 약속</strong>
         </Title>
@@ -494,7 +490,7 @@ export function AwardSection() {
           className="h-[160px] w-[160px] rounded-full lg:h-[240px] lg:w-[240px]"
         />
       </Reveal>
-      <SectionBadge label="수상">한국브랜드 선호도</SectionBadge>
+      <SectionBadge>Award</SectionBadge>
       <Title>
         <strong>3년 연속 1위</strong> 수상
       </Title>
@@ -516,7 +512,7 @@ export function OrgChartSection() {
   return (
     <section className="flex w-full flex-col items-center gap-[14px] bg-[#f8f8f8] px-[20px] py-[100px] lg:gap-[24px] lg:py-[160px]">
       {/* ===== 조직도 이미지 / 정적 ===== */}
-      <SectionBadge label="회사소개">조직도</SectionBadge>
+      <SectionBadge>Organization</SectionBadge>
       <Title>조직도</Title>
       <Placeholder
         label="조직도 (2025/07/제목을-입력해주세요_-004.png)"
@@ -593,7 +589,7 @@ export function BranchesSection() {
     <section className="flex w-full flex-col items-center px-[20px] py-[100px] lg:py-[160px]">
       <div className="flex w-full max-w-[1082px] flex-col items-center gap-[14px] lg:gap-[24px]">
         {/* ===== 섹션 타이틀 + 통합 콜센터 번호(SITE.phone) ===== */}
-        <SectionBadge label="전국 서비스 구축 현황">본사 · 6개 지사</SectionBadge>
+        <SectionBadge>Network</SectionBadge>
         <Title>
           <span>전국 어디든</span> <strong>빠른 설치와 AS</strong>
         </Title>

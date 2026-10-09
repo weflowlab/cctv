@@ -5,15 +5,17 @@
  *   탭 콘텐츠만 page.tsx 의 Suspense 안에서 교체된다 (Instant Navigation).
  * - 현재 탭 강조는 ServiceTabs 가 URL 에서 직접 판단.
  */
-import ConsultCta from "@/components/common/ConsultCta";
+import ServiceCta from "@/components/service/ServiceCta";
 import ServiceTabs from "@/components/service/ServiceTabs";
 import { SITE } from "@/lib/site";
+import Eyebrow from "@/components/common/Eyebrow";
 
 export default function ServiceLayout({ children }: LayoutProps<"/service">) {
   return (
     <>
       {/* ===== 페이지 타이틀: "서비스" + 안내 문구 ===== */}
-      <section className="bg-white px-[16px] pb-[24px] pt-[40px] text-center lg:pb-[40px] lg:pt-[80px]">
+      <section className="flex flex-col items-center bg-white px-[16px] pb-[24px] pt-[40px] text-center lg:pb-[40px] lg:pt-[80px]">
+        <Eyebrow className="mb-[14px] lg:mb-[18px]">Our Service</Eyebrow>
         <h1 className="text-[28px] font-bold leading-[40px] tracking-[-0.56px] text-[#202020] lg:text-[44px] lg:leading-[60px] lg:tracking-[-1px]">
           서비스
         </h1>
@@ -29,8 +31,8 @@ export default function ServiceLayout({ children }: LayoutProps<"/service">) {
       {/* ===== 탭 콘텐츠 (page.tsx) ===== */}
       {children}
 
-      {/* ===== 상담 신청 CTA 배너 (공통) ===== */}
-      <ConsultCta />
+      {/* ===== 하단 상담 CTA: 탭별 문구 (설치·렌탈·AS·스피커) ===== */}
+      <ServiceCta />
     </>
   );
 }

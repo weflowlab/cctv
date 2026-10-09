@@ -29,10 +29,10 @@ export default function CalculatorBanner({ className = "" }: { className?: strin
       </div>
 
       {/* ===== 계산기 사진 (keeper 원본: 계산기 일러스트) =====
-          스톡 사진(CC0): public/images/stock/calculator-banner.jpg — 실제 사진 확보 시 교체 */}
+          스톡 사진(CC0): public/images/stock/calculator-banner.webp — 실제 사진 확보 시 교체 */}
       <div className="relative h-[88px] w-[88px] shrink-0 overflow-hidden rounded-[12px] lg:h-[150px] lg:w-[200px]">
         <Image
-          src="/images/stock/calculator-banner.jpg"
+          src="/images/stock/calculator-banner.webp"
           alt="계산기와 연필, 메모지"
           fill
           sizes="(min-width: 1024px) 200px, 88px"

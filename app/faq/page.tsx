@@ -22,8 +22,11 @@ export default function FaqPage() {
       <HeaderScrollStyle threshold={100} topStyle="transparent" scrolledStyle="white" />
       {/* ===== FAQ 본문: 제목 / 카테고리 탭 / 아코디언 ===== */}
       <FaqSection />
-      {/* ===== 상담 신청 CTA 배너 ===== */}
-      <ConsultCta />
+      {/* ===== 하단 상담 CTA: FAQ — 남은 궁금증 문의 ===== */}
+      <ConsultCta
+        lead="찾는 답이 없으셨나요?"
+        title="직접 물어보시면 바로 답해 드립니다."
+      />
     </>
   );
 }

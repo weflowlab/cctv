@@ -7,6 +7,7 @@
  */
 import Link from "next/link";
 import type { ReactNode, SVGProps } from "react";
+import Eyebrow from "@/components/common/Eyebrow";
 
 export function SpaceOrBreak() {
   return (
@@ -39,11 +40,8 @@ type SectionHeadingProps = {
 export function SectionHeading({ eyebrow, title, desc, className = "" }: SectionHeadingProps) {
   return (
     <div className={`text-center ${className}`}>
-      {eyebrow && (
-        <p className="text-[14px] font-bold tracking-[-0.28px] text-point-strong lg:text-[18px] lg:tracking-[-0.36px]">
-          {eyebrow}
-        </p>
-      )}
+      {/* 섹션 라벨: 공용 Eyebrow (영문 대문자 + 틸 라인) */}
+      {eyebrow && <Eyebrow className="mb-[10px] lg:mb-[14px]">{eyebrow}</Eyebrow>}
       <h2 className="mt-[6px] text-[26px] font-bold leading-[37px] tracking-[-0.52px] text-[#222] lg:mt-[10px] lg:text-[42px] lg:leading-[60px] lg:tracking-[-1px] [&>strong]:text-point-strong">
         {title}
       </h2>

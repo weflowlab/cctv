@@ -7,7 +7,7 @@
  */
 import FaqAccordion from "@/components/support-faq/FaqAccordion";
 import { FAQ_ITEMS, type FaqItem } from "@/components/support-faq/data";
-import { HomeMoreLink, HomeSectionHeader } from "./HomeSection";
+import { HomeSectionHeader, HomeTextLink } from "./HomeSection";
 
 /** 홈에 노출할 질문 (표시 순서) */
 const BEST_QUESTIONS = [
@@ -28,7 +28,7 @@ export default function FaqBest() {
     <section className="flex w-full justify-center bg-point-light py-[80px] lg:py-[140px]">
       <div className="flex w-full max-w-[1080px] flex-col items-center">
         <HomeSectionHeader
-          chip="FAQ BEST 5"
+          chip="FAQ"
           title={
             <>
               <strong>자주 묻는 질문</strong> BEST 5
@@ -41,7 +41,7 @@ export default function FaqBest() {
         <FaqAccordion items={BEST_ITEMS} tone="light" />
 
         <div className="mt-[32px] lg:mt-[56px]">
-          <HomeMoreLink href="/faq">FAQ 전체 보기</HomeMoreLink>
+          <HomeTextLink href="/faq">FAQ 전체 보기</HomeTextLink>
         </div>
       </div>
     </section>

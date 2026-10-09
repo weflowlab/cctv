@@ -7,6 +7,7 @@
  * - 하단 [시공사례 자세히 보기 → /cases].
  */
 import Link from "next/link";
+import Eyebrow from "@/components/common/Eyebrow";
 import Placeholder from "@/components/common/Placeholder";
 import Reveal from "@/components/common/Reveal";
 import { getFeaturedCases, type CaseItem } from "@/components/cases/data";
@@ -57,9 +58,8 @@ export default function CaseShowcase() {
       <div className="flex w-full max-w-[1080px] flex-col items-center">
         {/* ===== 섹션 헤더 ===== */}
         <div className="mb-[32px] flex flex-col items-center gap-[16px] px-[16px] text-center lg:mb-[56px] lg:gap-[20px] lg:px-0">
-          <strong className="rounded-[100px] bg-brand-light px-[12px] py-[8px] text-[13px] font-medium text-point-strong lg:px-[16px] lg:text-[16px]">
-            시공사례
-          </strong>
+          {/* 섹션 라벨: 시공사례 */}
+          <Eyebrow>OUR WORK</Eyebrow>
           <h2 className="text-[26px] font-bold leading-[1.35] tracking-[-0.26px] text-[#222] lg:text-[42px] lg:leading-[60px] lg:tracking-[-1px]">
             말보다 <strong className="text-point-strong">현장</strong>으로
             <br />

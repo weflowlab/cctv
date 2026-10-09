@@ -171,6 +171,9 @@ export function parseQuoteQuery(params: { get(name: string): string | null }) {
   const envRaw = params.get("env");
   const placement: Placement | null = envRaw === "indoor" || envRaw === "outdoor" ? envRaw : null;
 
+  // 서비스 값만 있고 견적 정보가 없으면(하단 CTA·비용 비교 버튼 등) 요약 문구 없이 서비스 칩만 선택
+  if (!place && !count && !resLabel && !placement) return service ? { service, message: "" } : null;
+
   const parts: string[] = [];
   if (place) parts.push(`공간: ${place.name}`);
   if (count) parts.push(`CCTV ${count}대`);

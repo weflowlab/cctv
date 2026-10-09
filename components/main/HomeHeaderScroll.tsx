@@ -21,7 +21,8 @@ export default function HomeHeaderScroll() {
 
     // 현재 스크롤 위치에 맞춰 헤더 스타일 결정
     const apply = () => {
-      setHeaderStyle(window.scrollY < THRESHOLD ? "transparent" : "white");
+      // 요청 페이지를 "/" 로 명시 — 다른 페이지로 이동한 뒤 늦게 도착한 요청은 무시됨
+      setHeaderStyle(window.scrollY < THRESHOLD ? "transparent" : "white", "/");
     };
 
     // throttle: 구간 첫 이벤트는 즉시, 구간 안의 나머지는 구간 끝에 1회

@@ -12,6 +12,7 @@
  *   → 서버/프리렌더에서는 첫 슬라이드만 정적 HTML 로 그리고, 브라우저에서 Swiper 로 교체한다.
  */
 import Link from "next/link";
+import Eyebrow from "@/components/common/Eyebrow";
 import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
@@ -33,7 +34,7 @@ type Slide = {
   buttons: { label: string; href: string }[];
   /** 배경 이미지 자리 설명 (원래 넣을 실제 사진) */
   bg: string;
-  /** 배경 사진 — 스톡 사진(CC0): public/images/stock/*.jpg — 실제 사진 확보 시 교체 */
+  /** 배경 사진 — 스톡 사진(CC0): public/images/stock/*.webp — 실제 사진 확보 시 교체 */
   img: string;
   /** 배경 사진 대체 텍스트 */
   alt: string;
@@ -54,7 +55,7 @@ const SLIDES: Slide[] = [
     desc: `현장에 맞춘 설계부터 설치·렌탈·수리까지, ${SITE.name}가 한 번에 책임집니다.`,
     buttons: [{ label: "내 공간 견적 계산하기", href: "/calculator" }, CONSULT],
     bg: "메인 히어로 배경 (매장·사무실 CCTV 설치 현장)",
-    img: "/images/stock/hero-main-ceiling-camera.jpg",
+    img: "/images/stock/hero-main-ceiling-camera.webp",
     alt: "천장에 설치된 CCTV 카메라",
   },
   {
@@ -64,7 +65,7 @@ const SLIDES: Slide[] = [
     desc: "목돈 없이 월 이용료로 설치하고, 사용 중 고장도 함께 관리합니다.",
     buttons: [{ label: "렌탈 자세히 보기", href: "/service/rental" }, CONSULT],
     bg: "렌탈 슬라이드 배경 (CCTV 렌탈 설치 현장)",
-    img: "/images/stock/hero-rental-building-dome-camera.jpg",
+    img: "/images/stock/hero-rental-building-dome-camera.webp",
     alt: "건물 외벽에 설치된 돔 카메라",
   },
   {
@@ -74,7 +75,7 @@ const SLIDES: Slide[] = [
     desc: `${SITE.hours} 접수 — 방문 점검부터 수리까지 끝까지 맡습니다.`,
     buttons: [{ label: "AS 수리 알아보기", href: "/service/as" }, CONSULT],
     bg: "AS 출장수리 슬라이드 배경 (CCTV 점검·수리 현장)",
-    img: "/images/stock/hero-as-technician-rack.jpg",
+    img: "/images/stock/hero-as-technician-rack.webp",
     alt: "장비 랙 앞에서 노트북으로 점검 중인 기사",
   },
   {
@@ -84,7 +85,7 @@ const SLIDES: Slide[] = [
     desc: "배선 공사를 한 번에 끝내 공사 기간과 중복 비용을 줄이고, 관리도 한 곳에서.",
     buttons: [{ label: "동시 시공 알아보기", href: "/service/speaker" }, CONSULT],
     bg: "CCTV+스피커 슬라이드 배경 (원본 2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg)",
-    img: "/images/stock/hero-speaker-bookshelf-speaker.jpg",
+    img: "/images/stock/hero-speaker-bookshelf-speaker.webp",
     alt: "실내에 놓인 스피커",
   },
 ];
@@ -105,13 +106,16 @@ function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
   const Heading = idx === 0 ? "h1" : "h2";
   return (
     <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
-      {/* 배경 사진 — 스톡 사진(CC0): public/images/stock/hero-*.jpg — 실제 사진 확보 시 교체
-          첫 슬라이드는 첫 화면(LCP)이라 preload, 나머지는 lazy */}
+      {/* 배경 사진 — 스톡 사진(CC0): public/images/stock/hero-*.webp — 실제 사진 확보 시 교체
+          첫 슬라이드는 첫 화면(LCP)이라 preload.
+          나머지도 5초 자동 넘김으로 곧바로 첫 화면에 나와 LCP 로 잡히므로 lazy 대신 eager
+          (preload 와 loading 은 같이 쓰지 않음 — Next 문서 권장) */}
       <Image
         src={slide.img}
         alt={slide.alt}
         fill
         preload={idx === 0}
+        loading={idx === 0 ? undefined : "eager"}
         sizes="100vw"
         className="z-0 object-cover"
       />
@@ -120,9 +124,10 @@ function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
 
       {/* ===== 카피 + 버튼: 모바일 가운데 정렬 / PC 1080px 안에서 왼쪽 정렬 ===== */}
       <div className="relative z-[2] flex w-full max-w-[1080px] flex-col items-center px-[16px] pt-[var(--header-height-mobile)] text-center text-white lg:items-start lg:px-0 lg:pt-[var(--header-height)] lg:text-left">
-        <p className="mb-[12px] rounded-[100px] border border-white/40 px-[12px] py-[4px] text-[13px] font-medium tracking-[-0.26px] lg:mb-[20px] lg:px-[16px] lg:py-[6px] lg:text-[16px]">
+        {/* 슬라이드 라벨: 공용 Eyebrow (틸 글자 + 짧은 라인, 모바일 가운데 / PC 왼쪽) */}
+        <Eyebrow dark korean align="left" className="mb-[14px] max-lg:items-center lg:mb-[24px]">
           {slide.eyebrow}
-        </p>
+        </Eyebrow>
         <Heading className="break-keep text-[26px] font-bold leading-[1.4] tracking-[-1px] lg:text-[52px] lg:leading-[1.3] lg:tracking-[-2px]">
           {slide.title[0]}
           <br />

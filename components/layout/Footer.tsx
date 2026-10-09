@@ -8,8 +8,8 @@
  */
 import Link from "next/link";
 import FloatingContact from "@/components/common/FloatingContact";
-import Placeholder from "@/components/common/Placeholder";
 import { SITE } from "@/lib/site";
+import Logo from "./Logo";
 
 /** 정보 사이 세로 구분선 */
 function Divider() {
@@ -48,8 +48,8 @@ export default async function Footer() {
     <>
       <footer id="footer-main" className="relative border-t border-[#f0f0f0]">
         <div className="mx-auto w-full max-w-[1080px] bg-white px-[16px] py-[38px] lg:px-[20px] lg:pb-[60px] lg:pt-[52px]">
-          {/* ===== 로고 ===== */}
-          <Placeholder label={`${SITE.name} 로고`} className="h-[36px] w-[180px] rounded-[4px]" />
+          {/* ===== 로고 (영문 텍스트, 누르면 홈) ===== */}
+          <Logo size="footer" />
 
           <div className="mt-[20px] block w-full lg:flex">
             {/* ===== 회사 정보: 상호 / 대표 / 사업자등록번호 / 주소 ===== */}

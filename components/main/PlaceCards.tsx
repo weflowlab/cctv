@@ -5,6 +5,7 @@
  * - 레이아웃: 모바일 2열(마지막 카드는 2칸 차지) / PC 5열. 호버 시 브랜드색 테두리 + 아이콘 반전.
  */
 import Link from "next/link";
+import Eyebrow from "@/components/common/Eyebrow";
 import type { ComponentType, SVGProps } from "react";
 import Reveal from "@/components/common/Reveal";
 import { PLACES, type PlaceSlug } from "@/lib/site";
@@ -26,9 +27,8 @@ export default function PlaceCards() {
       <div className="flex w-full max-w-[1080px] flex-col items-center">
         {/* ===== 섹션 헤더 ===== */}
         <div className="mb-[40px] flex flex-col items-center gap-[16px] lg:mb-[60px] lg:gap-[20px]">
-          <strong className="rounded-[100px] bg-brand-light px-[12px] py-[8px] text-center text-[13px] font-medium text-point-strong lg:px-[16px] lg:text-[16px]">
-            장소별 CCTV
-          </strong>
+          {/* 섹션 라벨: 장소별 CCTV */}
+          <Eyebrow>PLACES</Eyebrow>
           <h2 className="text-center text-[26px] font-bold leading-[1.35] tracking-[-0.26px] text-[#222] lg:text-[42px] lg:leading-[60px] lg:tracking-[-1px]">
             우리 공간에 딱 맞는
             <br />

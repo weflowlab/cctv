@@ -6,7 +6,6 @@
  */
 import Reveal from "@/components/common/Reveal";
 import { PHILOSOPHY } from "@/components/about/philosophy";
-import { SITE } from "@/lib/site";
 import { HomeMoreLink, HomeSectionHeader } from "./HomeSection";
 
 export default function WhyUs() {
@@ -16,7 +15,7 @@ export default function WhyUs() {
       <div className="flex w-full max-w-[1080px] flex-col items-center">
         {/* ===== 섹션 헤더: 이름 뜻(UNITECH = Unite + Technology) ===== */}
         <HomeSectionHeader
-          chip={`왜 ${SITE.name}인가`}
+          chip="WHY UNITECH"
           title={
             <>
               흩어진 장비와 책임을

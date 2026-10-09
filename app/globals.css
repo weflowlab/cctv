@@ -96,7 +96,7 @@ img {
   white-space: nowrap;
 }
 
-/* --- 스크롤 등장 애니메이션 (원본 07a0986...css 그대로) ---
+/* --- 스크롤 등장 애니메이션 (keeper 원본 기반, 이동 거리 24px·0.7s 로 다듬음) ---
    <Reveal> 컴포넌트가 뷰포트 진입 시 아래 클래스를 붙여 실행한다. */
 @keyframes floatingRight {
   0% { transform: translateX(90px); }
@@ -107,27 +107,29 @@ img {
   to { opacity: 1; }
 }
 @keyframes slideInLeft {
-  0% { opacity: 0; transform: translate3d(-50px, 0, 0); }
+  0% { opacity: 0; transform: translate3d(-24px, 0, 0); }
   to { opacity: 1; transform: translateZ(0); }
 }
 @keyframes slideInRight {
-  0% { opacity: 0; transform: translate3d(50px, 0, 0); }
+  0% { opacity: 0; transform: translate3d(24px, 0, 0); }
   to { opacity: 1; transform: translateZ(0); }
 }
 @keyframes slideInUp {
-  0% { opacity: 0; transform: translate3d(0, 50px, 0); }
+  0% { opacity: 0; transform: translate3d(0, 24px, 0); }
   to { opacity: 1; transform: translateZ(0); }
 }
 @keyframes slideInDown {
-  0% { opacity: 0; transform: translate3d(0, -50px, 0); }
+  0% { opacity: 0; transform: translate3d(0, -24px, 0); }
   to { opacity: 1; transform: translateZ(0); }
 }
 .reveal-pending { opacity: 0; } /* 진입 전 숨김 */
-.fade-in { animation: fadeIn 1s ease-out forwards; }
-.slide-in-left { animation: slideInLeft 1s ease-out forwards; }
-.slide-in-right { animation: slideInRight 1s ease-out forwards; }
-.slide-in-up { animation: slideInUp 1s ease-out forwards; }
-.slide-in-down { animation: slideInDown 1s ease-out forwards; }
+/* fill-mode 는 반드시 both: forwards 만 쓰면 delay(순차 등장) 동안 원래 모습(보임)으로 있다가
+   애니메이션 시작 순간 투명으로 바뀌어 "보였다 사라졌다 올라오는" 깜빡임이 생김 */
+.fade-in { animation: fadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.slide-in-left { animation: slideInLeft 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.slide-in-right { animation: slideInRight 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.slide-in-up { animation: slideInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.slide-in-down { animation: slideInDown 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .float-right { animation: floatingRight 12s linear infinite; }
 
 /* 모션 최소화 설정 사용자는 애니메이션 생략 */

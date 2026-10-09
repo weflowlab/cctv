@@ -3,7 +3,7 @@
  * - 제조사 로고 2줄이 좌우 반대 방향으로 무한히 흐르는 marquee (keeper business ReasonSection 로직 그대로).
  *   같은 트랙 2개(원본 + aria-hidden 복제)를 이어 붙이고 CSS keyframes 로 -100% 이동 → 끊김 없는 루프.
  * - 얇고 차분하게: 작은 로고 칩, 느린 속도, 좌우 끝 페이드 마스크.
- * - 로고 이미지: public/images/partners/*.png — 기존 사이트의 로고 묶음 이미지 1장(2024/04/참조사진-제품로고들.jpg)을
+ * - 로고 이미지: public/images/partners/*.webp — 기존 사이트의 로고 묶음 이미지 1장(2024/04/참조사진-제품로고들.jpg)을
  *   로고별로 잘라낸 것. 원본 해상도가 낮아(높이 약 30px) 크게 키우면 흐려짐 → 칩 여백을 넉넉히 줘 원본 크기 근처로 표시.
  *   TODO: 고해상도 로고 파일을 구하면 같은 파일명으로 교체.
  */
@@ -12,7 +12,7 @@ import styles from "./main.module.css";
 
 type Logo = { name: string; file: string };
 
-/** 제휴 제조사 로고 2줄 (원본 이미지 속 순서) — file: public/images/partners/<file>.png */
+/** 제휴 제조사 로고 2줄 (원본 이미지 속 순서) — file: public/images/partners/<file>.webp */
 const LOGO_ROWS: Logo[][] = [
   [
     { name: "JWC", file: "jwc" },
@@ -84,7 +84,7 @@ export default function PartnerMarquee() {
                     {/* 로고: 칩 안에 비율 유지(contain). 복제 트랙은 스크린리더에서 숨김 */}
                     <div className="relative h-full w-full">
                       <Image
-                        src={`/images/partners/${file}.png`}
+                        src={`/images/partners/${file}.webp`}
                         alt={isClone ? "" : `${name} 로고`}
                         fill
                         sizes="(min-width: 1024px) 168px, 120px"

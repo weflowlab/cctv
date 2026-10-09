@@ -73,7 +73,7 @@ export default function Highlights() {
       <div className="flex w-full max-w-[1080px] flex-col items-center">
         {/* ===== 섹션 헤더 ===== */}
         <HomeSectionHeader
-          chip="핵심 장점"
+          chip="STRENGTHS"
           title={
             <>
               한눈에 보는 <strong>{SITE.name}</strong>

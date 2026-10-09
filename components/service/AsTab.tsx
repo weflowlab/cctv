@@ -11,16 +11,17 @@ import Reveal from "@/components/common/Reveal";
 import { SITE } from "@/lib/site";
 import { AS_SERVICES, AS_STRENGTHS, AS_WORRIES } from "./data";
 import { SectionHeading, SpaceOrBreak } from "./ui";
+import Eyebrow from "@/components/common/Eyebrow";
 
 type WorryIcon = (typeof AS_WORRIES)[number]["icon"];
 
 /** 수리 전문케어 서비스 5종 카드 사진 (AS_SERVICES 순서와 동일) — 스톡 사진(CC0), 실제 사진 확보 시 교체 */
 const SERVICE_PHOTOS = [
-  { src: "/images/stock/as-visit-repair.jpg", alt: "현장에 방문해 외벽 장비를 수리하는 기사" }, // 출장수리
-  { src: "/images/stock/as-urgent-check.jpg", alt: "기사 두 명이 외벽 장비를 긴급 점검하는 모습" }, // 긴급점검
-  { src: "/images/stock/as-diagnosis-network-rack.jpg", alt: "벽에 설치된 네트워크 장비 랙과 배선" }, // 고장진단
-  { src: "/images/stock/as-old-camera.jpg", alt: "오래된 건물 외벽에 달린 노후 CCTV 카메라" }, // 노후장비교체
-  { src: "/images/stock/as-maintenance-screwdriver.jpg", alt: "십자 드라이버와 나사 클로즈업" }, // 유지보수
+  { src: "/images/stock/as-visit-repair.webp", alt: "현장에 방문해 외벽 장비를 수리하는 기사" }, // 출장수리
+  { src: "/images/stock/as-urgent-check.webp", alt: "기사 두 명이 외벽 장비를 긴급 점검하는 모습" }, // 긴급점검
+  { src: "/images/stock/as-diagnosis-network-rack.webp", alt: "벽에 설치된 네트워크 장비 랙과 배선" }, // 고장진단
+  { src: "/images/stock/as-old-camera.webp", alt: "오래된 건물 외벽에 달린 노후 CCTV 카메라" }, // 노후장비교체
+  { src: "/images/stock/as-maintenance-screwdriver.webp", alt: "십자 드라이버와 나사 클로즈업" }, // 유지보수
 ];
 
 /** 고민 카드용 단순 라인 아이콘 (stroke=currentColor) — 홈 문제 제기 섹션(components/main/ProblemSection)에서도 사용 */
@@ -77,7 +78,7 @@ export default function AsTab() {
       <section className="bg-point-light px-[16px] py-[56px] lg:px-0 lg:py-[100px]">
         <div className="mx-auto flex w-full max-w-[580px] flex-col items-center gap-[32px] lg:w-[1080px] lg:max-w-none lg:flex-row lg:justify-between lg:gap-[72px]">
           <div className="text-center lg:text-left">
-            <p className="text-[14px] font-bold tracking-[-0.28px] text-point-strong lg:text-[18px]">AS 수리</p>
+            <Eyebrow align="left" className="mb-[6px] max-lg:items-center">After Service</Eyebrow>
             <h2 className="mt-[8px] text-[30px] font-bold leading-[1.4] tracking-[-0.6px] text-[#222] lg:text-[46px] lg:tracking-[-2px] [&>strong]:text-point-strong">
               AS 수리 전문
               <br />
@@ -93,10 +94,10 @@ export default function AsTab() {
               <strong className="font-bold">직접 방문하여 수리해 드립니다.</strong>
             </p>
           </div>
-          {/* 스톡 사진(CC0): public/images/stock/as-hero-toolbox.jpg — 실제 사진 확보 시 교체 */}
+          {/* 스톡 사진(CC0): public/images/stock/as-hero-toolbox.webp — 실제 사진 확보 시 교체 */}
           <div className="relative aspect-[4/3] w-full max-w-[480px] shrink-0 overflow-hidden rounded-[20px] lg:w-[480px]">
             <Image
-              src="/images/stock/as-hero-toolbox.jpg"
+              src="/images/stock/as-hero-toolbox.webp"
               alt="수리 공구가 가득 담긴 공구함"
               fill
               sizes="(min-width: 512px) 480px, 100vw"
@@ -167,7 +168,7 @@ export default function AsTab() {
                 delay={i * 120}
                 className={`overflow-hidden rounded-[14px] bg-white ${i === AS_SERVICES.length - 1 ? "col-span-2 lg:col-span-1" : ""}`}
               >
-                {/* 스톡 사진(CC0): public/images/stock/as-*.jpg — 실제 사진 확보 시 교체 */}
+                {/* 스톡 사진(CC0): public/images/stock/as-*.webp — 실제 사진 확보 시 교체 */}
                 <div className="relative aspect-[4/3] w-full">
                   <Image
                     src={SERVICE_PHOTOS[i].src}

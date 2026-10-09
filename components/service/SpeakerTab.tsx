@@ -9,6 +9,7 @@ import Image from "next/image";
 import Reveal from "@/components/common/Reveal";
 import { SPEAKER_BENEFITS } from "./data";
 import { SectionHeading, SpaceOrBreak } from "./ui";
+import Eyebrow from "@/components/common/Eyebrow";
 
 export default function SpeakerTab() {
   return (
@@ -17,7 +18,7 @@ export default function SpeakerTab() {
       <section className="bg-point-light px-[16px] py-[56px] lg:px-0 lg:py-[100px]">
         <div className="mx-auto flex w-full max-w-[580px] flex-col items-center gap-[32px] lg:w-[1080px] lg:max-w-none lg:flex-row lg:justify-between lg:gap-[64px]">
           <div className="text-center lg:text-left">
-            <p className="text-[14px] font-bold tracking-[-0.28px] text-point-strong lg:text-[18px]">Smart Integrated Solution</p>
+            <Eyebrow align="left" className="mb-[6px] max-lg:items-center">Smart Integrated Solution</Eyebrow>
             <h2 className="mt-[8px] text-[30px] font-bold leading-[1.4] tracking-[-0.6px] text-[#222] lg:text-[44px] lg:tracking-[-2px] [&>strong]:text-point-strong">
               <strong>CCTV + 스피커</strong>
               <br />
@@ -29,11 +30,11 @@ export default function SpeakerTab() {
               보안 솔루션을 한 번에
             </p>
           </div>
-          {/* 스톡 사진(CC0): public/images/stock/speaker-hero-woofer.jpg — 실제 사진 확보 시 교체
+          {/* 스톡 사진(CC0): public/images/stock/speaker-hero-woofer.webp — 실제 사진 확보 시 교체
               (원래 자리: CCTV+스피커 동시 시공 배너, 원본 2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg) */}
           <div className="relative aspect-[1693/929] w-full max-w-[520px] shrink-0 overflow-hidden rounded-[20px] lg:w-[520px]">
             <Image
-              src="/images/stock/speaker-hero-woofer.jpg"
+              src="/images/stock/speaker-hero-woofer.webp"
               alt="스피커 우퍼 유닛 클로즈업"
               fill
               sizes="(min-width: 552px) 520px, 100vw"

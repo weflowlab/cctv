@@ -41,11 +41,11 @@ export default function SpeakerPromo() {
             threshold={0.1}
             className="relative w-full overflow-hidden rounded-[20px] border border-[#3c3a3a] bg-[#1d1c1c] text-white lg:bg-[#242324]"
           >
-            {/* 스톡 사진(CC0): public/images/stock/promo-speaker-mixing-console.jpg — 실제 사진 확보 시 교체
+            {/* 스톡 사진(CC0): public/images/stock/promo-speaker-mixing-console.webp — 실제 사진 확보 시 교체
                 (원래 자리: CCTV + 스피커 동시 시공 현장, 원본 2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg) */}
             <div className="relative aspect-[343/220] w-full lg:aspect-auto lg:h-[480px]">
               <Image
-                src="/images/stock/promo-speaker-mixing-console.jpg"
+                src="/images/stock/promo-speaker-mixing-console.webp"
                 alt="음향 믹싱 콘솔과 스피커가 놓인 음향 장비실"
                 fill
                 sizes="(min-width: 1112px) 1080px, 100vw"

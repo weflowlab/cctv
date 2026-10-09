@@ -6,7 +6,7 @@
  * - date: 표시용 문자열 "YYYY-MM" (Date 객체 쓰지 않음 — 프리렌더 안전)
  * - CASES 는 최신순으로 유지.
  */
-import type { PlaceSlug } from "@/lib/site";
+import { PLACES, type PlaceSlug } from "@/lib/site";
 
 export type CaseItem = {
   /** slug 겸 id (예: "gangnam-cafe-2026-09") */
@@ -182,6 +182,14 @@ export function getFeaturedCases(limit = 6): CaseItem[] {
   const featured = CASES.filter((c) => c.featured);
   const rest = CASES.filter((c) => !c.featured);
   return [...featured, ...rest].slice(0, limit);
+}
+
+
+/** 장소별 사례 건수 (칩 바 표시용) — 사례가 없는 장소는 0 */
+export function countCasesByPlace(): Record<PlaceSlug, number> {
+  const counts = Object.fromEntries(PLACES.map((p) => [p.slug, 0])) as Record<PlaceSlug, number>;
+  for (const c of CASES) counts[c.place] += 1;
+  return counts;
 }
 
 /** id 로 사례 1건 조회 (없으면 undefined) */

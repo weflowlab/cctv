@@ -3,13 +3,13 @@
  * - keeper "평소에는 잊고 지냈던 CCTV / 막상 문제가 생기면…" 틀: 네이비 배경 + 공감 제목.
  * - AS 고민 4가지 카드: components/service/data.ts AS_WORRIES 재사용, 아이콘은 AsTab 의 WorryIconSvg 재사용
  *   (AS 탭 카드 렌더 방식 그대로, 색만 네이비 배경용 반투명 흰색). PC 4열 / 모바일 2열, 순차 slide-in-up.
- * - 해결 연결 문구 → [AS 수리 알아보기 → /service/as].
+ * - 해결 연결 문구로 끝내고 바로 아래 해결(Solution) 섹션으로 이어짐 — 별도 이동 버튼 없음.
  */
 import Reveal from "@/components/common/Reveal";
 import { WorryIconSvg } from "@/components/service/AsTab";
 import { AS_WORRIES } from "@/components/service/data";
 import { SITE } from "@/lib/site";
-import { HomeMoreLink, HomeSectionHeader } from "./HomeSection";
+import { HomeSectionHeader } from "./HomeSection";
 
 export default function ProblemSection() {
   return (
@@ -19,7 +19,7 @@ export default function ProblemSection() {
         {/* ===== 섹션 헤더: 공감 제목 ===== */}
         <HomeSectionHeader
           dark
-          chip="CCTV AS"
+          chip="THE PROBLEM"
           title={
             <>
               평소엔 잊고 지내던 CCTV,
@@ -53,16 +53,13 @@ export default function ProblemSection() {
           ))}
         </ul>
 
-        {/* ===== 해결 연결 문구 + AS 수리 알아보기 ===== */}
+        {/* ===== 해결 연결 문구 (다음 해결 섹션으로 이어짐) ===== */}
         <Reveal className="mt-[40px] flex flex-col items-center gap-[24px] lg:mt-[64px] lg:gap-[32px]">
           <p className="break-keep text-center text-[18px] font-bold leading-[1.5] tracking-[-0.4px] text-white lg:text-[28px] lg:tracking-[-0.7px]">
             설치한 곳이 어디든 괜찮습니다.
             <br />
             <span className="text-point">{SITE.name}가 직접 방문해 해결해 드립니다.</span>
           </p>
-          <HomeMoreLink href="/service/as" dark>
-            AS 수리 알아보기
-          </HomeMoreLink>
         </Reveal>
       </div>
 

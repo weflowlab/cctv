@@ -20,6 +20,7 @@ import { PLACES, type PlaceSlug } from "@/lib/site";
 import QuestionStep from "./QuestionStep";
 import QuoteResult from "./QuoteResult";
 import { INITIAL_DATA, QUESTIONS, calcRecommendedCount, type QuoteData } from "./data";
+import Eyebrow from "@/components/common/Eyebrow";
 
 const INITIAL_EXPANDED = QUESTIONS.map((_, i) => i === 0);
 /** 장소가 미리 선택된 경우: STEP 02 만 펼침 */
@@ -97,13 +98,13 @@ function Calculator({ initialPlace }: { initialPlace: PlaceSlug | null }) {
   return (
     <div className="mx-auto w-full max-w-[580px] px-[16px] pb-[100px] pt-[40px] lg:w-[1080px] lg:max-w-none lg:px-0 lg:pb-[132px] lg:pt-[88px]">
       {/* ===== 타이틀 ===== */}
-      <header className="text-center">
-        <h1 className="text-[16px] font-bold leading-[28px] tracking-[-0.5px] text-point-strong lg:text-[20px]">견적 계산기</h1>
-        <p className="mt-[6px] text-[26px] font-bold leading-[36px] tracking-[-1px] text-[#222] lg:text-[36px] lg:leading-[48px]">
+      <header className="flex flex-col items-center text-center">
+        <Eyebrow className="mb-[14px] lg:mb-[18px]">Estimate</Eyebrow>
+        <h1 className="text-[26px] font-bold leading-[36px] tracking-[-1px] text-[#222] lg:text-[36px] lg:leading-[48px]">
           우리 공간에 맞는 CCTV 수량과
           <br />
           예상 견적을 알려드려요
-        </p>
+        </h1>
       </header>
 
       {/* ===== STEP 01~06 아코디언 ===== */}
