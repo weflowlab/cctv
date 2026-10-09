@@ -8,7 +8,7 @@
  */
 import Link from "next/link";
 import type { ComponentType, SVGProps } from "react";
-import Placeholder from "@/components/common/Placeholder";
+import Image from "next/image";
 import Reveal from "@/components/common/Reveal";
 import { ClockIcon, CoinIcon, LayersIcon } from "./icons";
 
@@ -41,12 +41,17 @@ export default function SpeakerPromo() {
             threshold={0.1}
             className="relative w-full overflow-hidden rounded-[20px] border border-[#3c3a3a] bg-[#1d1c1c] text-white lg:bg-[#242324]"
           >
-            <Placeholder
-              quiet
-              dark
-              label="CCTV + 스피커 동시 시공 현장 (원본 2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg)"
-              className="aspect-[343/220] w-full border-0 lg:aspect-auto lg:h-[480px]"
-            />
+            {/* 스톡 사진(CC0): public/images/stock/promo-speaker-mixing-console.jpg — 실제 사진 확보 시 교체
+                (원래 자리: CCTV + 스피커 동시 시공 현장, 원본 2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg) */}
+            <div className="relative aspect-[343/220] w-full lg:aspect-auto lg:h-[480px]">
+              <Image
+                src="/images/stock/promo-speaker-mixing-console.jpg"
+                alt="음향 믹싱 콘솔과 스피커가 놓인 음향 장비실"
+                fill
+                sizes="(min-width: 1112px) 1080px, 100vw"
+                className="object-cover"
+              />
+            </div>
             {/* PC: 이미지 왼쪽을 어둡게 해서 카피 가독성 확보 */}
             <span className="absolute inset-0 hidden bg-[linear-gradient(90deg,rgba(28,28,28,0.92)_0%,rgba(28,28,28,0.6)_50%,rgba(28,28,28,0)_100%)] lg:block" />
             <div className="relative flex h-full w-full flex-col justify-center px-[24px] pb-[28px] pt-[28px] lg:absolute lg:top-0 lg:p-0 lg:pl-[83px]">

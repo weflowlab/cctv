@@ -2,11 +2,11 @@
  * 공통 하단 상담 CTA 배너 (모든 페이지 맨 아래에 <ConsultCta /> 하나만 배치)
  * - keeper 홈 하단 CTA(components/home/BottomCta) 틀: 딥네이비 배경 + 틸 빛 radial 오버레이 2개 (브랜드 컬러).
  * - 카피 "우리 공간 보안, / 지금 바로 {SITE.name}에 맡기세요." + "상담 신청하기" 버튼(→ /contact) + 보조 전화번호.
- * - 우측(모바일은 하단) 이미지 자리는 Placeholder. keeper 앱스토어 버튼은 제거.
+ * - 우측(모바일은 하단) 이미지는 스톡 사진(CC0, next/image). keeper 앱스토어 버튼은 제거.
  * - 서버 컴포넌트 (등장 애니메이션만 클라이언트 Reveal 사용).
  */
 import Link from "next/link";
-import Placeholder from "@/components/common/Placeholder";
+import Image from "next/image";
 import Reveal from "@/components/common/Reveal";
 import { SITE } from "@/lib/site";
 
@@ -54,11 +54,16 @@ export default function ConsultCta() {
 
         {/* ===== 이미지 자리 (PC 우측 / 모바일 하단) ===== */}
         <div className="z-0 w-full max-w-[375px] lg:max-w-none">
-          <Placeholder
-            label="CCTV 설치·상담 이미지 (TODO: 원본 이미지 선정)"
-            dark
-            className="relative bottom-0 aspect-[375/300] w-full lg:absolute lg:bottom-[-151px] lg:right-0 lg:aspect-auto lg:h-[460px] lg:w-[463px]"
-          />
+          {/* 스톡 사진(CC0): public/images/stock/consult-cta-wall-camera.jpg — 실제 사진 확보 시 교체 */}
+          <div className="relative bottom-0 aspect-[375/300] w-full overflow-hidden lg:absolute lg:bottom-[-151px] lg:right-0 lg:aspect-auto lg:h-[460px] lg:w-[463px]">
+            <Image
+              src="/images/stock/consult-cta-wall-camera.jpg"
+              alt="건물 콘크리트 외벽에 설치된 CCTV 카메라"
+              fill
+              sizes="(min-width: 1024px) 463px, 375px"
+              className="object-cover"
+            />
+          </div>
         </div>
       </section>
     </div>

@@ -6,12 +6,22 @@
  *   (원본 강점 9가지 전체는 회사소개로 이동 — 여기서는 AS 관련만)
  */
 import Placeholder from "@/components/common/Placeholder";
+import Image from "next/image";
 import Reveal from "@/components/common/Reveal";
 import { SITE } from "@/lib/site";
 import { AS_SERVICES, AS_STRENGTHS, AS_WORRIES } from "./data";
 import { SectionHeading, SpaceOrBreak } from "./ui";
 
 type WorryIcon = (typeof AS_WORRIES)[number]["icon"];
+
+/** 수리 전문케어 서비스 5종 카드 사진 (AS_SERVICES 순서와 동일) — 스톡 사진(CC0), 실제 사진 확보 시 교체 */
+const SERVICE_PHOTOS = [
+  { src: "/images/stock/as-visit-repair.jpg", alt: "현장에 방문해 외벽 장비를 수리하는 기사" }, // 출장수리
+  { src: "/images/stock/as-urgent-check.jpg", alt: "기사 두 명이 외벽 장비를 긴급 점검하는 모습" }, // 긴급점검
+  { src: "/images/stock/as-diagnosis-network-rack.jpg", alt: "벽에 설치된 네트워크 장비 랙과 배선" }, // 고장진단
+  { src: "/images/stock/as-old-camera.jpg", alt: "오래된 건물 외벽에 달린 노후 CCTV 카메라" }, // 노후장비교체
+  { src: "/images/stock/as-maintenance-screwdriver.jpg", alt: "십자 드라이버와 나사 클로즈업" }, // 유지보수
+];
 
 /** 고민 카드용 단순 라인 아이콘 (stroke=currentColor) — 홈 문제 제기 섹션(components/main/ProblemSection)에서도 사용 */
 export function WorryIconSvg({ name }: { name: WorryIcon }) {
@@ -83,15 +93,21 @@ export default function AsTab() {
               <strong className="font-bold">직접 방문하여 수리해 드립니다.</strong>
             </p>
           </div>
-          <Placeholder
-            label="AS 수리 히어로 이미지 (원본 2024/03/CK_td01130002085_l.jpg)"
-            className="aspect-[4/3] w-full max-w-[480px] rounded-[20px] lg:w-[480px]"
-          />
+          {/* 스톡 사진(CC0): public/images/stock/as-hero-toolbox.jpg — 실제 사진 확보 시 교체 */}
+          <div className="relative aspect-[4/3] w-full max-w-[480px] shrink-0 overflow-hidden rounded-[20px] lg:w-[480px]">
+            <Image
+              src="/images/stock/as-hero-toolbox.jpg"
+              alt="수리 공구가 가득 담긴 공구함"
+              fill
+              sizes="(min-width: 512px) 480px, 100vw"
+              className="object-cover"
+            />
+          </div>
         </div>
       </section>
 
       {/* ===== 문제제기: 고객 고민 4가지 카드 (PC 4열 / 모바일 2열), 순차 slide-up + 해결 연결 문구 =====
-          원본 이미지(2024/03/CK_td01130002085_l.jpg)는 히어로 Placeholder 에 이미 배치되어 여기서는 생략 */}
+          원본 이미지(2024/03/CK_td01130002085_l.jpg)는 히어로 이미지 자리에 이미 배치되어 여기서는 생략 */}
       <section className="bg-white px-[16px] py-[60px] lg:px-0 lg:py-[120px]">
         <div className="mx-auto w-full max-w-[580px] lg:w-[1080px] lg:max-w-none">
           <SectionHeading
@@ -151,7 +167,16 @@ export default function AsTab() {
                 delay={i * 120}
                 className={`overflow-hidden rounded-[14px] bg-white ${i === AS_SERVICES.length - 1 ? "col-span-2 lg:col-span-1" : ""}`}
               >
-                <Placeholder label={`${s.title} (원본 ${s.img})`} className="aspect-[4/3] w-full border-0" />
+                {/* 스톡 사진(CC0): public/images/stock/as-*.jpg — 실제 사진 확보 시 교체 */}
+                <div className="relative aspect-[4/3] w-full">
+                  <Image
+                    src={SERVICE_PHOTOS[i].src}
+                    alt={SERVICE_PHOTOS[i].alt}
+                    fill
+                    sizes="(min-width: 1024px) 204px, (min-width: 580px) 285px, 50vw"
+                    className="object-cover"
+                  />
+                </div>
                 <h3 className="px-[14px] py-[14px] text-center text-[16px] font-bold tracking-[-0.32px] text-[#222] lg:py-[18px] lg:text-[19px]">
                   {s.title}
                 </h3>

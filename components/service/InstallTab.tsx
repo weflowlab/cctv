@@ -4,12 +4,20 @@
  * - 구성: 히어로 → 패키지·가격(화소/장소 토글) → 시공절차 4단계 → 제휴·대량 도입 문의 → 렌탈 교차 링크
  */
 import Link from "next/link";
-import Placeholder from "@/components/common/Placeholder";
+import Image from "next/image";
 import Reveal from "@/components/common/Reveal";
 import { SITE } from "@/lib/site";
 import InstallPackages from "./InstallPackages";
 import { INSTALL_STEPS } from "./data";
 import { ArrowIcon, CrossLink, SectionHeading, SpaceOrBreak } from "./ui";
+
+/** 시공절차 4단계 카드 사진 (INSTALL_STEPS 순서와 동일) — 스톡 사진(CC0), 실제 사진 확보 시 교체 */
+const STEP_PHOTOS = [
+  { src: "/images/stock/install-step1-phone-call.jpg", alt: "휴대폰으로 상담 전화를 하는 남성" },
+  { src: "/images/stock/install-step2-consulting.jpg", alt: "테이블에 모여 자료를 보며 상담하는 모습" },
+  { src: "/images/stock/install-step3-electrician-panel.jpg", alt: "안전모를 쓴 기사가 배선반에서 작업하는 뒷모습" },
+  { src: "/images/stock/install-step4-wall-camera.jpg", alt: "건물 벽에 설치를 마친 CCTV 카메라와 안내 표지" },
+];
 
 export default function InstallTab() {
   return (
@@ -33,10 +41,16 @@ export default function InstallTab() {
               큰 규모의 공사 및 정보통신공사는 별도 문의 부탁드립니다.
             </p>
           </div>
-          <Placeholder
-            label="CCTV 설치 히어로 이미지 (원본 별도 이미지 없음 — 시공 사진 등으로 교체)"
-            className="aspect-[4/3] w-full max-w-[480px] rounded-[20px] lg:w-[480px]"
-          />
+          {/* 스톡 사진(CC0): public/images/stock/install-hero-technician-wall.jpg — 실제 사진 확보 시 교체 */}
+          <div className="relative aspect-[4/3] w-full max-w-[480px] shrink-0 overflow-hidden rounded-[20px] lg:w-[480px]">
+            <Image
+              src="/images/stock/install-hero-technician-wall.jpg"
+              alt="안전모를 쓴 기사가 벽면에 장비를 설치하는 모습"
+              fill
+              sizes="(min-width: 1024px) 480px, (min-width: 512px) 480px, 100vw"
+              className="object-cover"
+            />
+          </div>
         </div>
       </section>
 
@@ -50,7 +64,16 @@ export default function InstallTab() {
           <ol className="mt-[32px] grid grid-cols-1 gap-[12px] sm:grid-cols-2 lg:mt-[64px] lg:grid-cols-4 lg:gap-[20px]">
             {INSTALL_STEPS.map((step, i) => (
               <Reveal as="li" key={step.title} delay={i * 150} className="overflow-hidden rounded-[16px] bg-white">
-                <Placeholder label={`STEP${i + 1}. ${step.title} (원본 ${step.img})`} className="aspect-[3/2] w-full border-0 border-b" />
+                {/* 스톡 사진(CC0): public/images/stock/install-step{1~4}-*.jpg — 실제 사진 확보 시 교체 */}
+                <div className="relative aspect-[3/2] w-full">
+                  <Image
+                    src={STEP_PHOTOS[i].src}
+                    alt={STEP_PHOTOS[i].alt}
+                    fill
+                    sizes="(min-width: 1024px) 255px, (min-width: 640px) 290px, 100vw"
+                    className="object-cover"
+                  />
+                </div>
                 <div className="px-[20px] pb-[24px] pt-[18px]">
                   <p className="text-[13px] font-bold tracking-[-0.26px] text-point-strong lg:text-[15px]">STEP {i + 1}</p>
                   <h3 className="mt-[4px] text-[18px] font-bold leading-[26px] tracking-[-0.36px] text-[#222] lg:text-[22px] lg:leading-[32px]">

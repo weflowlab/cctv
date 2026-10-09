@@ -47,7 +47,7 @@ export default function DesktopHeader() {
               return (
                 <Link
                   key={key}
-                  href={key}
+                  href={menu.href ?? key}
                   aria-current={selected ? "page" : undefined}
                   className={`relative block select-none py-[8px] text-[15px] font-medium leading-[23px] tracking-[-1px] no-underline transition-colors duration-[250ms] ${textColor(
                     headerStyle,

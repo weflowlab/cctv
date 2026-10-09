@@ -2,10 +2,10 @@
  * 견적 계산기 유도 배너 (keeper /plan "견적계산기 바로가기" 브랜드색 배너 틀)
  * - 배너 전체가 /calculator 링크. 호버 시 버튼 화살표가 오른쪽으로 살짝 이동.
  * - 배치: 렌탈 탭 요금 슬라이더 아래(RentalSlider), 설치 탭 패키지 가격 카드 아래(InstallPackages)
- * - 오른쪽 일러스트 자리는 Placeholder. 훅이 없어 서버/클라이언트 어디서든 사용 가능.
+ * - 오른쪽은 계산기 스톡 사진(CC0, next/image). 훅이 없어 서버/클라이언트 어디서든 사용 가능.
  */
 import Link from "next/link";
-import Placeholder from "@/components/common/Placeholder";
+import Image from "next/image";
 import { ArrowIcon } from "./ui";
 
 export default function CalculatorBanner({ className = "" }: { className?: string }) {
@@ -28,12 +28,17 @@ export default function CalculatorBanner({ className = "" }: { className?: strin
         </span>
       </div>
 
-      {/* ===== 일러스트 자리 (keeper 원본: 계산기 일러스트) ===== */}
-      <Placeholder
-        dark
-        label="견적 계산기 일러스트"
-        className="h-[88px] w-[88px] shrink-0 rounded-[12px] lg:h-[150px] lg:w-[200px]"
-      />
+      {/* ===== 계산기 사진 (keeper 원본: 계산기 일러스트) =====
+          스톡 사진(CC0): public/images/stock/calculator-banner.jpg — 실제 사진 확보 시 교체 */}
+      <div className="relative h-[88px] w-[88px] shrink-0 overflow-hidden rounded-[12px] lg:h-[150px] lg:w-[200px]">
+        <Image
+          src="/images/stock/calculator-banner.jpg"
+          alt="계산기와 연필, 메모지"
+          fill
+          sizes="(min-width: 1024px) 200px, 88px"
+          className="object-cover"
+        />
+      </div>
     </Link>
   );
 }

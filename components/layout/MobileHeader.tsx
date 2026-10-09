@@ -99,7 +99,7 @@ export default function MobileHeader() {
                 return (
                   <li key={key}>
                     <Link
-                      href={key}
+                      href={menu.href ?? key}
                       onClick={() => setIsOpen(false)}
                       aria-current={selected ? "page" : undefined}
                       className="flex h-[62px] w-full items-center justify-between border-b border-[#eee] px-[20px]"

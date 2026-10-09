@@ -3,7 +3,7 @@
 /**
  * 홈 히어로 슬라이더 (keeper HeroBanner 틀 + 신규 회사 카피)
  * - 투명 헤더 밑으로 깔리도록 음수 margin-top(헤더 높이만큼) 적용. 헤더 투명/흰색 전환은 HomeHeaderScroll 담당.
- * - 높이 640px(PC·모바일 동일), 배경은 슬라이드별 Placeholder + 어두운 그라데이션, 카피는 그 위에 표시.
+ * - 높이 640px(PC·모바일 동일), 배경은 슬라이드별 사진(스톡 CC0, next/image) + 어두운 그라데이션, 카피는 그 위에 표시.
  * - Swiper 옵션: loop, autoplay 5초(사용자 조작 후에도 계속), Pagination(clickable, 커스텀 원형 불릿).
  * - 슬라이드 4장: 메인(내 공간 견적 계산하기 / 상담 신청하기) → 렌탈 → AS 수리 → CCTV+스피커.
  *   각 장 = 문제 공감(1줄) → 해결 약속(2줄, 강조) → 설명 → [자세히 보기] [상담 신청하기].
@@ -16,7 +16,7 @@ import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
-import Placeholder from "@/components/common/Placeholder";
+import Image from "next/image";
 import useIsClient from "@/components/common/useIsClient";
 import { SITE } from "@/lib/site";
 import { ArrowRightIcon } from "./icons";
@@ -31,8 +31,12 @@ type Slide = {
   desc: string;
   /** 버튼 (첫 번째는 브랜드색 채움, 두 번째는 흰 테두리) */
   buttons: { label: string; href: string }[];
-  /** 배경 이미지 자리 설명 */
+  /** 배경 이미지 자리 설명 (원래 넣을 실제 사진) */
   bg: string;
+  /** 배경 사진 — 스톡 사진(CC0): public/images/stock/*.jpg — 실제 사진 확보 시 교체 */
+  img: string;
+  /** 배경 사진 대체 텍스트 */
+  alt: string;
 };
 
 /**
@@ -50,6 +54,8 @@ const SLIDES: Slide[] = [
     desc: `현장에 맞춘 설계부터 설치·렌탈·수리까지, ${SITE.name}가 한 번에 책임집니다.`,
     buttons: [{ label: "내 공간 견적 계산하기", href: "/calculator" }, CONSULT],
     bg: "메인 히어로 배경 (매장·사무실 CCTV 설치 현장)",
+    img: "/images/stock/hero-main-ceiling-camera.jpg",
+    alt: "천장에 설치된 CCTV 카메라",
   },
   {
     id: "rental",
@@ -58,6 +64,8 @@ const SLIDES: Slide[] = [
     desc: "목돈 없이 월 이용료로 설치하고, 사용 중 고장도 함께 관리합니다.",
     buttons: [{ label: "렌탈 자세히 보기", href: "/service/rental" }, CONSULT],
     bg: "렌탈 슬라이드 배경 (CCTV 렌탈 설치 현장)",
+    img: "/images/stock/hero-rental-building-dome-camera.jpg",
+    alt: "건물 외벽에 설치된 돔 카메라",
   },
   {
     id: "as",
@@ -66,6 +74,8 @@ const SLIDES: Slide[] = [
     desc: `${SITE.hours} 접수 — 방문 점검부터 수리까지 끝까지 맡습니다.`,
     buttons: [{ label: "AS 수리 알아보기", href: "/service/as" }, CONSULT],
     bg: "AS 출장수리 슬라이드 배경 (CCTV 점검·수리 현장)",
+    img: "/images/stock/hero-as-technician-rack.jpg",
+    alt: "장비 랙 앞에서 노트북으로 점검 중인 기사",
   },
   {
     id: "speaker",
@@ -74,6 +84,8 @@ const SLIDES: Slide[] = [
     desc: "배선 공사를 한 번에 끝내 공사 기간과 중복 비용을 줄이고, 관리도 한 곳에서.",
     buttons: [{ label: "동시 시공 알아보기", href: "/service/speaker" }, CONSULT],
     bg: "CCTV+스피커 슬라이드 배경 (원본 2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg)",
+    img: "/images/stock/hero-speaker-bookshelf-speaker.jpg",
+    alt: "실내에 놓인 스피커",
   },
 ];
 
@@ -93,12 +105,15 @@ function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
   const Heading = idx === 0 ? "h1" : "h2";
   return (
     <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
-      {/* 배경 이미지 자리 */}
-      <Placeholder
-        dark
-        quiet
-        label={slide.bg}
-        className="absolute inset-0 z-0 h-full w-full border-0"
+      {/* 배경 사진 — 스톡 사진(CC0): public/images/stock/hero-*.jpg — 실제 사진 확보 시 교체
+          첫 슬라이드는 첫 화면(LCP)이라 preload, 나머지는 lazy */}
+      <Image
+        src={slide.img}
+        alt={slide.alt}
+        fill
+        preload={idx === 0}
+        sizes="100vw"
+        className="z-0 object-cover"
       />
       {/* 카피 가독성용 어두운 그라데이션 (모바일: 위→아래 / PC: 왼쪽→오른쪽) */}
       <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(12,11,9,0.85)_0%,rgba(12,11,9,0.55)_60%,rgba(12,11,9,0.3)_100%)] lg:bg-[linear-gradient(90deg,rgba(12,11,9,0.85)_0%,rgba(12,11,9,0.5)_55%,rgba(12,11,9,0.1)_100%)]" />

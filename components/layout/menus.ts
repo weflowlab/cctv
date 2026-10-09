@@ -5,11 +5,16 @@
  * - PC 헤더(DesktopHeader)와 모바일 헤더(MobileHeader)가 같은 데이터를 공유한다.
  */
 
-export type Menu = { name: string };
+/**
+ * name: 메뉴 이름 / href: 실제 이동 주소 (없으면 키 경로 그대로)
+ * - 서비스는 하위 탭만 있는 메뉴라 첫 탭(/service/install)으로 바로 연결 — 중간 리다이렉트 페이지를 거치면
+ *   이동 중 빈 화면·오류 표시·스크롤 튐이 생김
+ */
+export type Menu = { name: string; href?: string };
 
 export const MENUS: Record<string, Menu> = {
   "/about": { name: "회사소개" },
-  "/service": { name: "서비스" }, // 탭: /service/install · rental · as · speaker
+  "/service": { name: "서비스", href: "/service/install" }, // 탭: /service/install · rental · as · speaker
   "/cases": { name: "시공사례" }, // 칩: /cases/place/home · store · office · factory · public (구 장소별 CCTV 통합)
   "/calculator": { name: "견적 계산기" }, // 질문 6단계 → 추천 대수·예상 견적
   "/faq": { name: "FAQ" },

@@ -10,7 +10,7 @@
  * - 카드 문구: 신규 회사 톤(고객 불안 → 해결). 가격·보증기간 같은 구체 조건은 홈에서 빼고 각 서비스 페이지에서 안내.
  */
 import Link from "next/link";
-import Placeholder from "@/components/common/Placeholder";
+import Image from "next/image";
 import Reveal from "@/components/common/Reveal";
 import { SERVICES, SITE, type ServiceSlug } from "@/lib/site";
 import { ArrowRightIcon } from "./icons";
@@ -75,10 +75,16 @@ export default function ServiceCards() {
             <span className={`${BUTTON} bg-point`}>
               <ArrowRightIcon className={ARROW} />
             </span>
-            <Placeholder
-              label="CCTV 설치 (카메라 + 녹화기 구성)"
-              className="absolute bottom-[-20px] left-0 h-[200px] w-full lg:bottom-0 lg:h-[320px]"
-            />
+            {/* 스톡 사진(CC0): public/images/stock/card-install-dome-camera.jpg — 실제 사진 확보 시 교체 */}
+            <div className="absolute bottom-[-20px] left-0 h-[200px] w-full overflow-hidden lg:bottom-0 lg:h-[320px]">
+              <Image
+                src="/images/stock/card-install-dome-camera.jpg"
+                alt="천장에 설치된 돔형 CCTV 카메라"
+                fill
+                sizes="(min-width: 1024px) 528px, (min-width: 480px) 480px, 100vw"
+                className="object-cover"
+              />
+            </div>
             <CardLink slug="install" />
           </Reveal>
 
@@ -131,11 +137,13 @@ export default function ServiceCards() {
             <span className={`${BUTTON} bg-black/[0.68]`}>
               <ArrowRightIcon className={ARROW} />
             </span>
-            <Placeholder
-              quiet
-              dark
-              label="CCTV 렌탈 (월 이용료로 설치)"
-              className="absolute bottom-0 left-0 z-0 h-full w-full"
+            {/* 스톡 사진(CC0): public/images/stock/card-rental-rooftop-camera.jpg — 실제 사진 확보 시 교체 */}
+            <Image
+              src="/images/stock/card-rental-rooftop-camera.jpg"
+              alt="파란 하늘 아래 건물 옥상에 설치된 CCTV 카메라"
+              fill
+              sizes="(min-width: 1024px) 528px, (min-width: 480px) 480px, 100vw"
+              className="z-0 object-cover"
             />
             <CardLink slug="rental" />
           </Reveal>

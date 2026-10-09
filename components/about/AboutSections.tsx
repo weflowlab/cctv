@@ -15,6 +15,7 @@
  * - 반응형: Tailwind 기본(모바일) + lg:(PC)
  */
 import type { ReactNode } from "react";
+import Image from "next/image";
 import Placeholder from "@/components/common/Placeholder";
 import Reveal from "@/components/common/Reveal";
 import { LEGACY, SITE } from "@/lib/site";
@@ -112,21 +113,26 @@ function Body({
   );
 }
 
-/** 네이비 배경(이미지 자리) 위에 흰 글씨가 올라가는 블록 — keeper ImageBackdrop 과 동일 수치 */
+/** 네이비 배경 사진 위에 흰 글씨가 올라가는 블록 — keeper ImageBackdrop 과 동일 수치 */
 function ImageBackdrop({
   label,
+  photo,
   minHeightPc,
   children,
 }: {
+  /** 실제 사진 확보 시 들어갈 사진 설명 (현재 스톡 사진의 alt 로 사용) */
   label: string;
+  /** 배경 사진 경로 — 스톡 사진(CC0): public/images/stock/*.jpg — 실제 사진 확보 시 교체 */
+  photo: string;
   minHeightPc: string;
   children: ReactNode;
 }) {
   return (
     <div className={`relative flex h-auto w-full items-center justify-center ${minHeightPc}`}>
-      {/* 실제 배경 사진 대신 플레이스홀더 — 흰 글씨 가독성을 위해 브랜드 네이비 위에 dark 플레이스홀더 */}
-      <div className="absolute inset-0 bg-brand">
-        <Placeholder label={label} dark quiet className="h-full w-full border-0" />
+      {/* 배경 사진 + 브랜드 네이비 오버레이(흰 글씨 가독성) */}
+      <div className="absolute inset-0 overflow-hidden bg-brand">
+        <Image src={photo} alt={label} fill sizes="100vw" className="object-cover" />
+        <div className="absolute inset-0 bg-brand/80" />
       </div>
       <div className="relative z-[1] flex flex-col items-center justify-center gap-[14px] px-[20px] py-[100px] lg:gap-[24px] lg:py-[200px]">
         {children}
@@ -187,7 +193,10 @@ export function StorySection() {
 
       {/* ===== 네이비 배경(이미지 자리) 위 "그래서, 우리는 하나로 묶기로 했습니다" + "그리고 알게 되었습니다" / PC min-height 826px ===== */}
       <ImageBackdrop
-        label="스토리 상단 배경 이미지 — 기사님이 현장에서 CCTV를 설치하는 모습"
+        label="벽면을 따라 정리된 배선 전선관과 분전함"
+        // 스톡 사진(CC0): public/images/stock/about-story-cable-conduits.jpg — 실제 사진 확보 시 교체
+        // (원래 자리: 기사님이 현장에서 CCTV를 설치하는 모습)
+        photo="/images/stock/about-story-cable-conduits.jpg"
         minHeightPc="lg:min-h-[826px]"
       >
         <Reveal>
@@ -285,10 +294,17 @@ export function PhilosophySection() {
 
         <div className="flex w-full flex-col items-center justify-start gap-[40px] lg:gap-[80px]">
           {PHILOSOPHY.map((item) => {
-            // 카드: 이미지 자리(Placeholder) 위에 네이비 오버레이 + 큰 영문 "Unite ○○"
+            // 카드: 배경 사진 위에 네이비 오버레이 + 큰 영문 "Unite ○○"
             const card = (
               <div className="relative flex h-[152px] w-full items-center justify-center overflow-hidden rounded-[12px] bg-brand lg:h-[244px] lg:rounded-[20px]">
-                <Placeholder label={item.image} dark quiet className="absolute inset-0 h-full w-full border-0" />
+                {/* 스톡 사진(CC0): public/images/stock/about-*.jpg (philosophy.tsx photo) — 실제 사진 확보 시 교체 */}
+                <Image
+                  src={item.photo}
+                  alt={item.photoAlt}
+                  fill
+                  sizes="(min-width: 1024px) 520px, 100vw"
+                  className="object-cover"
+                />
                 <div className="absolute inset-0 bg-brand/70" />
                 <p className="relative whitespace-nowrap text-[24px] font-bold leading-[38px] text-white lg:text-[32px] lg:leading-normal">
                   Unite&nbsp;<span className="text-point">{item.keyword}</span>
@@ -377,7 +393,10 @@ export function ClosingSection() {
       {/* ===== 네이비 배경(이미지 자리) 위 "그리고 우리는 믿습니다." / PC min-height 407px ===== */}
       <div className="w-full lg:pb-[200px]">
         <ImageBackdrop
-          label="스토리 하단 배경 이미지 — 안심하고 일상을 보내는 고객의 공간"
+          label="햇빛이 드는 밝고 깔끔한 사무 공간"
+          // 스톡 사진(CC0): public/images/stock/about-closing-bright-interior.jpg — 실제 사진 확보 시 교체
+          // (원래 자리: 안심하고 일상을 보내는 고객의 공간)
+          photo="/images/stock/about-closing-bright-interior.jpg"
           minHeightPc="lg:min-h-[407px]"
         >
           <Reveal>

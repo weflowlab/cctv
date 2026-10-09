@@ -5,6 +5,7 @@
  * - 원본 자료가 배너 한 장뿐이라 섹션을 2개로 간결하게 유지. 원본에 없는 문구는 TODO 주석.
  */
 import Placeholder from "@/components/common/Placeholder";
+import Image from "next/image";
 import Reveal from "@/components/common/Reveal";
 import { SPEAKER_BENEFITS } from "./data";
 import { SectionHeading, SpaceOrBreak } from "./ui";
@@ -28,10 +29,17 @@ export default function SpeakerTab() {
               보안 솔루션을 한 번에
             </p>
           </div>
-          <Placeholder
-            label="CCTV+스피커 동시 시공 배너 (원본 2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg)"
-            className="aspect-[1693/929] w-full max-w-[520px] rounded-[20px] lg:w-[520px]"
-          />
+          {/* 스톡 사진(CC0): public/images/stock/speaker-hero-woofer.jpg — 실제 사진 확보 시 교체
+              (원래 자리: CCTV+스피커 동시 시공 배너, 원본 2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg) */}
+          <div className="relative aspect-[1693/929] w-full max-w-[520px] shrink-0 overflow-hidden rounded-[20px] lg:w-[520px]">
+            <Image
+              src="/images/stock/speaker-hero-woofer.jpg"
+              alt="스피커 우퍼 유닛 클로즈업"
+              fill
+              sizes="(min-width: 552px) 520px, 100vw"
+              className="object-cover"
+            />
+          </div>
         </div>
       </section>
 
