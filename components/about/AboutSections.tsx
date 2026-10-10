@@ -150,7 +150,7 @@ export function StorySection() {
       {/* ===== 문제 제기: 뱃지 + "CCTV, 막상 달려고 하면 왜 이렇게 어려울까요?" + 3문단 / 문단 Reveal 순차 등장
            주제: 브랜드 가이드 문구 "복잡한 보안은 쉽게, 사후관리는 확실하게" — 처음 CCTV를 알아보는 사람의 막막함에서 출발
            (홈·AS 탭의 "고장 나면 연락 두절" 이야기와 겹치지 않게, 다른 업체를 깎아내리지 않는 실제 고민으로) ===== */}
-      <div className="flex flex-col items-center justify-center gap-[14px] px-[20px] pb-[90px] pt-[40px] lg:gap-[24px] lg:pb-[150px] lg:pt-[140px]">
+      <div className="flex flex-col items-center justify-center gap-[14px] px-[20px] pb-[120px] pt-[52px] lg:gap-[24px] lg:pb-[150px] lg:pt-[140px]">
         <Reveal>
           <SectionBadge>Brand Story</SectionBadge>
         </Reveal>
@@ -468,8 +468,8 @@ export function StrengthsSection() {
              같은 행(3개) 안에서 100ms 씩 지연을 줘 순차적으로 등장 ===== */}
         <ul className="mt-[16px] grid w-full grid-cols-2 gap-[10px] lg:mt-[24px] lg:grid-cols-3 lg:gap-[20px]">
           {STRENGTHS.map((item, i) => {
-            // 모바일 2열에서 혼자 남는 9번 카드: 가로로 길게(2칸), 안 배치는 다른 카드와 같음(번호 → 아이콘 → 문구, 가운데)
-            const wide = i === STRENGTHS.length - 1;
+            // 모바일 2열: 1번 카드를 가로로 길게(2칸) → 나머지 8개가 2열로 딱 맞음. 안 배치는 다른 카드와 같음(번호 → 아이콘 → 문구, 가운데)
+            const wide = i === 0;
             return (
               <Reveal as="li" key={item.title} delay={(i % 3) * 100} className={`h-full ${wide ? "max-lg:col-span-2" : ""}`}>
                 <div

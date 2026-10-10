@@ -61,8 +61,9 @@ function formatPhone(raw: string) {
 }
 
 /** 입력칸 공통 스타일 (에러 시 테두리 브랜드색, 포커스 시 브랜드색) */
+// 글자 16px: iOS 사파리는 16px 미만 입력칸을 누르면 화면을 자동 확대하므로 모바일도 16px
 const inputClass = (hasError: boolean) =>
-  `h-[52px] w-full rounded-[8px] border bg-white px-[12px] py-[16px] text-[14px] font-normal leading-[140%] tracking-[-0.32px] text-[#4a5565] outline-0 placeholder:text-[#999] focus:border-brand lg:h-[54px] lg:px-[18px] lg:text-[16px] ${
+  `h-[52px] w-full rounded-[8px] border bg-white px-[12px] py-[16px] text-[16px] font-normal leading-[140%] tracking-[-0.32px] text-[#4a5565] outline-0 placeholder:text-[#999] focus:border-brand lg:h-[54px] lg:px-[18px] lg:text-[16px] ${
     hasError ? "border-brand" : "border-[#dadde5]"
   }`;
 
