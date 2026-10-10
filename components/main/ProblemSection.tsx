@@ -46,8 +46,12 @@ export default function ProblemSection() {
                 <WorryIconSvg name={w.icon} />
               </div>
               <h3 className="text-[16px] font-bold tracking-[-0.32px] text-white lg:text-[19px]">{w.title}</h3>
-              <p className="whitespace-pre-line break-keep text-[13px] leading-[20px] tracking-[-0.26px] text-white/70 lg:text-[15px] lg:leading-[23px]">
-                &ldquo;{w.desc}&rdquo;
+              <p
+                className={`break-keep text-[13px] leading-[20px] tracking-[-0.26px] text-white/70 lg:text-[15px] lg:leading-[23px] ${
+                  "mobileBreak" in w ? "max-lg:whitespace-pre-line" : "whitespace-pre-line"
+                }`}
+              >
+                &ldquo;{"homeDesc" in w ? w.homeDesc : w.desc}&rdquo;
               </p>
             </Reveal>
           ))}

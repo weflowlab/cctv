@@ -20,7 +20,8 @@ export default function CalculatorBanner({ className = "" }: { className?: strin
           몇 대가 필요할지 고민되시나요?
         </p>
         <p className="mt-[4px] text-[13px] leading-[20px] tracking-[-0.26px] text-white/85 lg:mt-[6px] lg:text-[18px] lg:leading-[28px] lg:tracking-[-0.36px]">
-          공간 정보를 입력하시면 CCTV 설치 수량을 추천해 드려요
+          공간 정보를 입력하시면
+          <br className="lg:hidden" /> CCTV 설치 수량을 추천해 드려요
         </p>
         <span className="mt-[16px] inline-flex items-center gap-[6px] rounded-[100px] bg-white py-[10px] pl-[16px] pr-[14px] text-[14px] font-bold leading-[1.2] tracking-[-0.28px] text-point-strong lg:mt-[20px] lg:gap-[8px] lg:py-[14px] lg:pl-[24px] lg:pr-[22px] lg:text-[17px]">
           견적 계산기 바로가기

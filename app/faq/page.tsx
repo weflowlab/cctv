@@ -25,7 +25,11 @@ export default function FaqPage() {
       {/* ===== 하단 상담 CTA: FAQ — 남은 궁금증 문의 ===== */}
       <ConsultCta
         lead="찾는 답이 없으셨나요?"
-        title="직접 물어보시면 바로 답해 드립니다."
+        title={
+          <>
+            직접 물어보시면<br className="lg:hidden" /> 바로 답해 드립니다.
+          </>
+        }
       />
     </>
   );

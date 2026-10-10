@@ -46,7 +46,7 @@ export const PACKAGE_IMAGES: Record<Placement, string[]> = {
 export const PACKAGE_COMMON_ITEMS = ["꼼꼼한 설치 시공+기본 자재 포함", "기계 무상 AS 1년", "모니터 별도", "부가세 별도"];
 
 export const PACKAGE_NOTES = [
-  "매장, 주택, 사무실 등 소규모 전용 알뜰 특가패키지, 정보통신면허 공사 및 큰 규모의 공사 발주 별도 문의",
+  "매장, 주택, 사무실 등 소규모 전용 알뜰 특가패키지,\n정보통신면허 공사 및 큰 규모의 공사 발주 별도 문의", // \n = 모바일만 줄바꿈
   "수도권 기준, 지방권 금액 소폭 변동",
 ];
 
@@ -132,11 +132,13 @@ export const AS_SERVICES = [
 /**
  * AS 고객 고민 4가지 (원본 "CCTV AS 이런 문제로 고민해보신 적 있으신가요?")
  * - title 은 원본 그대로, desc 는 고객 입장 공감 문구(신규 작성, \n = 줄바꿈), icon 은 AsTab 의 인라인 SVG 키
+ * - mobileBreak: true 면 \n 줄바꿈을 모바일에서만 (PC 는 한 줄)
+ * - homeDesc: 홈 고민 카드에서만 다르게 끊을 때 (없으면 desc)
  */
 export const AS_WORRIES = [
   { title: "설치업체 책임회피", desc: "고장 났는데 설치 업체는\n'우리 책임 아니다'만 반복해요", icon: "shield" },
   { title: "시공사 조작미숙", desc: "사용법을 물어봐도\n시공 기사님도 잘 모르세요", icon: "tool" },
-  { title: "시공사 연락두절", desc: "AS 요청 전화를 해도 받지 않아요", icon: "phone" },
+  { title: "시공사 연락두절", desc: "AS 요청 전화를\n해도 받지 않아요", homeDesc: "AS 요청 전화를 해도\n받지 않아요", icon: "phone", mobileBreak: true },
   { title: "설치업체 불친절", desc: "문의할 때마다 불친절한 응대에 마음이 상해요", icon: "chat" },
 ] as const;
 

@@ -80,7 +80,7 @@ export default function InstallTab() {
                   <h3 className="mt-[4px] text-[18px] font-bold leading-[26px] tracking-[-0.36px] text-[#222] lg:text-[22px] lg:leading-[32px]">
                     {step.title}
                   </h3>
-                  <p className="mt-[6px] whitespace-pre-line text-[14px] leading-[22px] tracking-[-0.28px] text-[#666] lg:text-[16px] lg:leading-[24px]">
+                  <p className="mt-[6px] text-[14px] leading-[22px] tracking-[-0.28px] text-[#666] lg:whitespace-pre-line lg:text-[16px] lg:leading-[24px]">
                     {step.desc}
                   </p>
                 </div>

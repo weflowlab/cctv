@@ -43,16 +43,6 @@ const SHOW_ORG_CHART = false;
 /* 공통 조각 (keeper story 와 동일 수치)                                  */
 /* ------------------------------------------------------------------ */
 
-/** PC 에서만 줄바꿈 (모바일은 공백으로 이어서 자연 줄바꿈) */
-function PcBr() {
-  return (
-    <>
-      {" "}
-      <br className="hidden lg:inline" />
-    </>
-  );
-}
-
 /** 모바일에서만 줄바꿈 (PC 는 공백으로 이어짐) */
 function MoBr() {
   return (
@@ -299,9 +289,9 @@ export function PhilosophySection() {
           </h3>
           <p className="flex-1 break-keep text-center text-[13px] leading-[21px] text-[#787878] lg:text-left lg:text-[24px] lg:leading-[36px]">
             하나된 기술과 책임 있는 시공으로
-            <PcBr />
+            <br />
             고객의 공간과 일상을 끝까지 지키겠다는 약속,
-            <PcBr />
+            <br />
             그것이 우리의 철학입니다.
           </p>
         </Reveal>
@@ -392,11 +382,13 @@ export function ClosingSection() {
         <div className="flex flex-col items-center gap-[24px] lg:gap-[40px]">
           <Reveal delay={200}>
             <Body tone="soft">
-              우리는 현장에서 직접 CCTV를 설치하고, 고치고, 관리해 온 사람들입니다.
+              우리는 현장에서 직접 CCTV를 설치하고, 고치고,
+              <MoBr />
+              관리해 온 사람들입니다.
               {/* TODO: 고객 확인 후 "○○년간 ○○건의 현장을…" 같은 실적 문장으로 교체 가능 */}
               <br />
               수많은 현장에서 고객이 가장 어려워한 건 장비가 아니라,
-              <PcBr />
+              <br />
               무엇을 골라야 할지 모르는 막막함이었습니다.
             </Body>
           </Reveal>
@@ -475,22 +467,36 @@ export function StrengthsSection() {
              인터랙션: 각 카드를 Reveal 로 감싸 화면 진입 시 slide-in-up,
              같은 행(3개) 안에서 100ms 씩 지연을 줘 순차적으로 등장 ===== */}
         <ul className="mt-[16px] grid w-full grid-cols-2 gap-[10px] lg:mt-[24px] lg:grid-cols-3 lg:gap-[20px]">
-          {STRENGTHS.map((item, i) => (
-            <Reveal as="li" key={item.title} delay={(i % 3) * 100} className="h-full">
-              <div className="flex h-full flex-col items-center gap-[12px] rounded-[12px] bg-white px-[12px] py-[24px] text-center shadow-[0_4px_20px_rgba(0,0,0,0.05)] lg:gap-[20px] lg:rounded-[20px] lg:px-[24px] lg:py-[40px]">
-                <span className="text-[13px] font-bold text-point-strong lg:text-[18px]">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                {/* 아이콘: 옅은 틸 원 + 진한 틸 라인 아이콘 */}
-                <span className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-point-light text-point-strong lg:h-[80px] lg:w-[80px]">
-                  <item.Icon className="h-[28px] w-[28px] lg:h-[42px] lg:w-[42px]" />
-                </span>
-                <p className="whitespace-pre-line break-keep text-[14px] font-bold leading-[22px] text-[#202020] lg:text-[22px] lg:leading-[34px]">
-                  {item.title}
-                </p>
-              </div>
-            </Reveal>
-          ))}
+          {STRENGTHS.map((item, i) => {
+            // 모바일 2열에서 혼자 남는 9번 카드: 가로로 길게(2칸) — [아이콘] [번호 / 문구] 가로 배치
+            const wide = i === STRENGTHS.length - 1;
+            return (
+              <Reveal as="li" key={item.title} delay={(i % 3) * 100} className={`h-full ${wide ? "max-lg:col-span-2" : ""}`}>
+                <div
+                  className={`flex h-full flex-col items-center gap-[12px] rounded-[12px] bg-white px-[12px] py-[24px] text-center shadow-[0_4px_20px_rgba(0,0,0,0.05)] lg:gap-[20px] lg:rounded-[20px] lg:px-[24px] lg:py-[40px] ${
+                    wide
+                      ? "max-lg:grid max-lg:grid-cols-[auto_auto] max-lg:content-center max-lg:justify-center max-lg:gap-x-[16px] max-lg:gap-y-[2px] max-lg:text-left"
+                      : ""
+                  }`}
+                >
+                  <span className="text-[13px] font-bold text-point-strong max-lg:justify-self-start lg:text-[18px]">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {/* 아이콘: 옅은 틸 원 + 진한 틸 라인 아이콘 */}
+                  <span
+                    className={`flex h-[52px] w-[52px] items-center justify-center rounded-full bg-point-light text-point-strong lg:h-[80px] lg:w-[80px] ${
+                      wide ? "max-lg:order-first max-lg:row-span-2" : ""
+                    }`}
+                  >
+                    <item.Icon className="h-[28px] w-[28px] lg:h-[42px] lg:w-[42px]" />
+                  </span>
+                  <p className="whitespace-pre-line break-keep text-[14px] font-bold leading-[22px] text-[#202020] lg:text-[22px] lg:leading-[34px]">
+                    {item.title}
+                  </p>
+                </div>
+              </Reveal>
+            );
+          })}
         </ul>
       </div>
     </section>

@@ -69,7 +69,8 @@ export default function CaseShowcase() {
             직접 방문해 시공합니다
           </h2>
           <p className="break-keep text-[15px] leading-[1.6] tracking-[-0.3px] text-sub lg:text-[18px]">
-            서울부터 지방까지, 직접 다녀온 현장마다 공간에 맞게 설계해 설치했습니다.
+            서울부터 지방까지,
+            <br className="lg:hidden" /> 직접 다녀온 현장마다 공간에 맞게 설계해 설치했습니다.
           </p>
         </div>
 

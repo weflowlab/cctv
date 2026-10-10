@@ -137,7 +137,11 @@ export default function AsTab() {
                   <WorryIconSvg name={w.icon} />
                 </div>
                 <h3 className="text-[16px] font-bold tracking-[-0.32px] text-[#222] lg:text-[19px]">{w.title}</h3>
-                <p className="whitespace-pre-line text-[13px] leading-[20px] tracking-[-0.26px] text-[#666] break-keep lg:text-[15px] lg:leading-[23px]">
+                <p
+                  className={`break-keep text-[13px] leading-[20px] tracking-[-0.26px] text-[#666] lg:text-[15px] lg:leading-[23px] ${
+                    "mobileBreak" in w ? "max-lg:whitespace-pre-line" : "whitespace-pre-line"
+                  }`}
+                >
                   &ldquo;{w.desc}&rdquo;
                 </p>
               </Reveal>
@@ -149,20 +153,26 @@ export default function AsTab() {
               기존 업체의 책임회피·불친절로 해결되지 않은 장애,
               <SpaceOrBreak />
               <strong className="font-bold text-point-strong">
-                {SITE.name}는 타사 제품이라도 직접 방문해 합리적인 가격으로 해결해 드립니다.
+                {SITE.name}는 타사 제품이라도 직접 방문해
+                <br className="lg:hidden" /> 합리적인 가격으로 해결해 드립니다.
               </strong>
             </p>
           </Reveal>
         </div>
       </section>
 
-      {/* ===== 해결: 수리 전문케어 서비스 5종 — 이미지 + 이름 카드 (PC 5열 / 모바일 2열), 순차 slide-up ===== */}
+      {/* ===== 해결: 수리 전문케어 서비스 5종 — 이미지 + 이름 카드 (PC 5열 / 모바일: 출장수리 큰 카드 + 2×2), 순차 slide-up ===== */}
       <section className="bg-[#f6f7fa] px-[16px] py-[60px] lg:px-0 lg:py-[120px]">
         <div className="mx-auto w-full max-w-[580px] lg:w-[1080px] lg:max-w-none">
           <SectionHeading
             eyebrow="SOLUTION"
             title={<>{SITE.name} <strong>수리 전문케어 서비스</strong></>}
-            desc="고장 진단부터 수리·교체·유지보수까지, 문제를 끝까지 해결해 드립니다."
+            desc={
+              <>
+                고장 진단부터 수리·교체·유지보수까지,
+                <br className="lg:hidden" /> 문제를 끝까지 해결해 드립니다.
+              </>
+            }
           />
           <ul className="mt-[32px] grid grid-cols-2 gap-[10px] lg:mt-[64px] lg:grid-cols-5 lg:gap-[16px]">
             {AS_SERVICES.map((s, i) => (
@@ -170,15 +180,16 @@ export default function AsTab() {
                 as="li"
                 key={s.title}
                 delay={i * 120}
-                className={`overflow-hidden rounded-[14px] bg-white ${i === AS_SERVICES.length - 1 ? "col-span-2 lg:col-span-1" : ""}`}
+                className={`overflow-hidden rounded-[14px] bg-white ${i === 0 ? "col-span-2 lg:col-span-1" : ""}`}
               >
                 {/* 스톡 사진(CC0): public/images/stock/as-*.webp — 실제 사진 확보 시 교체 */}
-                <div className="relative aspect-[4/3] w-full">
+                {/* 출장수리(첫 카드)는 모바일에서 2칸 큰 카드 → 사진 비율을 가로로 넓게 */}
+                <div className={`relative w-full ${i === 0 ? "aspect-[16/9] lg:aspect-[4/3]" : "aspect-[4/3]"}`}>
                   <Image
                     src={SERVICE_PHOTOS[i].src}
                     alt={SERVICE_PHOTOS[i].alt}
                     fill
-                    sizes="(min-width: 1024px) 204px, (min-width: 580px) 285px, 50vw"
+                    sizes={i === 0 ? "(min-width: 1024px) 204px, (min-width: 580px) 580px, 100vw" : "(min-width: 1024px) 204px, (min-width: 580px) 285px, 50vw"}
                     className="object-cover"
                   />
                 </div>

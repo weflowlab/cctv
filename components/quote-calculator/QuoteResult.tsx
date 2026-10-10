@@ -64,22 +64,23 @@ export default function QuoteResult({ data, recommended, onReset }: Props) {
           </p>
         </header>
 
-        {/* ===== 선택 요약 ===== */}
+        {/* ===== 선택 요약: 모바일 3 x 2 칸 / PC 한 줄 칩 ===== */}
         <div className="mt-[28px] flex flex-col items-center gap-[12px] lg:mt-[40px]">
-          <ul className="flex flex-wrap justify-center gap-[6px] lg:gap-[8px]">
+          <ul className="grid w-full grid-cols-3 gap-[6px] lg:flex lg:w-auto lg:flex-wrap lg:justify-center lg:gap-[8px]">
             {QUESTIONS.map((q) => (
               <li
                 key={q.key}
-                className="rounded-[100px] bg-white px-[12px] py-[6px] text-[13px] tracking-[-0.26px] text-[#666] lg:px-[16px] lg:text-[15px]"
+                className="flex flex-col items-center justify-center rounded-[12px] bg-white px-[6px] py-[8px] text-center text-[12px] leading-[1.35] tracking-[-0.26px] text-[#666] lg:block lg:rounded-[100px] lg:px-[16px] lg:py-[6px] lg:text-[15px]"
               >
-                {q.short} <strong className="font-bold text-[#222]">{answerLabel(q.key, data[q.key])}</strong>
+                {/* 모바일: 항목명 위 · 선택값 아래 2줄 / PC: 한 줄 */}
+                {q.short} <strong className="font-bold text-[#222] max-lg:text-[13px]">{answerLabel(q.key, data[q.key])}</strong>
               </li>
             ))}
           </ul>
         </div>
 
         {/* ===== 견적 카드: 대수 조정 슬라이더 + 렌탈 / 일시납 가격 ===== */}
-        <div className="mt-[28px] rounded-[14px] bg-white/60 px-[16px] pb-[16px] pt-[24px] lg:mt-[40px] lg:rounded-[20px] lg:px-[48px] lg:pb-[48px] lg:pt-[40px]">
+        <div className="mt-[28px] rounded-[14px] bg-white/60 px-[16px] pb-0 pt-[24px] lg:mt-[40px] lg:rounded-[20px] lg:px-[48px] lg:pb-[48px] lg:pt-[40px]">
           {/* 대수 조정: 드래그·−/+ 로 1~16대, 금액 즉시 재계산 */}
           <p className="text-center text-[15px] font-medium tracking-[-0.3px] text-[#333] lg:text-[18px]">
             대수를 직접 조정해 보세요 <span className="font-normal text-[#888]">(추천 {recommended}대)</span>
@@ -138,11 +139,11 @@ export default function QuoteResult({ data, recommended, onReset }: Props) {
             </section>
           </div>
 
-          {/* ===== 다시 계산하기: 견적 카드 아래 가운데 — 위 여백 16/36px (감싼 박스 아래 여백 16/48px) ===== */}
+          {/* ===== 다시 계산하기: 견적 카드 아래 가운데 — 모바일은 버튼 위아래 20px 동일(감싼 박스 아래 여백 0), PC 위 36px · 박스 아래 48px ===== */}
           <button
             type="button"
             onClick={onReset}
-            className="mx-auto mt-[16px] flex cursor-pointer items-center gap-[4px] text-[14px] font-medium tracking-[-0.28px] text-[#888] underline underline-offset-[3px] hover:text-point-strong lg:mt-[36px] lg:text-[16px]"
+            className="mx-auto flex cursor-pointer py-[20px] lg:py-0 items-center gap-[4px] text-[14px] font-medium tracking-[-0.28px] text-[#888] underline underline-offset-[3px] hover:text-point-strong lg:mt-[36px] lg:text-[16px]"
           >
             다시 계산하기
           </button>

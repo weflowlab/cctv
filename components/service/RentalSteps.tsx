@@ -6,16 +6,17 @@
  * - 동작: 2.5초마다 다음 단계가 활성화(브랜드색)되고, 활성 단계 아래 진행 바가 0→100% 로 채워짐.
  *   5단계 뒤에는 1단계로 순환. 단계를 클릭하면 그 단계부터 타이머를 다시 잰다.
  * - 화면 밖에 있을 땐 멈춤(IntersectionObserver) — 보이기 시작할 때 1단계부터 재생.
- * - PC: 가로 5칸 + 단계 사이 연결선 / 모바일: 세로 목록.
+ * - PC: 가로 5칸 + 단계 사이 연결선 / 모바일: 가로 슬라이드(MobileCarousel, 활성 단계를 자동으로 따라감 — 손대면 멈춤).
  */
 import { useEffect, useRef, useState } from "react";
+import MobileCarousel from "@/components/common/MobileCarousel";
 import { RENTAL_STEPS } from "./data";
 
 const STEP_MS = 2500;
 const TICK_MS = 50;
 
 export default function RentalSteps() {
-  const rootRef = useRef<HTMLOListElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   // elapsed: 현재 단계 시작 후 지난 시간(ms) → 진행 바 비율
   // (단계와 경과 시간을 한 state 로 묶어 updater 안에서 함께 갱신 — StrictMode 이중 실행에도 안전)
@@ -50,57 +51,59 @@ export default function RentalSteps() {
   const ratio = Math.min(elapsed / STEP_MS, 1);
 
   return (
-    <ol ref={rootRef} className="relative mt-[32px] flex flex-col gap-[10px] lg:mt-[64px] lg:flex-row lg:gap-[16px]">
-      {RENTAL_STEPS.map((title, i) => {
-        const isActive = i === current;
-        const isDone = i < current;
-        return (
-          <li key={title} className="relative flex-1">
-            {/* PC: 단계 사이 연결선 (마지막 제외) */}
-            {i < RENTAL_STEPS.length - 1 && (
-              <span
-                aria-hidden
-                className={`absolute left-[calc(100%+2px)] top-1/2 hidden h-[2px] w-[12px] -translate-y-1/2 lg:block ${
-                  isDone ? "bg-brand" : "bg-[#dedede]"
-                }`}
-              />
-            )}
-            <button
-              type="button"
-              onClick={() => goTo(i)}
-              aria-current={isActive ? "step" : undefined}
-              className={`relative flex w-full cursor-pointer items-center gap-[14px] overflow-hidden rounded-[14px] border px-[20px] py-[18px] text-left transition-colors duration-300 lg:flex-col lg:gap-[12px] lg:px-[12px] lg:py-[32px] lg:text-center ${
-                isActive ? "border-brand bg-brand-light" : "border-[#eee] bg-white"
-              }`}
-            >
-              <span
-                className={`flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-full text-[15px] font-bold transition-colors duration-300 lg:h-[52px] lg:w-[52px] lg:text-[20px] ${
-                  isActive || isDone ? "bg-brand text-white" : "bg-[#f5f5f5] text-[#888]"
-                }`}
-              >
-                {i + 1}
-              </span>
-              <span className="flex flex-col lg:items-center">
-                <span
-                  className={`text-[17px] font-bold leading-[26px] tracking-[-0.34px] lg:text-[20px] lg:leading-[30px] ${
-                    isActive ? "text-point-strong" : "text-[#222]"
-                  }`}
-                >
-                  {title}
-                </span>
-              </span>
-              {/* 활성 단계 진행 바 */}
-              {isActive && (
+    <div ref={rootRef} className="mt-[32px] lg:mt-[64px]">
+      <MobileCarousel as="ol" follow={current} className="relative lg:flex lg:flex-row lg:gap-[16px]">
+        {RENTAL_STEPS.map((title, i) => {
+          const isActive = i === current;
+          const isDone = i < current;
+          return (
+            <li key={title} className="relative flex-1 max-lg:w-[40%]">
+              {/* PC: 단계 사이 연결선 (마지막 제외) */}
+              {i < RENTAL_STEPS.length - 1 && (
                 <span
                   aria-hidden
-                  className="absolute bottom-0 left-0 h-[3px] bg-brand"
-                  style={{ width: `${ratio * 100}%` }}
+                  className={`absolute left-[calc(100%+2px)] top-1/2 hidden h-[2px] w-[12px] -translate-y-1/2 lg:block ${
+                    isDone ? "bg-brand" : "bg-[#dedede]"
+                  }`}
                 />
               )}
-            </button>
-          </li>
-        );
-      })}
-    </ol>
+              <button
+                type="button"
+                onClick={() => goTo(i)}
+                aria-current={isActive ? "step" : undefined}
+                className={`relative flex h-full w-full cursor-pointer flex-col items-center gap-[10px] overflow-hidden rounded-[14px] border px-[12px] py-[24px] text-center transition-colors duration-300 lg:gap-[12px] lg:py-[32px] ${
+                  isActive ? "border-brand bg-brand-light" : "border-[#eee] bg-white"
+                }`}
+              >
+                <span
+                  className={`flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-full text-[15px] font-bold transition-colors duration-300 lg:h-[52px] lg:w-[52px] lg:text-[20px] ${
+                    isActive || isDone ? "bg-brand text-white" : "bg-[#f5f5f5] text-[#888]"
+                  }`}
+                >
+                  {i + 1}
+                </span>
+                <span className="flex flex-col items-center">
+                  <span
+                    className={`text-[17px] font-bold leading-[26px] tracking-[-0.34px] lg:text-[20px] lg:leading-[30px] ${
+                      isActive ? "text-point-strong" : "text-[#222]"
+                    }`}
+                  >
+                    {title}
+                  </span>
+                </span>
+                {/* 활성 단계 진행 바 */}
+                {isActive && (
+                  <span
+                    aria-hidden
+                    className="absolute bottom-0 left-0 h-[3px] bg-brand"
+                    style={{ width: `${ratio * 100}%` }}
+                  />
+                )}
+              </button>
+            </li>
+          );
+        })}
+      </MobileCarousel>
+    </div>
   );
 }

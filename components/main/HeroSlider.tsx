@@ -21,7 +21,7 @@ import "swiper/css";
 import Image from "next/image";
 import useIsClient from "@/components/common/useIsClient";
 import { LEGACY, SITE } from "@/lib/site";
-import { ArrowRightIcon } from "./icons";
+import { ArrowRightIcon, CalculatorIcon, ClipboardCheckIcon } from "./icons";
 
 type Slide = {
   id: string;
@@ -29,10 +29,11 @@ type Slide = {
   eyebrow: string;
   /** 메인 카피 (줄 단위) */
   title: string[];
-  /** 서브 카피 */
+  /** 서브 카피 ("\n" = 모바일에서만 줄바꿈, PC 는 공백) */
   desc: string;
-  /** 버튼 (첫 번째는 브랜드색 채움, 두 번째는 흰 테두리) */
-  buttons: { label: string; href: string }[];
+  /** 버튼 (첫 번째는 브랜드색 채움, 두 번째는 흰 테두리)
+   *  short: 모바일 문구(두 버튼 가로 배치용 짧은 문구), icon: 앞 아이콘 */
+  buttons: { label: string; short: string; href: string; icon: "calc" | "consult" }[];
   /** 배경 이미지 자리 설명 (원래 넣을 실제 사진) */
   bg: string;
   /** 배경 사진 — 스톡 사진(CC0): public/images/stock/*.webp — 실제 사진 확보 시 교체 */
@@ -46,15 +47,15 @@ type Slide = {
  * - 기존 회사 실적(수상·순위·전국 지사) 표현은 쓰지 않는다.
  * - 첫 장: 회사가 무엇을 하는지(설치·렌탈·AS + 운영시간)를 eyebrow 로 바로 보여 줌.
  */
-const CONSULT = { label: "상담 신청하기", href: "/contact" };
+const CONSULT = { label: "상담 신청하기", short: "상담 신청하기", href: "/contact", icon: "consult" as const };
 
 const SLIDES: Slide[] = [
   {
     id: "main",
     eyebrow: `${SITE.serviceArea} · ${SITE.hours}`,
     title: ["자리 비운 사이 생기는 일,", "이제 CCTV로 지키세요"],
-    desc: `현장에 맞춘 설계부터 설치·렌탈·수리까지, ${SITE.name}가 한 번에 책임집니다.`,
-    buttons: [{ label: "내 공간 견적 계산하기", href: "/calculator" }, CONSULT],
+    desc: `현장에 맞춘 설계부터 설치·렌탈·수리까지,\n${SITE.name}가 한 번에 책임집니다.`,
+    buttons: [{ label: "내 공간 견적 계산하기", short: "견적 계산하기", href: "/calculator", icon: "calc" }, CONSULT],
     bg: "메인 히어로 배경 (매장·사무실 CCTV 설치 현장)",
     img: "/images/stock/hero-main-ceiling-camera.webp",
     alt: "천장에 설치된 CCTV 카메라",
@@ -63,8 +64,8 @@ const SLIDES: Slide[] = [
     id: "rental",
     eyebrow: "CCTV 렌탈",
     title: ["설치비 부담에 미루고 계셨다면,", "월 렌탈로 바로 시작하세요"],
-    desc: "목돈 없이 월 이용료로 설치하고, 사용 중 고장도 함께 관리합니다.",
-    buttons: [{ label: "월 렌탈료 계산해 보기", href: "/calculator" }, CONSULT],
+    desc: "목돈 없이 월 이용료로 설치하고,\n사용 중 고장도 함께 관리합니다.",
+    buttons: [{ label: "월 렌탈료 계산해 보기", short: "렌탈료 계산하기", href: "/calculator", icon: "calc" }, CONSULT],
     bg: "렌탈 슬라이드 배경 (CCTV 렌탈 설치 현장)",
     img: "/images/stock/hero-rental-building-dome-camera.webp",
     alt: "건물 외벽에 설치된 돔 카메라",
@@ -73,8 +74,8 @@ const SLIDES: Slide[] = [
     id: "as",
     eyebrow: "AS 수리",
     title: ["CCTV가 갑자기 먹통이라면,", "어느 업체 제품이든 고쳐 드립니다"],
-    desc: `${SITE.hours} 접수 — 방문 점검부터 수리까지 끝까지 맡습니다.`,
-    buttons: [{ label: "교체·증설 견적 알아보기", href: "/calculator" }, CONSULT],
+    desc: `${SITE.hours} 접수,\n방문 점검부터 수리까지 끝까지 맡습니다.`,
+    buttons: [{ label: "교체·증설 견적 알아보기", short: "견적 알아보기", href: "/calculator", icon: "calc" }, CONSULT],
     bg: "AS 출장수리 슬라이드 배경 (CCTV 점검·수리 현장)",
     img: "/images/stock/hero-as-technician-rack.webp",
     alt: "장비 랙 앞에서 노트북으로 점검 중인 기사",
@@ -84,7 +85,7 @@ const SLIDES: Slide[] = [
     eyebrow: "CCTV + 스피커",
     title: ["CCTV·스피커, 따로 공사하시나요?", "한 번에 동시 시공하세요"],
     desc: "배선 공사를 한 번에 끝내 공사 기간과 중복 비용을 줄이고, 관리도 한 곳에서.",
-    buttons: [{ label: "우리 공간 견적 계산하기", href: "/calculator" }, CONSULT],
+    buttons: [{ label: "우리 공간 견적 계산하기", short: "견적 계산하기", href: "/calculator", icon: "calc" }, CONSULT],
     bg: "CCTV+스피커 슬라이드 배경 (원본 2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg)",
     img: "/images/stock/hero-speaker-bookshelf-speaker.webp",
     alt: "실내에 놓인 스피커",
@@ -137,25 +138,29 @@ function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
             {slide.title[1]}
           </strong>
         </Heading>
-        <p className="mt-[12px] break-keep text-[15px] font-normal leading-[1.6] tracking-[-0.3px] text-white/85 lg:mt-[20px] lg:text-[20px]">
+        <p className="mt-[12px] break-keep text-[15px] font-normal leading-[1.6] tracking-[-0.3px] text-white/85 max-lg:whitespace-pre-line lg:mt-[20px] lg:text-[20px]">
           {slide.desc}
         </p>
-        <div className="mt-[28px] flex flex-wrap justify-center gap-[8px] lg:mt-[44px] lg:justify-start lg:gap-[12px]">
-          {slide.buttons.map((btn, bIdx) => (
-            <Link
-              key={btn.href}
-              href={btn.href}
-              className={[
-                "flex h-[44px] w-fit items-center justify-center gap-[6px] rounded-[100px] px-[22px] text-[15px] font-bold tracking-[-0.2px] transition-opacity duration-150 active:opacity-70 lg:h-[56px] lg:gap-[8px] lg:px-[30px] lg:text-[18px]",
-                bIdx === 0
-                  ? "bg-brand text-white"
-                  : "border border-white/70 bg-white/10 text-white",
-              ].join(" ")}
-            >
-              {btn.label}
-              <ArrowRightIcon className="h-[12px] w-[14px] lg:h-[14px] lg:w-[16px]" />
-            </Link>
-          ))}
+        {/* 버튼 2개: 모바일은 짧은 문구로 가로 2칸 꽉 채움 / PC 는 긴 문구 + 화살표. 앞에 아이콘(계산기 / 체크 클립보드) */}
+        <div className="mt-[28px] grid w-full max-w-[360px] grid-cols-2 gap-[8px] lg:mt-[44px] lg:flex lg:w-auto lg:max-w-none lg:gap-[12px]">
+          {slide.buttons.map((btn, bIdx) => {
+            const Icon = btn.icon === "calc" ? CalculatorIcon : ClipboardCheckIcon;
+            return (
+              <Link
+                key={btn.href}
+                href={btn.href}
+                className={[
+                  "flex h-[48px] items-center justify-center gap-[6px] rounded-[100px] px-[12px] text-[15px] font-bold tracking-[-0.3px] transition-opacity duration-150 active:opacity-70 lg:h-[56px] lg:w-fit lg:gap-[8px] lg:px-[30px] lg:text-[18px]",
+                  bIdx === 0 ? "bg-brand text-white" : "border border-white/70 bg-white/10 text-white",
+                ].join(" ")}
+              >
+                <Icon strokeWidth={2} className="h-[18px] w-[18px] shrink-0 lg:h-[22px] lg:w-[22px]" />
+                <span className="lg:hidden">{btn.short}</span>
+                <span className="hidden lg:inline">{btn.label}</span>
+                <ArrowRightIcon className="hidden h-[14px] w-[16px] lg:block" />
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -166,7 +171,8 @@ function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
 function AwardBadge() {
   return (
     <div className="pointer-events-none absolute inset-x-0 top-[calc(var(--header-height-mobile)+12px)] z-[3] flex justify-center px-[16px] lg:top-[calc(var(--header-height)+24px)] lg:px-0">
-      <div className="flex w-full max-w-[1080px] justify-end">
+      {/* 모바일: 가운데 / PC: 오른쪽 */}
+      <div className="flex w-full max-w-[1080px] justify-center lg:justify-end">
         <div className="flex items-center gap-[10px] lg:gap-[16px]">
           <Image
             src="/images/award/kbpa-medals.webp"

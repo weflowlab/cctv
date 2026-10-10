@@ -25,9 +25,18 @@ export default function CasesListLayout({ children }: LayoutProps<"/cases">) {
       </section>
 
       {/* ===== 하단 상담 CTA: 시공사례 목록 ===== */}
+      {/* 모바일에서만 줄바꿈 */}
       <ConsultCta
-        lead="우리 공간도 이렇게 바뀔 수 있습니다."
-        title="비슷한 현장 사례로 안내해 드립니다."
+        lead={
+          <>
+            우리 공간도<br className="lg:hidden" /> 이렇게 바뀔 수 있습니다.
+          </>
+        }
+        title={
+          <>
+            비슷한 현장 사례로<br className="lg:hidden" /> 안내해 드립니다.
+          </>
+        }
       />
     </>
   );

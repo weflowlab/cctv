@@ -10,6 +10,7 @@
  *   → 두 값 조합으로 INSTALL_PRICES 에서 1~4대 가격을 골라 카드 4장 렌더.
  *   토글이 바뀌면 카드 묶음을 key 로 다시 마운트해 0.5s fade-in.
  * - 각 카드의 [문의하기] → /contact
+ * - 모바일: 카드 4장을 가로 슬라이드(MobileCarousel — 다음 카드 살짝 보임 + 위치 점) / PC: 4열
  * - 카드 아래 "풀세트 구성품": 설치 장소 토글에 따라 실내 9종 ↔ 실외 10종 (01 카메라 교체 + 실외는 10 방수 하이박스 추가).
  *   원본의 실내·실외 구성품 묶음 2개를 토글 하나로 합침.
  * - 가격 카드 박스 아래에 견적 계산기 유도 배너 (CalculatorBanner)
@@ -17,6 +18,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
+import MobileCarousel from "@/components/common/MobileCarousel";
 import CalculatorBanner from "./CalculatorBanner";
 import {
   CAMERA_NAME,
@@ -100,13 +102,14 @@ export default function InstallPackages() {
             <Segmented label="설치 장소" options={PLACEMENT_OPTIONS} value={placement} onChange={setPlacement} />
           </div>
 
-          {/* ===== 패키지 카드 4장: 1~4대 (토글 변경 시 key 재마운트 → fade-in) ===== */}
-          <ul
+          {/* ===== 패키지 카드 4장: 1~4대 (토글 변경 시 key 재마운트 → fade-in, 슬라이드 위치도 처음으로) ===== */}
+          <MobileCarousel
             key={`${resolution}-${placement}`}
-            className="mt-[24px] grid grid-cols-1 gap-[12px] opacity-0 [animation:fadeIn_0.5s_ease-in-out_forwards] sm:grid-cols-2 lg:mt-[40px] lg:grid-cols-4 lg:gap-[16px]"
+            wrapperClassName="mt-[24px] opacity-0 [animation:fadeIn_0.5s_ease-in-out_forwards] lg:mt-[40px]"
+            className="lg:grid lg:grid-cols-4 lg:gap-[16px]"
           >
             {prices.map((price, i) => (
-              <li key={i} className="flex flex-col overflow-hidden rounded-[12px] bg-white">
+              <li key={i} className="flex flex-col overflow-hidden rounded-[12px] bg-white max-lg:w-[85%]">
                 {/* 패키지 구성 사진 (기존 사이트 제품 사진) */}
                 <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-[#eee] bg-[#efefef]">
                   <Image
@@ -142,7 +145,7 @@ export default function InstallPackages() {
                 </div>
               </li>
             ))}
-          </ul>
+          </MobileCarousel>
 
           {/* ===== 풀세트 구성품: 실내 9종 / 실외 10종 (설치 장소 토글 연동) ===== */}
           {/* id="fullset": 홈 "풀세트 구성품" 카드에서 바로 이동하는 앵커 (고정 헤더에 가리지 않게 scroll-margin) */}
@@ -177,7 +180,7 @@ export default function InstallPackages() {
           </div>
 
           {/* ===== 안내 문구 (원본 * 주석 2줄) ===== */}
-          <ul className="mt-[20px] space-y-[4px] text-[12px] leading-[18px] tracking-[-0.24px] text-[#888] lg:mt-[28px] lg:text-[14px] lg:leading-[22px]">
+          <ul className="mt-[20px] space-y-[4px] text-[12px] leading-[18px] tracking-[-0.24px] text-[#888] max-lg:whitespace-pre-line lg:mt-[28px] lg:text-[14px] lg:leading-[22px]">
             {PACKAGE_NOTES.map((n) => (
               <li key={n}>* {n}</li>
             ))}

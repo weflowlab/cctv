@@ -30,7 +30,7 @@ const CARDS: SolutionCard[] = [
   {
     service: "CCTV 설치",
     strength: "현장 맞춤 설계",
-    desc: "공간 구조와 동선을 직접 보고 카메라 위치와 대수를 정합니다.",
+    desc: "공간 구조와 동선을 직접 보고\n카메라 위치와 대수를 정합니다.",
     href: "/service/install",
     image: "/images/stock/card-install-dome-camera.webp",
     alt: "천장에 설치된 돔 CCTV 카메라",
@@ -39,7 +39,7 @@ const CARDS: SolutionCard[] = [
   {
     service: "CCTV 렌탈",
     strength: "목돈 없이 시작",
-    desc: "초기 비용 부담은 줄이고, 월 요금으로 시작하실 수 있습니다.",
+    desc: "초기 비용 부담은 줄이고,\n월 요금으로 시작하실 수 있습니다.",
     href: "/service/rental",
     image: "/images/stock/card-rental-rooftop-camera.webp",
     alt: "건물 옥상에 설치된 CCTV 카메라",
@@ -86,7 +86,12 @@ export default function Solution() {
               <strong>한 팀이 끝까지</strong> 책임집니다
             </>
           }
-          desc={`연락할 곳은 하나면 충분합니다. ${SITE.name}가 처음부터 끝까지 함께합니다.`}
+          desc={
+            <>
+              연락할 곳은 하나면 충분합니다.
+              <br className="lg:hidden" /> {SITE.name}가 처음부터 끝까지 함께합니다.
+            </>
+          }
           className="mb-[40px] lg:mb-[60px]"
         />
 
@@ -117,7 +122,7 @@ export default function Solution() {
                     <Icon className="h-[22px] w-[22px]" />
                     <h3 className="text-[18px] font-bold tracking-[-0.36px] text-[#222] lg:text-[20px]">{strength}</h3>
                   </span>
-                  <p className="mt-[8px] flex-1 break-keep text-[14px] leading-[22px] tracking-[-0.28px] text-sub lg:text-[15px] lg:leading-[24px]">
+                  <p className="mt-[8px] flex-1 break-keep text-[14px] leading-[22px] tracking-[-0.28px] text-sub max-lg:whitespace-pre-line lg:text-[15px] lg:leading-[24px]">
                     {desc}
                   </p>
                   <span className="mt-[16px] flex items-center gap-[4px] text-[13px] font-bold text-[#999] transition-colors group-hover:text-brand">

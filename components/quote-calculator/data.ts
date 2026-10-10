@@ -71,7 +71,7 @@ export const QUESTIONS: Question[] = [
   {
     key: "pillar",
     short: "기둥·칸막이",
-    label: "내부에 시야를 가리는 기둥이나 칸막이 구조물이 몇 개 정도 있나요?",
+    label: "내부에 시야를 가리는 기둥이나 칸막이 구조물이\n몇 개 정도 있나요?",
     answers: [
       { value: "ZERO", label: "없음" },
       { value: "ONE_TO_TWO", label: "1 ~ 2개" },
@@ -83,7 +83,7 @@ export const QUESTIONS: Question[] = [
   {
     key: "extra",
     short: "추가 공간",
-    label: "창고, 휴게실, 뒷문 등 추가로 살펴볼 공간이 몇 군데 있나요?",
+    label: "창고, 휴게실, 뒷문 등 추가로 살펴볼 공간이\n몇 군데 있나요?",
     answers: [
       { value: "ZERO", label: "없음" },
       { value: "ONE", label: "1곳" },

@@ -25,8 +25,17 @@ const CTA_BY_TAB: Record<ServiceSlug, ConsultCtaProps> = {
     href: "/contact?service=rental",
   },
   as: {
-    lead: "고장 난 CCTV, 혼자 고민하지 마세요.",
-    title: "타사 제품도 바로 접수해 드립니다.",
+    // 모바일에서만 줄바꿈
+    lead: (
+      <>
+        고장 난 CCTV,<br className="lg:hidden" /> 혼자 고민하지 마세요.
+      </>
+    ),
+    title: (
+      <>
+        타사 제품도<br className="lg:hidden" /> 바로 접수해 드립니다.
+      </>
+    ),
     href: "/contact?service=as",
   },
   speaker: {

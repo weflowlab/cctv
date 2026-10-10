@@ -7,7 +7,7 @@
  * - 칩: [전체 → /cases] + PLACES 5개 [→ /cases/place/<slug>] 를 Link 로 나열
  *   · 선택 브랜드 네이비/흰 글자, 미선택 #F5F5F5/#888
  *   · scroll={false} 로 칩 이동 시 스크롤이 맨 위로 튀지 않게
- *   · 바 전체를 sticky(헤더 높이만큼 아래)로 고정, 모바일에서 넘치면 가로 스크롤
+ *   · 바 전체를 sticky(헤더 높이만큼 아래)로 고정, 모바일에서 넘치면 가로 스크롤(슬라이드)
  *   · 칩 안에 사례 건수("전체 11", "가정 2") — CASES 에서 계산. 선택 칩에선 반투명 흰색 숫자.
  *     건수 0 인 장소도 표시하되 흐리게(비활성처럼), 클릭은 가능(빈 상태 안내로 이동)
  */
@@ -56,7 +56,8 @@ function ChipsBar({ current }: { current: Current }) {
           const selected = chip.slug === current;
           const empty = chip.count === 0;
           return (
-            <li key={chip.name} className="shrink-0">
+            // relative: 칩 안 화면낭독용(sr-only, absolute) 글자가 가로 스크롤 영역 밖으로 빠져 페이지가 옆으로 밀리지 않게
+            <li key={chip.name} className="relative shrink-0">
               <Link
                 href={chip.href}
                 scroll={false}

@@ -154,8 +154,8 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
   return (
     <>
       {/* ===== 폼 카드: 흰 배경, 라운드 20px ===== */}
-      <div className="flex h-fit w-full overflow-hidden rounded-[20px] bg-white shadow-[0_10px_24px_0_rgba(0,0,0,0.04)]">
-        <form className="w-full bg-white" onSubmit={handleSubmit} noValidate>
+      <div className="flex h-fit w-full rounded-[20px] bg-white shadow-[0_10px_24px_0_rgba(0,0,0,0.04)]">
+        <form className="w-full rounded-[20px] bg-white" onSubmit={handleSubmit} noValidate>
           <div className="flex w-full flex-col p-[24px] lg:p-[44px]">
             {/* ===== 제목: 기존 사이트 문구 ===== */}
             <div className="mb-[24px] flex flex-col lg:mb-[32px]">
@@ -207,7 +207,7 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
             {/* ===== 서비스 선택: 칩형 다중 선택 (선택 시 브랜드색 테두리/글자) ===== */}
             <fieldset className="mb-[16px] flex w-full flex-col lg:mb-[20px]">
               <legend className={labelClass}>서비스 선택</legend>
-              <div className="flex flex-wrap gap-[8px]">
+              <div className="grid grid-cols-[repeat(2,auto)] justify-start gap-[8px] lg:flex lg:flex-wrap">
                 {SERVICE_OPTIONS.map((s) => {
                   const selected = values.services.includes(s);
                   return (
@@ -216,7 +216,7 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
                       type="button"
                       onClick={() => toggleService(s)}
                       aria-pressed={selected}
-                      className={`h-[40px] cursor-pointer rounded-[50px] border px-[16px] text-[14px] font-medium tracking-[-0.3px] transition-colors duration-200 lg:h-[44px] lg:px-[20px] lg:text-[15px] ${
+                      className={`h-[40px] w-fit cursor-pointer rounded-[50px] border px-[16px] text-[14px] font-medium tracking-[-0.3px] transition-colors duration-200 lg:h-[44px] lg:px-[20px] lg:text-[15px] ${
                         selected
                           ? "border-brand bg-brand-light text-point-strong"
                           : "border-[#dadde5] bg-white text-[#666] hover:border-brand"

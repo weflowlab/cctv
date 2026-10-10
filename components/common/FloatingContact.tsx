@@ -68,13 +68,13 @@ export default function FloatingContact() {
         {/* 전화 상담: 흰 원 + 브랜드색 수화기 */}
         <a
           href={SITE.phoneHref}
-          aria-label={`전화 상담 ${SITE.phone}`}
+          aria-label="전화 상담"
           className={btn}
         >
           <span className={`${face} border border-[#e5e5e5] bg-white`} style={{ animationDelay: SHAKE_DELAY[0] }}>
             <PhoneIcon className="h-[26px] w-[26px] fill-brand stroke-brand" stroke={2.4} />
           </span>
-          <Tooltip>전화 상담 {SITE.phone}</Tooltip>
+          <Tooltip>전화 상담</Tooltip>
         </a>
 
         {/* 카카오톡 상담: 노란 원 + 말풍선 (새 탭) */}
@@ -110,13 +110,13 @@ export default function FloatingContact() {
       {/* ================= 모바일: 하단 고정 바 ================= */}
       <nav
         aria-label="빠른 상담"
-        className={`fixed inset-x-0 bottom-0 z-[90] grid border-t border-[#e5e5e5] bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_12px_rgba(0,0,0,0.06)] lg:hidden ${
+        className={`fixed inset-x-0 bottom-0 z-[90] grid bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_12px_rgba(0,0,0,0.08)] lg:hidden ${
           onContactPage ? "grid-cols-1" : "grid-cols-2"
         }`}
       >
         <a
           href={SITE.phoneHref}
-          aria-label={`전화 상담 ${SITE.phone}`}
+          aria-label="전화 상담"
           className="flex h-[60px] items-center justify-center gap-[6px] text-[15px] font-bold tracking-[-0.3px] text-[#222] active:bg-[#f5f5f5]"
         >
           <span className="fc-shake flex" style={{ animationDelay: SHAKE_DELAY[0] }}>

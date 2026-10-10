@@ -189,3 +189,25 @@ export function BoxIcon(props: IconProps) {
     </LineIcon>
   );
 }
+
+/** 견적 계산 — 계산기 (히어로 버튼) */
+export function CalculatorIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <rect x="5" y="2.5" width="14" height="19" rx="2.5" />
+      <path d="M8.5 6.5h7v3h-7z" />
+      <path d="M8.5 13.5h.01M12 13.5h.01M15.5 13.5h.01M8.5 17h.01M12 17h.01M15.5 17h.01" />
+    </LineIcon>
+  );
+}
+
+/** 상담 신청 — 체크 클립보드 (플로팅 문의하기 버튼과 같은 모양) */
+export function ClipboardCheckIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <rect x="5" y="4.5" width="14" height="16.5" rx="2" />
+      <rect x="9" y="2.5" width="6" height="4" rx="1" />
+      <path d="m9 13.5 2.2 2.2L15.5 11.5" />
+    </LineIcon>
+  );
+}

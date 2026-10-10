@@ -10,6 +10,7 @@ import { SPEAKER_BENEFITS } from "./data";
 import { SectionHeading, SpaceOrBreak } from "./ui";
 import Eyebrow from "@/components/common/Eyebrow";
 import { ClockIcon, CoinIcon, LayersIcon } from "@/components/main/icons";
+import MobileCarousel from "@/components/common/MobileCarousel";
 
 /** 혜택 아이콘 (SPEAKER_BENEFITS 순서: 시간 단축 / 비용 절감 / 통합 관리) — 홈과 같은 라인 아이콘 */
 const BENEFIT_ICONS = [ClockIcon, CoinIcon, LayersIcon];
@@ -28,9 +29,8 @@ export default function SpeakerTab() {
               동시 시공 가능
             </h2>
             <p className="mt-[12px] text-[15px] leading-[1.6] tracking-[-0.3px] text-[#1d1d1f] lg:mt-[16px] lg:text-[20px] lg:tracking-[-0.44px]">
-              좋은 품질의 음향 시스템과
-              <SpaceOrBreak />
-              보안 솔루션을 한 번에
+              {/* 모바일도 한 줄 — 폭에 맞게 글자 살짝 작게 */}
+              <span className="max-lg:text-[14px] max-lg:tracking-[-0.5px]">좋은 품질의 음향 시스템과 보안 솔루션을 한 번에</span>
             </p>
           </div>
           {/* 스톡 사진(CC0): public/images/stock/speaker-hero-woofer.webp — 실제 사진 확보 시 교체
@@ -61,7 +61,8 @@ export default function SpeakerTab() {
             // TODO: 문구 확정 (원본 배너에 없는 보조 설명 — placeholder)
             desc="CCTV와 스피커를 한 팀이 함께 시공해 드립니다."
           />
-          <ul className="mt-[32px] grid grid-cols-1 gap-[12px] lg:mt-[64px] lg:grid-cols-3 lg:gap-[20px]">
+          {/* 모바일: 가로 슬라이드 / PC: 3열 */}
+          <MobileCarousel wrapperClassName="mt-[32px] lg:mt-[64px]" className="lg:grid lg:grid-cols-3 lg:gap-[20px]">
             {SPEAKER_BENEFITS.map((b, i) => {
               const Icon = BENEFIT_ICONS[i];
               return (
@@ -69,7 +70,7 @@ export default function SpeakerTab() {
                   as="li"
                   key={b.label}
                   delay={i * 150}
-                  className="flex items-center gap-[16px] rounded-[16px] bg-[#f6f7fa] px-[24px] py-[24px] lg:flex-col lg:gap-[20px] lg:py-[48px] lg:text-center"
+                  className="flex flex-col items-center gap-[16px] rounded-[16px] bg-[#f6f7fa] px-[24px] py-[32px] text-center max-lg:w-[78%] lg:gap-[20px] lg:py-[48px]"
                 >
                   <div className="flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-full bg-white text-point-strong lg:h-[88px] lg:w-[88px]">
                     <Icon className="h-[30px] w-[30px] lg:h-[44px] lg:w-[44px]" />
@@ -85,7 +86,7 @@ export default function SpeakerTab() {
                 </Reveal>
               );
             })}
-          </ul>
+          </MobileCarousel>
         </div>
       </section>
     </>

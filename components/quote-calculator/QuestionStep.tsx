@@ -7,7 +7,7 @@
  * - 선택지 카드 클릭 → onSelect (같은 값을 다시 누르면 선택 해제 — 처리는 부모)
  * - STEP 02 이후가 펼쳐지면 해당 STEP 이 헤더 아래에 오도록 부드럽게 스크롤
  */
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import type { Question } from "./data";
 
 type Props = {
@@ -61,7 +61,17 @@ export default function QuestionStep({ stepIndex, question, value, isExpanded, o
             STEP {String(stepIndex).padStart(2, "0")}
           </p>
           <h2 className="mt-[6px] text-[18px] font-bold leading-[26px] tracking-[-0.36px] text-[#222] lg:mt-[4px] lg:text-[22px] lg:leading-[33px] lg:tracking-[-0.6px]">
-            {question.label}
+            {/* label 의 \n 은 모바일에서만 줄바꿈 (PC 는 띄어쓰기) */}
+            {question.label.split("\n").map((line, i) => (
+              <Fragment key={i}>
+                {i > 0 && (
+                  <>
+                    <br className="lg:hidden" />{" "}
+                  </>
+                )}
+                {line}
+              </Fragment>
+            ))}
           </h2>
           {/* 모바일: 선택값을 질문 아래에 */}
           <span className={`mt-[6px] inline-block text-[15px] font-medium tracking-[-0.3px] lg:hidden ${selectedLabel ? "text-point-strong" : "text-[#bbb]"}`}>

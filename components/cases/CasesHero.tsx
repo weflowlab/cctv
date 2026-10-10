@@ -22,7 +22,7 @@ export default function CasesHero() {
           <CasesTitle />
           <p className="break-keep text-[15px] leading-[160%] tracking-[-0.3px] text-[#666] lg:text-[18px]">
             우리 공간과 비슷한 현장을 찾아보세요.
-            <br className="hidden lg:block" /> 장소·대수별로 어떻게 설치했는지 확인하실 수 있습니다.
+            <br /> 장소·대수별로 어떻게 설치했는지 확인하실 수 있습니다.
           </p>
         </div>
 

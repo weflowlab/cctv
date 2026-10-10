@@ -45,11 +45,11 @@ export default function ConsultCta({
             <br />
             <b className="text-white">{title}</b>
           </Reveal>
-          {/* ===== 버튼 2개: 상담 신청(주) + 전화 걸기(보조) — PC 가로 / 모바일 세로 ===== */}
-          <Reveal threshold={0.1} className="flex w-full flex-col items-center justify-center gap-[10px] sm:w-auto sm:flex-row lg:gap-[12px]">
+          {/* ===== 버튼 2개: 상담 신청(주) + 전화 걸기(보조) — 모바일·PC 모두 가로 (모바일은 2칸 반반) ===== */}
+          <Reveal threshold={0.1} className="flex w-full max-w-[360px] flex-row items-center justify-center gap-[8px] sm:w-auto sm:max-w-none lg:gap-[12px]">
             <Link
               href={href}
-              className="flex h-[48px] w-full max-w-[280px] items-center justify-center gap-[6px] rounded-[48px] bg-white px-[24px] text-[15px] font-bold tracking-[-0.3px] text-[#222] visited:text-[#222] transition-colors hover:bg-point-light sm:w-auto lg:h-[56px] lg:px-[28px] lg:text-[18px]"
+              className="flex h-[48px] flex-1 items-center justify-center gap-[6px] rounded-[48px] bg-white px-[16px] text-[15px] font-bold tracking-[-0.3px] text-[#222] visited:text-[#222] transition-colors hover:bg-point-light sm:w-auto sm:flex-none sm:px-[24px] lg:h-[56px] lg:px-[28px] lg:text-[18px]"
             >
               <span>상담 신청</span>
               {/* 오른쪽 화살표 */}
@@ -59,8 +59,8 @@ export default function ConsultCta({
             </Link>
             <a
               href={SITE.phoneHref}
-              aria-label={`전화 상담 ${SITE.phone}`}
-              className="flex h-[48px] w-full max-w-[280px] items-center justify-center gap-[6px] rounded-[48px] border border-white/60 px-[24px] text-[15px] font-bold tracking-[-0.3px] text-white visited:text-white transition-colors hover:bg-white/10 sm:w-auto lg:h-[56px] lg:px-[28px] lg:text-[18px]"
+              aria-label="전화 상담"
+              className="flex h-[48px] flex-1 items-center justify-center gap-[6px] rounded-[48px] border border-white/60 px-[16px] text-[15px] font-bold tracking-[-0.3px] text-white visited:text-white transition-colors hover:bg-white/10 sm:w-auto sm:flex-none sm:px-[24px] lg:h-[56px] lg:px-[28px] lg:text-[18px]"
             >
               <span>전화 상담</span>
               <svg className="h-[12px] w-[12px] lg:h-[14px] lg:w-[14px]" viewBox="0 0 14 14" fill="none" aria-hidden>
