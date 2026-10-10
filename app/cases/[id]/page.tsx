@@ -11,6 +11,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import CaseBackLink from "@/components/cases/CaseBackLink";
 import CaseCard from "@/components/cases/CaseCard";
 import CaseGallery from "@/components/cases/CaseGallery";
 import { CASES, caseImageSrc, getCase } from "@/components/cases/data";
@@ -20,6 +21,10 @@ import { SITE } from "@/lib/site";
 import Eyebrow from "@/components/common/Eyebrow";
 
 type Props = { params: Promise<{ id: string }> };
+
+/** [← 시공사례 목록] 글자 스타일 */
+const BACK_LINK_CLASS =
+  "text-[14px] font-semibold tracking-[-0.3px] text-[#444] hover:text-point-strong lg:text-[16px]";
 
 export function generateStaticParams() {
   return CASES.map((c) => ({ id: c.id }));
@@ -74,13 +79,17 @@ async function CaseDetail({ params }: { params: Props["params"] }) {
     <article className="w-full pb-[100px] lg:pb-[160px]">
       <div className="mx-auto max-w-[1112px] px-[16px]">
         {/* ===== 상단: 목록으로 / CASE STUDY 라벨 / 장소 칩 / 제목 ===== */}
-        <div className="mb-[24px] mt-[32px] lg:mb-[40px] lg:mt-[64px]">
-          <Link
-            href="/cases"
-            className="text-[14px] font-medium tracking-[-0.3px] text-[#888] hover:text-point-strong lg:text-[16px]"
+        <div className="mb-[24px] mt-[16px] lg:mb-[40px] lg:mt-[32px]">
+          {/* 목록에서 들어왔으면 뒤로가기처럼 보던 탭·스크롤 위치로 복귀 (CaseBackLink) */}
+          <Suspense
+            fallback={
+              <Link href="/cases" className={BACK_LINK_CLASS}>
+                ← 시공사례 목록
+              </Link>
+            }
           >
-            ← 시공사례 목록
-          </Link>
+            <CaseBackLink className={BACK_LINK_CLASS} />
+          </Suspense>
           <div className="mt-[20px] lg:mt-[28px]">
             <Eyebrow align="left" className="mb-[14px] lg:mb-[18px]">Case Study</Eyebrow>
             <Link

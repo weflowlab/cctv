@@ -253,8 +253,8 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
               />
             </div>
 
-            {/* ===== 약관 동의: 원형 체크박스 + 문구(클릭 토글) + 약관보기(아래 작은 안내 상자 토글) ===== */}
-            <div className="mb-[16px] mt-[24px] flex flex-col lg:mt-[32px]">
+            {/* ===== 약관 동의 (위아래 여백 16px 동일): 원형 체크박스 + 문구(클릭 토글) + 약관보기(아래 작은 안내 상자 토글) ===== */}
+            <div className="my-[16px] flex flex-col">
               <div className="flex items-center gap-0">
                 <label className="relative flex cursor-pointer items-center gap-[8px]">
                   <input

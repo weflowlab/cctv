@@ -2,7 +2,7 @@
 
 /**
  * 희망 서비스일 달력 (외부 라이브러리 없이 직접 구현)
- * - 입력칸(버튼)을 누르면 아래에 달력 팝업. 바깥 클릭·ESC 로 닫힘, 날짜를 고르면 닫힘.
+ * - 입력칸(버튼)을 누르면 달력 팝업이 떠서 다른 입력칸을 덮음. 열 때 화면에서 입력칸 위·아래 남은 공간을 비교해 더 넓은 쪽으로 연다. 바깥 클릭·ESC 로 닫힘, 날짜를 고르면 닫힘.
  * - 오늘 이전 날짜는 선택 불가(흐리게 + 비활성). 이전 달 버튼도 이번 달에서는 비활성.
  * - 오늘 = 틸 테두리, 선택한 날 = 네이비 원, 일요일 빨강 · 토요일 파랑.
  * - 값은 "YYYY-MM-DD" 문자열 (빈 문자열 = 미선택). 화면에는 "2026년 10월 15일 (목)" 으로 표시.
@@ -38,6 +38,8 @@ export default function DatePicker({ id, value, onChange, className }: Props) {
   const [todayKey, setTodayKey] = useState("");
   const [view, setView] = useState<{ y: number; m: number } | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
+  // 팝업 방향: 열 때 화면 기준 위/아래 남은 공간 중 넓은 쪽
+  const [dropUp, setDropUp] = useState(false);
 
   // 바깥 클릭 · ESC 로 닫기
   useEffect(() => {
@@ -61,6 +63,8 @@ export default function DatePicker({ id, value, onChange, className }: Props) {
     // 선택한 날이 있으면 그 달, 없으면 이번 달부터
     const base = value ? new Date(`${value}T00:00:00`) : now;
     setView({ y: base.getFullYear(), m: base.getMonth() });
+    const rect = wrapRef.current?.getBoundingClientRect();
+    if (rect) setDropUp(rect.top > window.innerHeight - rect.bottom);
     setOpen(true);
   };
 
@@ -94,18 +98,29 @@ export default function DatePicker({ id, value, onChange, className }: Props) {
         className={`${className} flex cursor-pointer items-center justify-between text-left`}
       >
         <span className={value ? "text-[#4a5565]" : "text-[#999]"}>{value ? formatLabel(value) : "날짜를 선택해주세요"}</span>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="1.8" strokeLinecap="round" aria-hidden>
+        {/* 달력 아이콘: 평소 회색, 열려 있거나 날짜를 골랐을 때 틸 */}
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          aria-hidden
+          className={`shrink-0 transition-colors duration-200 ${open || value ? "text-point" : "text-[#999]"}`}
+        >
           <rect x="3.5" y="5" width="17" height="15.5" rx="2" />
           <path d="M3.5 9.5h17M8 3v4M16 3v4" />
         </svg>
       </button>
 
-      {/* ===== 달력 팝업 ===== */}
+      {/* ===== 달력 팝업 (위·아래 중 공간이 넓은 쪽으로 떠서 덮음) ===== */}
       {open && view && (
         <div
           role="dialog"
           aria-label="희망 서비스일 선택"
-          className="absolute left-0 top-[calc(100%+8px)] z-[20] w-full max-w-[340px] rounded-[16px] border border-[#eef0f4] bg-white p-[16px] shadow-[0_12px_32px_rgba(10,45,91,0.14)] lg:p-[20px]"
+          className={`absolute left-0 z-[20] ${dropUp ? "bottom-[calc(100%+8px)]" : "top-[calc(100%+8px)]"} w-full max-w-[340px] rounded-[16px] border border-[#eef0f4] bg-white p-[16px] shadow-[0_12px_32px_rgba(10,45,91,0.14)] lg:p-[20px]`}
         >
           {/* 월 이동 */}
           <div className="mb-[12px] flex items-center justify-between">

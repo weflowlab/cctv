@@ -37,7 +37,7 @@
 | rental-benefit6-smartphone.webp | 렌탈 혜택 6 | Browsing Smartphone | Kristin Hardwick | stocksnap | CC0 1.0 | https://stocksnap.io/photo/browsing-smartphone-QBV7MANABA |
 | rental-benefit7-control-room.webp | 렌탈 혜택 7 | Control room of BESSY II, 2025-06-28 | Nylki | wikimedia | CC0 1.0 | https://commons.wikimedia.org/w/index.php?curid=168831580 |
 | speaker-hero-woofer.webp | /service/speaker 히어로 | Speaker Music | Krzysztof%20Puszczy%u0144ski | stocksnap | CC0 1.0 | https://stocksnap.io/photo/speaker-music-WKV40ATLIY |
-| calculator-banner.webp | 견적 계산기 배너 | Calculator Numbers | Martin Vorel | stocksnap | CC0 1.0 | https://stocksnap.io/photo/calculator-numbers-JY874BSKKC |
+| calculator-banner.webp | 견적 계산기 배너 | Free calculator working desk image | rawpixel | rawpixel | CC0 1.0 | https://www.rawpixel.com/image/5912338/image-background-public-domain-note |
 | about-story-cable-conduits.webp | /about 스토리 상단 배경 | Teck cables entering a 18×36″ junction box | Darryl | wordpress | CC0 1.0 | https://wordpress.org/photos/photo/57961f039c/ |
 | about-tech-network-cable.webp | /about 철학 카드 Technology | Network Cable | Lenharth Systems | stocksnap | CC0 1.0 | https://stocksnap.io/photo/network-cable-QVKM5X26VN |
 | about-responsibility-repair.webp | /about 철학 카드 Responsibility | Man lying on kitchen floor surrounded by tools installing a dish washer | Topher | wordpress | CC0 1.0 | https://wordpress.org/photos/photo/59465c690c/ |

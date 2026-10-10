@@ -33,16 +33,7 @@ export default async function Footer() {
             <div className="mb-[4px] text-[13px] font-bold tracking-[-0.3px] text-brand lg:text-[15px]">{SITE.hours}</div>
             <div>상호 : {SITE.legalName}</div>
             <div>대표 : {SITE.ceo}</div>
-            <div>
-              사업자 등록번호 : {SITE.bizNumber}{" "}
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href={`https://www.ftc.go.kr/bizCommPop.do?wrkr_no=${SITE.bizNumber.replace(/-/g, "")}`}
-              >
-                [사업자 정보 확인]
-              </a>
-            </div>
+            <div>사업자 등록번호 : {SITE.bizNumber}</div>
             <div>주소 : {SITE.address}</div>
             <div>
               대표전화 : <a href={SITE.phoneHref}>{SITE.phone}</a>

@@ -179,10 +179,13 @@ export default function InstallPackages() {
             </ul>
           </div>
 
-          {/* ===== 안내 문구 (원본 * 주석 2줄) ===== */}
+          {/* ===== 안내 문구 (원본 * 주석 2줄) — "*" 를 따로 둬서 줄바꿈된 둘째 줄이 첫 글자 위치에 맞춰짐 ===== */}
           <ul className="mt-[20px] space-y-[4px] text-[12px] leading-[18px] tracking-[-0.24px] text-[#888] max-lg:whitespace-pre-line lg:mt-[28px] lg:text-[14px] lg:leading-[22px]">
             {PACKAGE_NOTES.map((n) => (
-              <li key={n}>* {n}</li>
+              <li key={n} className="flex gap-[4px]">
+                <span aria-hidden>*</span>
+                <span>{n}</span>
+              </li>
             ))}
           </ul>
         </div>

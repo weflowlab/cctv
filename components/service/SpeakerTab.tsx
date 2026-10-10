@@ -70,7 +70,7 @@ export default function SpeakerTab() {
                   as="li"
                   key={b.label}
                   delay={i * 150}
-                  className="flex flex-col items-center gap-[16px] rounded-[16px] bg-[#f6f7fa] px-[24px] py-[32px] text-center max-lg:w-[78%] lg:gap-[20px] lg:py-[48px]"
+                  className="flex flex-col items-center gap-[16px] rounded-[16px] bg-[#f6f7fa] px-[24px] py-[32px] text-center max-lg:w-[68%] lg:gap-[20px] lg:py-[48px]"
                 >
                   <div className="flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-full bg-white text-point-strong lg:h-[88px] lg:w-[88px]">
                     <Icon className="h-[30px] w-[30px] lg:h-[44px] lg:w-[44px]" />

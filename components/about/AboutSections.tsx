@@ -150,7 +150,7 @@ export function StorySection() {
       {/* ===== 문제 제기: 뱃지 + "CCTV, 막상 달려고 하면 왜 이렇게 어려울까요?" + 3문단 / 문단 Reveal 순차 등장
            주제: 브랜드 가이드 문구 "복잡한 보안은 쉽게, 사후관리는 확실하게" — 처음 CCTV를 알아보는 사람의 막막함에서 출발
            (홈·AS 탭의 "고장 나면 연락 두절" 이야기와 겹치지 않게, 다른 업체를 깎아내리지 않는 실제 고민으로) ===== */}
-      <div className="flex flex-col items-center justify-center gap-[14px] px-[20px] pb-[120px] pt-[40px] lg:gap-[24px] lg:pb-[200px] lg:pt-[180px]">
+      <div className="flex flex-col items-center justify-center gap-[14px] px-[20px] pb-[90px] pt-[40px] lg:gap-[24px] lg:pb-[150px] lg:pt-[140px]">
         <Reveal>
           <SectionBadge>Brand Story</SectionBadge>
         </Reveal>
@@ -468,26 +468,18 @@ export function StrengthsSection() {
              같은 행(3개) 안에서 100ms 씩 지연을 줘 순차적으로 등장 ===== */}
         <ul className="mt-[16px] grid w-full grid-cols-2 gap-[10px] lg:mt-[24px] lg:grid-cols-3 lg:gap-[20px]">
           {STRENGTHS.map((item, i) => {
-            // 모바일 2열에서 혼자 남는 9번 카드: 가로로 길게(2칸) — [아이콘] [번호 / 문구] 가로 배치
+            // 모바일 2열에서 혼자 남는 9번 카드: 가로로 길게(2칸), 안 배치는 다른 카드와 같음(번호 → 아이콘 → 문구, 가운데)
             const wide = i === STRENGTHS.length - 1;
             return (
               <Reveal as="li" key={item.title} delay={(i % 3) * 100} className={`h-full ${wide ? "max-lg:col-span-2" : ""}`}>
                 <div
-                  className={`flex h-full flex-col items-center gap-[12px] rounded-[12px] bg-white px-[12px] py-[24px] text-center shadow-[0_4px_20px_rgba(0,0,0,0.05)] lg:gap-[20px] lg:rounded-[20px] lg:px-[24px] lg:py-[40px] ${
-                    wide
-                      ? "max-lg:grid max-lg:grid-cols-[auto_auto] max-lg:content-center max-lg:justify-center max-lg:gap-x-[16px] max-lg:gap-y-[2px] max-lg:text-left"
-                      : ""
-                  }`}
+                  className="flex h-full flex-col items-center gap-[12px] rounded-[12px] bg-white px-[12px] py-[24px] text-center shadow-[0_4px_20px_rgba(0,0,0,0.05)] lg:gap-[20px] lg:rounded-[20px] lg:px-[24px] lg:py-[40px]"
                 >
-                  <span className="text-[13px] font-bold text-point-strong max-lg:justify-self-start lg:text-[18px]">
+                  <span className="text-[13px] font-bold text-point-strong lg:text-[18px]">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   {/* 아이콘: 옅은 틸 원 + 진한 틸 라인 아이콘 */}
-                  <span
-                    className={`flex h-[52px] w-[52px] items-center justify-center rounded-full bg-point-light text-point-strong lg:h-[80px] lg:w-[80px] ${
-                      wide ? "max-lg:order-first max-lg:row-span-2" : ""
-                    }`}
-                  >
+                  <span className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-point-light text-point-strong lg:h-[80px] lg:w-[80px]">
                     <item.Icon className="h-[28px] w-[28px] lg:h-[42px] lg:w-[42px]" />
                   </span>
                   <p className="whitespace-pre-line break-keep text-[14px] font-bold leading-[22px] text-[#202020] lg:text-[22px] lg:leading-[34px]">

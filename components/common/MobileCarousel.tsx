@@ -2,7 +2,7 @@
 
 /**
  * 모바일 전용 가로 슬라이드 목록 (PC 는 넘겨 준 className 의 격자 그대로)
- * - 모바일(≤1023px): 가로 스크롤 + 한 장씩 멈춤(scroll-snap). 화면 좌우 끝까지 붙도록 섹션 여백(16px)만큼 바깥으로 넓힘.
+ * - 모바일(≤1023px): 가로 스크롤 + 한 장씩 멈춤(scroll-snap). 세로 스크롤은 막음(카드 등장 애니메이션 등으로 목록 안이 위아래로 밀리지 않게). 화면 좌우 끝까지 붙도록 섹션 여백(16px)만큼 바깥으로 넓힘.
  *   각 항목은 itemClassName 으로 너비를 지정(기본 85%) → 다음 카드가 옆에 살짝 보여 넘길 수 있음을 알려 줌.
  * - 아래 위치 점(● ○ ○): 스크롤 위치로 현재 카드 계산, 점을 누르면 그 카드로 이동.
  * - children 은 <li> 들 (as="ol" 로 순서 목록도 가능).
@@ -60,7 +60,7 @@ export default function MobileCarousel({ children, className = "", as: Tag = "ul
         ref={listRef}
         onScroll={onScroll}
         onPointerDown={() => (touched.current = true)}
-        className={`max-lg:-mx-[16px] max-lg:flex max-lg:snap-x max-lg:snap-mandatory max-lg:scroll-px-[16px] max-lg:gap-[12px] max-lg:overflow-x-auto max-lg:px-[16px] max-lg:pb-[4px] max-lg:[scrollbar-width:none] max-lg:[&::-webkit-scrollbar]:hidden max-lg:[&>*]:shrink-0 max-lg:[&>*]:snap-start ${className}`}
+        className={`max-lg:-mx-[16px] max-lg:flex max-lg:snap-x max-lg:snap-mandatory max-lg:scroll-px-[16px] max-lg:gap-[12px] max-lg:overflow-x-auto max-lg:overflow-y-hidden max-lg:overscroll-x-contain max-lg:px-[16px] max-lg:pb-[4px] max-lg:[scrollbar-width:none] max-lg:[&::-webkit-scrollbar]:hidden max-lg:[&>*]:shrink-0 max-lg:[&>*]:snap-start ${className}`}
       >
         {children}
       </Tag>

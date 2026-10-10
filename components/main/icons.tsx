@@ -205,8 +205,8 @@ export function CalculatorIcon(props: IconProps) {
 export function ClipboardCheckIcon(props: IconProps) {
   return (
     <LineIcon {...props}>
-      <rect x="5" y="4.5" width="14" height="16.5" rx="2" />
-      <rect x="9" y="2.5" width="6" height="4" rx="1" />
+      <path d="M8 4.5H7a2 2 0 0 0-2 2V19a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6.5a2 2 0 0 0-2-2h-1" />{/* 클립보드 몸통: 위쪽 집게(작은 사각형) 구간은 선을 비움 */}
+      <rect x="8" y="2.5" width="8" height="4" rx="1" />
       <path d="m9 13.5 2.2 2.2L15.5 11.5" />
     </LineIcon>
   );

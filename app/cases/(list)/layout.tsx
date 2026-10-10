@@ -8,6 +8,7 @@
  */
 import CasePlaceChips from "@/components/cases/CasePlaceChips";
 import CasesHero from "@/components/cases/CasesHero";
+import CasesListMemo from "@/components/cases/CasesListMemo";
 import ConsultCta from "@/components/common/ConsultCta";
 
 export default function CasesListLayout({ children }: LayoutProps<"/cases">) {
@@ -21,7 +22,10 @@ export default function CasesListLayout({ children }: LayoutProps<"/cases">) {
 
       {/* ===== 목록 콘텐츠 (page.tsx): 안내 문구 또는 장소 소개 + 카드 그리드 ===== */}
       <section className="w-full pb-[120px] pt-[28px] lg:pb-[160px] lg:pt-[40px]">
-        <div className="mx-auto max-w-[1112px] px-[16px]">{children}</div>
+        <div className="mx-auto max-w-[1112px] px-[16px]">
+          {/* 상세로 들어갈 때 지금 목록 주소 기록 → 상세의 [← 시공사례 목록] 이 뒤로가기처럼 동작 */}
+          <CasesListMemo>{children}</CasesListMemo>
+        </div>
       </section>
 
       {/* ===== 하단 상담 CTA: 시공사례 목록 ===== */}

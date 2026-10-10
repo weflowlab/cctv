@@ -23,6 +23,12 @@ export const FAQ_TABS: FaqCategory[] = ["설치", "렌탈", "AS", "기타"];
 export const FAQ_ITEMS: FaqItem[] = [
   // ----- 설치 -----
   {
+    // 맨 앞(전체·설치 탭 1번) — 근거: 고객 확인 — 직접 방문 시공, 전국 시공 가능 (SITE.serviceArea)
+    category: "설치",
+    question: "시공 가능 지역이 어디인가요?",
+    answer: `${SITE.serviceArea}이 가능합니다. 설치할 지역을 알려 주시면 방문 일정을 바로 안내해 드립니다.`,
+  },
+  {
     // 근거: 설치 패키지 페이지 (200만 화소 실내 돔 1대 450,000원, 소규모 전용, 수도권 기준)
     category: "설치",
     question: "CCTV 설치 비용은 얼마인가요?",
@@ -42,12 +48,6 @@ export const FAQ_ITEMS: FaqItem[] = [
     question: "규모가 큰 현장이나 정보통신공사도 가능한가요?",
     answer:
       "네, 소규모부터 대규모 현장까지 맞춤 설계·시공·정보통신 공사를 진행합니다. 큰 규모의 공사나 정보통신면허 공사는 패키지와 별도로 현장에 맞춰 견적을 안내해 드리니 상담을 신청해 주세요.",
-  },
-  {
-    // 근거: 고객 확인 — 직접 방문 시공, 전국 시공 가능 (SITE.serviceArea)
-    category: "설치",
-    question: "시공 가능 지역이 어디인가요?",
-    answer: `${SITE.serviceArea}이 가능합니다. 설치할 지역을 알려 주시면 방문 일정을 바로 안내해 드립니다.`,
   },
   {
     // 근거: 장소별 CCTV 페이지 "1. 가정 보안"

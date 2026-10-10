@@ -77,8 +77,8 @@ const SLIDES: Slide[] = [
     desc: `${SITE.hours} 접수,\n방문 점검부터 수리까지 끝까지 맡습니다.`,
     buttons: [{ label: "교체·증설 견적 알아보기", short: "견적 알아보기", href: "/calculator", icon: "calc" }, CONSULT],
     bg: "AS 출장수리 슬라이드 배경 (CCTV 점검·수리 현장)",
-    img: "/images/stock/hero-as-technician-rack.webp",
-    alt: "장비 랙 앞에서 노트북으로 점검 중인 기사",
+    img: "/images/stock/as-old-camera.webp",
+    alt: "건물 외벽에 달린 오래된 CCTV 카메라",
   },
   {
     id: "speaker",

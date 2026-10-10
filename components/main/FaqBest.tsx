@@ -11,8 +11,8 @@ import { HomeSectionHeader, HomeTextLink } from "./HomeSection";
 
 /** 홈에 노출할 질문 (표시 순서) */
 const BEST_QUESTIONS = [
+  "시공 가능 지역이 어디인가요?",
   "CCTV 설치 비용은 얼마인가요?",
-  "몇 대가 필요한지 모르겠어요.",
   "렌탈 시 초기 비용이 드나요?",
   "다른 업체에서 설치한 CCTV도 수리해 주나요?",
   "스마트폰으로 영상을 볼 수 있나요?",

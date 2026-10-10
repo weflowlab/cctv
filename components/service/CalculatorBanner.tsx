@@ -34,7 +34,7 @@ export default function CalculatorBanner({ className = "" }: { className?: strin
       <div className="relative h-[88px] w-[88px] shrink-0 overflow-hidden rounded-[12px] lg:h-[150px] lg:w-[200px]">
         <Image
           src="/images/stock/calculator-banner.webp"
-          alt="계산기와 연필, 메모지"
+          alt="서류 위에 놓인 계산기와 펜"
           fill
           sizes="(min-width: 1024px) 200px, 88px"
           className="object-cover"

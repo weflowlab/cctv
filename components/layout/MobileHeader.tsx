@@ -2,7 +2,7 @@
 
 /**
  * 모바일 헤더 (≤1023px)
- * - 높이 72px 바: 로고 + (홈에서만) "상담 신청" 버튼 + 햄버거 버튼.
+ * - 높이 60px 바(--header-height-mobile): 로고 + (홈에서만) "상담 신청" 버튼 + 햄버거 버튼.
  * - 햄버거 클릭 → 오른쪽에서 서랍(드로어) 메뉴가 밀려 나옴 (화면 폭 약 78%, 최대 340px)
  *   · 나머지 화면은 어둡게 덮음(딤) — 딤 클릭 · X 버튼 · ESC · 메뉴 이동 시 닫힘
  *   · 서랍 구성: [로고 + X] → 메뉴 5개(현재 메뉴는 틸 강조) → 하단 고정 버튼 2개 [전화 상담] [상담 신청하기]
@@ -31,8 +31,8 @@ function FormIcon({ className }: { className: string }) {
       strokeLinejoin="round"
       aria-hidden
     >
-      <rect x="5" y="4.5" width="14" height="16.5" rx="2" />
-      <rect x="9" y="2.5" width="6" height="4" rx="1" />
+      <path d="M8 4.5H7a2 2 0 0 0-2 2V19a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6.5a2 2 0 0 0-2-2h-1" />{/* 클립보드 몸통: 위쪽 집게(작은 사각형) 구간은 선을 비움 */}
+      <rect x="8" y="2.5" width="8" height="4" rx="1" />
       <path d="m9 13.5 2.2 2.2L15.5 11.5" />
     </svg>
   );
@@ -73,7 +73,7 @@ export default function MobileHeader() {
     <div className="lg:hidden">
       {/* ===== 상단 바 (고정): 로고 / 상담 신청(홈) / 햄버거 ===== */}
       <header
-        className={`fixed inset-x-0 top-0 z-[100] flex h-[72px] items-center justify-between px-[16px] transition-colors duration-200 ${
+        className={`fixed inset-x-0 top-0 z-[100] flex h-[var(--header-height-mobile)] items-center justify-between px-[16px] transition-colors duration-200 ${
           headerStyle === "white" ? "bg-white" : "bg-transparent"
         }`}
       >
@@ -128,7 +128,7 @@ export default function MobileHeader() {
         }`}
       >
         {/* 서랍 머리: 로고 + 닫기(X) */}
-        <div className="flex h-[72px] shrink-0 items-center justify-between border-b border-[#eee] px-[20px]">
+        <div className="flex h-[var(--header-height-mobile)] shrink-0 items-center justify-between border-b border-[#eee] px-[20px]">
           <Logo />
           <button
             type="button"

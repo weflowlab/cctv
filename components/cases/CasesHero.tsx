@@ -15,7 +15,7 @@ export default function CasesHero() {
     <div className="relative w-full overflow-hidden bg-gradient-to-b from-[#eef3f9] to-white">
       <div className="pointer-events-none absolute right-[-160px] top-[-200px] h-[480px] w-[480px] rounded-full bg-[radial-gradient(closest-side,rgba(0,167,171,0.16),rgba(0,167,171,0))]" />
 
-      <div className="relative mx-auto flex w-full max-w-[1112px] flex-col gap-[28px] px-[16px] pb-[36px] pt-[48px] lg:flex-row lg:items-end lg:justify-between lg:gap-[48px] lg:pb-[56px] lg:pt-[88px]">
+      <div className="relative mx-auto flex w-full max-w-[1112px] flex-col gap-[28px] px-[16px] pb-[36px] pt-[16px] lg:flex-row lg:items-end lg:justify-between lg:gap-[48px] lg:pb-[56px] lg:pt-[32px]">
         {/* ===== 왼쪽: 라벨 + 제목 + 설명 ===== */}
         <div className="flex flex-col gap-[14px] lg:gap-[18px]">
           <Eyebrow align="left">Our Work</Eyebrow>

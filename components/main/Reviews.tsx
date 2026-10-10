@@ -13,7 +13,7 @@
  * - 카드 클릭 → 라이트박스(크게 보기): ESC·배경 클릭·닫기 버튼으로 닫기, 좌우 버튼·방향키로 이동, 열린 동안 배경 스크롤 잠금.
  */
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Eyebrow from "@/components/common/Eyebrow";
 import Reveal from "@/components/common/Reveal";
 import { ArrowLeftIcon, ArrowRightIcon } from "./icons";
@@ -104,6 +104,19 @@ export default function Reviews() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
   const close = useCallback(() => setOpenIdx(null), []);
+
+  // 터치 기기: 손대는 동안 멈추고, 손을 떼면 잠깐(1.2초) 뒤 다시 흐름
+  const [touchPaused, setTouchPaused] = useState(false);
+  const resumeTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const pauseByTouch = () => {
+    clearTimeout(resumeTimer.current);
+    setTouchPaused(true);
+  };
+  const resumeAfterTouch = () => {
+    clearTimeout(resumeTimer.current);
+    resumeTimer.current = setTimeout(() => setTouchPaused(false), 1200);
+  };
+  useEffect(() => () => clearTimeout(resumeTimer.current), []);
   // 라이트박스 좌우 이동 (끝에서 처음으로 순환)
   const move = useCallback(
     (step: number) =>
@@ -135,7 +148,12 @@ export default function Reviews() {
       </div>
 
       {/* ===== 캡처 카드 무한 흐름: 화면 끝까지 꽉 차게 / 원본 묶음 + 복제 묶음(aria-hidden) / 호버·포커스 시 멈춤 ===== */}
-      <div className="review-row mt-[32px] flex w-full items-start overflow-hidden py-[12px] lg:mt-[56px]">
+      <div
+        onTouchStart={pauseByTouch}
+        onTouchEnd={resumeAfterTouch}
+        onTouchCancel={resumeAfterTouch}
+        className={`review-row mt-[32px] flex w-full items-start overflow-hidden py-[12px] lg:mt-[56px] ${touchPaused ? "is-paused" : ""}`}
+      >
         {[false, true].map((isClone) => (
           <ul
             key={String(isClone)}

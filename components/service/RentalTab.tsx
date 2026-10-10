@@ -56,7 +56,7 @@ export default function RentalTab() {
         </div>
       </section>
 
-      {/* ===== 혜택 7가지: 이미지 카드 그리드 (PC 위 3개 · 아래 4개 — 12칸 격자에서 4칸/3칸씩 / 모바일 2열), 순차 slide-up ===== */}
+      {/* ===== 혜택 7가지: 이미지 카드 그리드 (PC 위 3개 · 아래 4개 — 12칸 격자에서 4칸/3칸씩 / 모바일: 혜택 1 큰 카드 + 2열), 순차 slide-up ===== */}
       <section className="bg-white px-[16px] py-[60px] lg:px-0 lg:py-[120px]">
         <div className="mx-auto w-full max-w-[580px] lg:w-[1080px] lg:max-w-none">
           <SectionHeading eyebrow="BENEFIT" title={<>{SITE.name} 렌탈 <strong>혜택 7가지</strong></>} />
@@ -66,15 +66,16 @@ export default function RentalTab() {
                 as="li"
                 key={b.title}
                 delay={(i < 3 ? i : i - 3) * 120}
-                className={`overflow-hidden rounded-[14px] bg-[#f6f7fa] ${i < 3 ? "lg:col-span-4" : "lg:col-span-3"}`}
+                className={`overflow-hidden rounded-[14px] bg-[#f6f7fa] ${i === 0 ? "col-span-2 lg:col-span-4" : i < 3 ? "lg:col-span-4" : "lg:col-span-3"}`}
               >
                 {/* 스톡 사진(CC0): public/images/stock/rental-benefit{1~7}-*.webp — 실제 사진 확보 시 교체 */}
-                <div className="relative aspect-[4/3] w-full">
+                {/* 혜택 1(첫 카드)은 모바일에서 2칸 큰 카드 → 사진 비율을 가로로 넓게 (AS 탭 솔루션 섹션과 같은 방식) */}
+                <div className={`relative w-full ${i === 0 ? "aspect-[16/9] lg:aspect-[4/3]" : "aspect-[4/3]"}`}>
                   <Image
                     src={BENEFIT_PHOTOS[i].src}
                     alt={BENEFIT_PHOTOS[i].alt}
                     fill
-                    sizes="(min-width: 1024px) 347px, (min-width: 580px) 285px, 50vw"
+                    sizes={i === 0 ? "(min-width: 1024px) 347px, (min-width: 580px) 580px, 100vw" : "(min-width: 1024px) 347px, (min-width: 580px) 285px, 50vw"}
                     className="object-cover"
                   />
                 </div>
