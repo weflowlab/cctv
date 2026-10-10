@@ -57,7 +57,8 @@ export default function RentalSteps() {
           const isActive = i === current;
           const isDone = i < current;
           return (
-            <li key={title} className="relative flex-1 max-lg:w-[40%]">
+            // 모바일: 모든 단계 같은 폭(40%) — flex-1 은 PC 에만 (모바일에 붙으면 글자 길이대로 폭이 달라짐)
+            <li key={title} className="relative max-lg:w-[40%] lg:flex-1">
               {/* PC: 단계 사이 연결선 (마지막 제외) */}
               {i < RENTAL_STEPS.length - 1 && (
                 <span
@@ -84,7 +85,7 @@ export default function RentalSteps() {
                 </span>
                 <span className="flex flex-col items-center">
                   <span
-                    className={`text-[17px] font-bold leading-[26px] tracking-[-0.34px] lg:text-[20px] lg:leading-[30px] ${
+                    className={`whitespace-nowrap text-[17px] font-bold leading-[26px] tracking-[-0.34px] lg:text-[20px] lg:leading-[30px] ${
                       isActive ? "text-point-strong" : "text-[#222]"
                     }`}
                   >
