@@ -125,8 +125,8 @@ function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
       <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(12,11,9,0.85)_0%,rgba(12,11,9,0.55)_60%,rgba(12,11,9,0.3)_100%)] lg:bg-[linear-gradient(90deg,rgba(12,11,9,0.85)_0%,rgba(12,11,9,0.5)_55%,rgba(12,11,9,0.1)_100%)]" />
 
       {/* ===== 카피 + 버튼: 모바일 가운데 정렬 / PC 1080px 안에서 왼쪽 정렬
-           헤더 높이만큼 위 여백(pt)만 있으면 덩어리가 아래로 처져 보여, 아래 여백(pb)을 줘 위로 끌어올림 ===== */}
-      <div className="relative z-[2] flex w-full max-w-[1080px] flex-col items-center px-[16px] pt-[var(--header-height-mobile)] pb-[44px] text-center text-white lg:items-start lg:px-0 lg:pt-[var(--header-height)] lg:pb-[56px] lg:text-left">
+           헤더 높이만큼 위 여백(pt, 모바일은 헤더 60px + 12px = 예전 72px 기준 위치 유지)만 있으면 덩어리가 아래로 처져 보여, 아래 여백(pb)을 줘 위로 끌어올림 ===== */}
+      <div className="relative z-[2] flex w-full max-w-[1080px] flex-col items-center px-[16px] pt-[calc(var(--header-height-mobile)+12px)] pb-[44px] text-center text-white lg:items-start lg:px-0 lg:pt-[var(--header-height)] lg:pb-[56px] lg:text-left">
         {/* 슬라이드 라벨: 공용 Eyebrow (틸 글자 + 짧은 라인, 모바일 가운데 / PC 왼쪽) */}
         <Eyebrow dark korean align="left" className="mb-[14px] max-lg:items-center lg:mb-[24px]">
           {slide.eyebrow}
@@ -170,7 +170,7 @@ function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
 /** 우측 상단 수상 배지 — 메달 이미지(public/images/award/kbpa-medals.webp, 기존 사이트 원본) + 문구 */
 function AwardBadge() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-[calc(var(--header-height-mobile)+12px)] z-[3] flex justify-center px-[16px] lg:top-[calc(var(--header-height)+24px)] lg:px-0">
+    <div className="pointer-events-none absolute inset-x-0 top-[calc(var(--header-height-mobile)+24px)] z-[3] flex justify-center px-[16px] lg:top-[calc(var(--header-height)+24px)] lg:px-0">
       {/* 모바일: 가운데 / PC: 오른쪽 */}
       <div className="flex w-full max-w-[1080px] justify-center lg:justify-end">
         <div className="flex items-center gap-[10px] lg:gap-[16px]">
