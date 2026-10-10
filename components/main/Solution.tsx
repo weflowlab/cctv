@@ -3,7 +3,7 @@
  * - 기존 "한눈에 보는 장점 6개(Highlights)" + "서비스 카드 4개(ServiceCards)" + "스피커 단독 섹션(SpeakerPromo)"을 하나로 합침
  *   (같은 내용이 세 번 반복되던 문제 해결)
  * - 구성: 헤더 → 서비스 4개 카드(사진 + 서비스명 + 강점 한 줄 + 설명, 카드 전체가 서비스 탭 링크)
- *         → 공통 강점 배지 2개(24시간 접수 · 풀세트 구성품) → 주 버튼 [견적 계산하기] 하나
+ *         → 공통 강점 배지 2개(전국 방문 시공 · 24시간 접수) → 주 버튼 [견적 계산하기] 하나
  * - 홈 버튼 원칙: 섹션의 큰 버튼은 전환(견적·상담)으로만, 다른 페이지 이동은 카드 클릭으로.
  * - 사진은 스톡(CC0) — 실제 사진 확보 시 교체.
  */
@@ -13,7 +13,7 @@ import type { ComponentType, SVGProps } from "react";
 import Reveal from "@/components/common/Reveal";
 import { SITE } from "@/lib/site";
 import { HomeMoreLink, HomeSectionHeader } from "./HomeSection";
-import { ArrowRightIcon, BlueprintIcon, BoxIcon, ClockIcon, CoinIcon, SpeakerIcon, WrenchIcon } from "./icons";
+import { ArrowRightIcon, BlueprintIcon, ClockIcon, CoinIcon, SpeakerIcon, WrenchIcon } from "./icons";
 
 type SolutionCard = {
   service: string;
@@ -65,10 +65,10 @@ const CARDS: SolutionCard[] = [
   },
 ];
 
-/** 서비스와 상관없는 공통 강점 배지 */
+/** 서비스와 상관없는 공통 강점 배지 — 전국 방문 시공 · 24시간 접수 */
 const BADGES = [
+  { label: SITE.serviceArea, Icon: MapPinIcon },
   { label: `${SITE.hours} 접수`, Icon: ClockIcon },
-  { label: "풀세트 구성품 9~10종", Icon: BoxIcon },
 ];
 
 export default function Solution() {
@@ -149,5 +149,20 @@ export default function Solution() {
         </div>
       </div>
     </section>
+  );
+}
+
+/** 위치 핀 아이콘 (전국 방문 시공 배지) */
+function MapPinIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden {...props}>
+      <path
+        d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="9.5" r="2.5" stroke="currentColor" strokeWidth="2" />
+    </svg>
   );
 }

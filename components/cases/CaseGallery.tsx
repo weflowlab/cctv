@@ -5,14 +5,14 @@
  * - 구성: 대표 사진 크게(16:10) + 하단 썸네일 줄
  * - 동작: 썸네일 클릭 → 대표 사진 전환 / 모바일은 대표 사진을 좌우로 스와이프(40px 이상)해 이전·다음
  *   / 좌우 화살표 버튼(PC) / 우하단 "n / 전체" 표시
- * - 사진은 지금 Placeholder (images 값 = 사진 자리 설명). 관리자 페이지 도입 후 Blob URL 이미지로 교체.
+ * - 사진: srcs = 임시 스톡 사진 경로(caseImageSrc), images = 사진 설명(alt). 관리자 페이지 도입 후 Blob URL 로 교체.
  */
 import { useRef, useState } from "react";
-import Placeholder from "@/components/common/Placeholder";
+import Image from "next/image";
 
 const SWIPE_THRESHOLD = 40;
 
-export default function CaseGallery({ images, title }: { images: string[]; title: string }) {
+export default function CaseGallery({ images, srcs, title }: { images: string[]; srcs: string[]; title: string }) {
   const [index, setIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const total = images.length;
@@ -42,7 +42,15 @@ export default function CaseGallery({ images, title }: { images: string[]; title
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
-        <Placeholder label={`${title} — ${images[index]}`} className="aspect-[16/10] w-full" />
+        <div className="relative aspect-[16/10] w-full">
+          <Image
+            src={srcs[index]}
+            alt={`${title} — ${images[index]}`}
+            fill
+            sizes="(min-width: 1024px) 1080px, 100vw"
+            className="object-cover"
+          />
+        </div>
 
         {total > 1 && (
           <>
@@ -89,7 +97,9 @@ export default function CaseGallery({ images, title }: { images: string[]; title
                   i === index ? "border-brand" : "border-transparent opacity-60 hover:opacity-100"
                 }`}
               >
-                <Placeholder label={label} kind="icon" className="aspect-[16/10] w-full" />
+                <span className="relative block aspect-[16/10] w-full">
+                  <Image src={srcs[i]} alt="" fill sizes="120px" className="object-cover" />
+                </span>
               </button>
             </li>
           ))}

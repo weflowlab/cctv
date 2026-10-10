@@ -2,7 +2,7 @@
 
 /**
  * 견적 계산기 결과 화면 (클라이언트 컴포넌트)
- * - 추천 대수(고정) 표시 + 선택 요약 + [다시 계산하기]
+ * - 추천 대수(고정) 표시 + 선택 요약 → 견적 카드 → 맨 아래 [다시 계산하기]
  * - 대수 조정 슬라이더(CountSlider, 1~16, 초기값 = 추천 대수) → 아래 가격 카드 금액이 즉시 재계산(숫자 애니메이션)
  * - 가격 카드 2개
  *   · 렌탈: RENTAL_MONTHLY 자사 월 요금 + 타사 대비 매월 절약액
@@ -64,7 +64,7 @@ export default function QuoteResult({ data, recommended, onReset }: Props) {
           </p>
         </header>
 
-        {/* ===== 선택 요약 + 다시 계산하기 ===== */}
+        {/* ===== 선택 요약 ===== */}
         <div className="mt-[28px] flex flex-col items-center gap-[12px] lg:mt-[40px]">
           <ul className="flex flex-wrap justify-center gap-[6px] lg:gap-[8px]">
             {QUESTIONS.map((q) => (
@@ -76,13 +76,6 @@ export default function QuoteResult({ data, recommended, onReset }: Props) {
               </li>
             ))}
           </ul>
-          <button
-            type="button"
-            onClick={onReset}
-            className="flex cursor-pointer items-center gap-[4px] text-[14px] font-medium tracking-[-0.28px] text-[#888] underline underline-offset-[3px] hover:text-point-strong lg:text-[16px]"
-          >
-            다시 계산하기
-          </button>
         </div>
 
         {/* ===== 견적 카드: 대수 조정 슬라이더 + 렌탈 / 일시납 가격 ===== */}
@@ -145,9 +138,14 @@ export default function QuoteResult({ data, recommended, onReset }: Props) {
             </section>
           </div>
 
-          <p className="mt-[16px] text-center text-[12px] leading-[18px] tracking-[-0.24px] text-[#888] lg:mt-[24px] lg:text-[14px]">
-            * 예상 견적이며, 현장 환경과 지역(수도권 기준)에 따라 달라질 수 있습니다.
-          </p>
+          {/* ===== 다시 계산하기: 견적 카드 아래 가운데 — 위 여백 16/36px (감싼 박스 아래 여백 16/48px) ===== */}
+          <button
+            type="button"
+            onClick={onReset}
+            className="mx-auto mt-[16px] flex cursor-pointer items-center gap-[4px] text-[14px] font-medium tracking-[-0.28px] text-[#888] underline underline-offset-[3px] hover:text-point-strong lg:mt-[36px] lg:text-[16px]"
+          >
+            다시 계산하기
+          </button>
         </div>
       </div>
     </div>

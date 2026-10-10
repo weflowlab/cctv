@@ -6,10 +6,11 @@
  * - 높이 640px(PC·모바일 동일), 배경은 슬라이드별 사진(스톡 CC0, next/image) + 어두운 그라데이션, 카피는 그 위에 표시.
  * - Swiper 옵션: loop, autoplay 5초(사용자 조작 후에도 계속), Pagination(clickable, 커스텀 원형 불릿).
  * - 슬라이드 4장: 메인(내 공간 견적 계산하기 / 상담 신청하기) → 렌탈 → AS 수리 → CCTV+스피커.
- *   각 장 = 문제 공감(1줄) → 해결 약속(2줄, 강조) → 설명 → [자세히 보기] [상담 신청하기].
+ *   각 장 = 문제 공감(1줄) → 해결 약속(2줄, 강조) → 설명 → [견적 계산기(장마다 문구 다름)] [상담 신청하기].
  * - 초기화 전에는 opacity 0 → onBeforeInit 에서 1 로 페이드 인 (레이아웃 깜빡임 방지).
  * - Swiper Autoplay 는 렌더 중 현재 시각을 읽어 정적 프리렌더(Cache Components)와 충돌한다.
  *   → 서버/프리렌더에서는 첫 슬라이드만 정적 HTML 로 그리고, 브라우저에서 Swiper 로 교체한다.
+ * - 우측 상단 수상 배지(메달 + 한국브랜드 선호도 3년 연속 1위 수상): 슬라이드와 무관하게 고정. LEGACY.award 일 때만.
  */
 import Link from "next/link";
 import Eyebrow from "@/components/common/Eyebrow";
@@ -19,7 +20,7 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import Image from "next/image";
 import useIsClient from "@/components/common/useIsClient";
-import { SITE } from "@/lib/site";
+import { LEGACY, SITE } from "@/lib/site";
 import { ArrowRightIcon } from "./icons";
 
 type Slide = {
@@ -50,7 +51,7 @@ const CONSULT = { label: "상담 신청하기", href: "/contact" };
 const SLIDES: Slide[] = [
   {
     id: "main",
-    eyebrow: `CCTV 설치 · 렌탈 · AS | ${SITE.hours}`,
+    eyebrow: `${SITE.serviceArea} · ${SITE.hours}`,
     title: ["자리 비운 사이 생기는 일,", "이제 CCTV로 지키세요"],
     desc: `현장에 맞춘 설계부터 설치·렌탈·수리까지, ${SITE.name}가 한 번에 책임집니다.`,
     buttons: [{ label: "내 공간 견적 계산하기", href: "/calculator" }, CONSULT],
@@ -63,7 +64,7 @@ const SLIDES: Slide[] = [
     eyebrow: "CCTV 렌탈",
     title: ["설치비 부담에 미루고 계셨다면,", "월 렌탈로 바로 시작하세요"],
     desc: "목돈 없이 월 이용료로 설치하고, 사용 중 고장도 함께 관리합니다.",
-    buttons: [{ label: "렌탈 자세히 보기", href: "/service/rental" }, CONSULT],
+    buttons: [{ label: "월 렌탈료 계산해 보기", href: "/calculator" }, CONSULT],
     bg: "렌탈 슬라이드 배경 (CCTV 렌탈 설치 현장)",
     img: "/images/stock/hero-rental-building-dome-camera.webp",
     alt: "건물 외벽에 설치된 돔 카메라",
@@ -71,9 +72,9 @@ const SLIDES: Slide[] = [
   {
     id: "as",
     eyebrow: "AS 수리",
-    title: ["설치 업체가 연락 두절이라면,", "다른 업체 제품도 고쳐 드립니다"],
+    title: ["CCTV가 갑자기 먹통이라면,", "어느 업체 제품이든 고쳐 드립니다"],
     desc: `${SITE.hours} 접수 — 방문 점검부터 수리까지 끝까지 맡습니다.`,
-    buttons: [{ label: "AS 수리 알아보기", href: "/service/as" }, CONSULT],
+    buttons: [{ label: "교체·증설 견적 알아보기", href: "/calculator" }, CONSULT],
     bg: "AS 출장수리 슬라이드 배경 (CCTV 점검·수리 현장)",
     img: "/images/stock/hero-as-technician-rack.webp",
     alt: "장비 랙 앞에서 노트북으로 점검 중인 기사",
@@ -83,7 +84,7 @@ const SLIDES: Slide[] = [
     eyebrow: "CCTV + 스피커",
     title: ["CCTV·스피커, 따로 공사하시나요?", "한 번에 동시 시공하세요"],
     desc: "배선 공사를 한 번에 끝내 공사 기간과 중복 비용을 줄이고, 관리도 한 곳에서.",
-    buttons: [{ label: "동시 시공 알아보기", href: "/service/speaker" }, CONSULT],
+    buttons: [{ label: "우리 공간 견적 계산하기", href: "/calculator" }, CONSULT],
     bg: "CCTV+스피커 슬라이드 배경 (원본 2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg)",
     img: "/images/stock/hero-speaker-bookshelf-speaker.webp",
     alt: "실내에 놓인 스피커",
@@ -122,8 +123,9 @@ function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
       {/* 카피 가독성용 어두운 그라데이션 (모바일: 위→아래 / PC: 왼쪽→오른쪽) */}
       <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(12,11,9,0.85)_0%,rgba(12,11,9,0.55)_60%,rgba(12,11,9,0.3)_100%)] lg:bg-[linear-gradient(90deg,rgba(12,11,9,0.85)_0%,rgba(12,11,9,0.5)_55%,rgba(12,11,9,0.1)_100%)]" />
 
-      {/* ===== 카피 + 버튼: 모바일 가운데 정렬 / PC 1080px 안에서 왼쪽 정렬 ===== */}
-      <div className="relative z-[2] flex w-full max-w-[1080px] flex-col items-center px-[16px] pt-[var(--header-height-mobile)] text-center text-white lg:items-start lg:px-0 lg:pt-[var(--header-height)] lg:text-left">
+      {/* ===== 카피 + 버튼: 모바일 가운데 정렬 / PC 1080px 안에서 왼쪽 정렬
+           헤더 높이만큼 위 여백(pt)만 있으면 덩어리가 아래로 처져 보여, 아래 여백(pb)을 줘 위로 끌어올림 ===== */}
+      <div className="relative z-[2] flex w-full max-w-[1080px] flex-col items-center px-[16px] pt-[var(--header-height-mobile)] pb-[44px] text-center text-white lg:items-start lg:px-0 lg:pt-[var(--header-height)] lg:pb-[56px] lg:text-left">
         {/* 슬라이드 라벨: 공용 Eyebrow (틸 글자 + 짧은 라인, 모바일 가운데 / PC 왼쪽) */}
         <Eyebrow dark korean align="left" className="mb-[14px] max-lg:items-center lg:mb-[24px]">
           {slide.eyebrow}
@@ -154,6 +156,31 @@ function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
               <ArrowRightIcon className="h-[12px] w-[14px] lg:h-[14px] lg:w-[16px]" />
             </Link>
           ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** 우측 상단 수상 배지 — 메달 이미지(public/images/award/kbpa-medals.webp, 기존 사이트 원본) + 문구 */
+function AwardBadge() {
+  return (
+    <div className="pointer-events-none absolute inset-x-0 top-[calc(var(--header-height-mobile)+12px)] z-[3] flex justify-center px-[16px] lg:top-[calc(var(--header-height)+24px)] lg:px-0">
+      <div className="flex w-full max-w-[1080px] justify-end">
+        <div className="flex items-center gap-[10px] lg:gap-[16px]">
+          <Image
+            src="/images/award/kbpa-medals.webp"
+            alt="한국브랜드 선호도 1위 수상 메달"
+            width={621}
+            height={350}
+            loading="eager"
+            className="h-auto w-[92px] lg:w-[160px]"
+          />
+          <p className="text-left text-[12px] font-medium leading-[1.35] tracking-[-0.2px] text-white/85 lg:text-[17px]">
+            한국브랜드 선호도
+            <br />
+            <strong className="text-[15px] font-bold text-[#f3d27a] lg:text-[22px]">3년 연속 1위 수상</strong>
+          </p>
         </div>
       </div>
     </div>
@@ -205,6 +232,8 @@ export default function HeroSlider() {
             })}
           </Swiper>
         )}
+
+        {LEGACY.award && <AwardBadge />}
       </div>
     </section>
   );

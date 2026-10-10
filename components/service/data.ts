@@ -34,9 +34,11 @@ export const INSTALL_PRICES: Record<Resolution, Record<Placement, number[]>> = {
 };
 
 /** 패키지 카드 이미지 (원본: 실내 066-1~069-1, 실외 070~073) */
+/** 패키지 카드 사진 — 기존 사이트(kkcctv.co.kr) 제품 사진을 WebP 로 변환해 public/images/products 에 저장
+ *  (원본: 실내 2024/04/066-1~069-1, 실외 2024/04/070~073) */
 export const PACKAGE_IMAGES: Record<Placement, string[]> = {
-  indoor: ["2024/04/066-1.png", "2024/04/067-1.jpg", "2024/04/068-1.jpg", "2024/04/069-1.jpg"],
-  outdoor: ["2024/04/070.png", "2024/04/071.jpg", "2024/04/072.jpg", "2024/04/073.jpg"],
+  indoor: [1, 2, 3, 4].map((n) => `/images/products/package-indoor-${n}.webp`),
+  outdoor: [1, 2, 3, 4].map((n) => `/images/products/package-outdoor-${n}.webp`),
 };
 
 /** 패키지 공통 구성/조건 — 첫 줄(장비 구성)은 화소·카메라 종류에 따라 조합
@@ -52,32 +54,34 @@ export const PACKAGE_NOTES = [
  * 패키지 풀세트 구성품 (원본 "FullHD 실내/실외 CCTV 풀세트 구성품" 이미지 속 문구 · 번호 순서 그대로)
  * - 실내 9종 = 01 실내 카메라 + 02~09 공통 8종
  * - 실외 10종 = 01 실외 방수 카메라 + 02~09 공통 8종 + 10 방수 하이박스(실외 전용)
+ * - 사진: 기존 사이트 구성품 이미지(2024/04/054-1 ~ 064-1)에서 번호·이름 띠를 잘라내고 제품 부분만 WebP 로 저장
+ *   (public/images/products) — 카드에 번호·이름을 따로 표시하므로 중복 방지
  * - 원본 카메라·DVR 이미지는 HIKVISION 제품 — TODO: 신규 회사 취급 제품 확인
  * - 원본 HDD 사진은 8TB 제품인데 문구는 1TB → 사진 교체 시 1TB 제품으로
  */
 export const FULLSET_CAMERA: Record<Placement, { name: string; image: string }> = {
-  indoor: { name: "실내 카메라", image: "2024/04/062-1.png" },
-  outdoor: { name: "실외 방수 카메라", image: "2024/04/063-1.png" },
+  indoor: { name: "실내 카메라", image: "/images/products/camera-indoor.webp" },
+  outdoor: { name: "실외 방수 카메라", image: "/images/products/camera-outdoor.webp" },
 };
 export const FULLSET_COMMON = [
-  { name: "CCTV 녹화기 (DVR)", image: "2024/04/054-1.png" },
-  { name: "1TB 하드디스크", image: "2024/04/055-1.jpg" },
-  { name: "고급 실드 케이블", image: "2024/04/056-1.jpg" },
-  { name: "CCTV 아답터", image: "2024/04/057-1.png" },
-  { name: "CCTV 전용 브라켓", image: "2024/04/058-1.png" },
-  { name: "CCTV 젠더 (BNCP-RCAJ)", image: "2024/04/059-1.png" },
-  { name: "CCTV 설치안내판", image: "2024/04/060-1.jpg" },
-  { name: "PC·모바일 소프트웨어 (실시간 영상 확인)", image: "2024/04/061-1.png" },
+  { name: "CCTV 녹화기 (DVR)", image: "/images/products/dvr.webp" },
+  { name: "1TB 하드디스크", image: "/images/products/hdd.webp" },
+  { name: "고급 실드 케이블", image: "/images/products/cable.webp" },
+  { name: "CCTV 아답터", image: "/images/products/adapter.webp" },
+  { name: "CCTV 전용 브라켓", image: "/images/products/bracket.webp" },
+  { name: "CCTV 젠더 (BNCP-RCAJ)", image: "/images/products/gender.webp" },
+  { name: "CCTV 설치안내판", image: "/images/products/sign.webp" },
+  { name: "PC·모바일 소프트웨어 (실시간 영상 확인)", image: "/images/products/software.webp" },
 ];
 /** 실외 패키지에만 추가되는 구성품 */
-export const FULLSET_OUTDOOR_ONLY = [{ name: "CCTV 방수 하이박스", image: "2024/04/064-1.png" }];
+export const FULLSET_OUTDOOR_ONLY = [{ name: "CCTV 방수 하이박스", image: "/images/products/waterproof-box.webp" }];
 
 /** 설치 시공절차 4단계 (원본 이미지 002-1 / 003 / 004 / 005 속 문구) */
 export const INSTALL_STEPS = [
   { title: "상담신청", desc: "홈페이지 또는 콜상담을 통해 상담신청", img: "2024/03/002-1-e1711603714590.png" },
   { title: "상담진행", desc: "전담매니저 매칭 후 빠른 상담 또는 방문 진행", img: "2024/03/003-e1711603751986.png" },
-  { title: "CCTV 공사", desc: "고객님과의 일정 협의 후 일정에 맞게 공사시공", img: "2024/03/004-e1711603780434.png" },
-  { title: "CCTV 설치완료", desc: "유지보수 및 담당자배정 완료", img: "2024/03/005-e1711603816617.png" },
+  { title: "CCTV 공사", desc: "고객님과의 일정 협의 후\n일정에 맞게 공사시공", img: "2024/03/004-e1711603780434.png" },
+  { title: "CCTV 설치완료", desc: "유지보수 및 담당자 배정 완료", img: "2024/03/005-e1711603816617.png" },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -104,8 +108,15 @@ export const RENTAL_MONTHLY: { count: number; other: number; ours: number }[] = 
 /** 렌탈 서비스 진행 과정 5단계 (원본 Service 1~5 — 설명 문구는 원본에 없음) */
 export const RENTAL_STEPS = ["전화상담", "신청서작성", "본인인증", "설치일정조율", "설치완료"];
 
-/** 렌탈 제휴 브랜드 (원본 홈 2024/12/ 로고 이미지들) — 기존 회사 제휴. 화면은 LEGACY.partners 로 숨김 */
-export const RENTAL_PARTNERS = ["딜라이브", "KT", "SK", "ADT캡스", "LG U+"];
+/** 렌탈 제휴 브랜드 (원본 홈 2024/12/ 로고 이미지 5종 → public/images/rental-partners/<file>.webp)
+ *  기존 회사 제휴. 화면은 LEGACY.partners 일 때만 */
+export const RENTAL_PARTNERS = [
+  { name: "KT", file: "kt" },
+  { name: "SK텔레콤", file: "sk" },
+  { name: "ADT캡스", file: "adt" },
+  { name: "LG U+", file: "lgu" },
+  { name: "딜라이브", file: "dlive" },
+];
 
 /* ------------------------------------------------------------------ */
 /* AS 수리                                                             */
@@ -120,11 +131,11 @@ export const AS_SERVICES = [
 
 /**
  * AS 고객 고민 4가지 (원본 "CCTV AS 이런 문제로 고민해보신 적 있으신가요?")
- * - title 은 원본 그대로, desc 는 고객 입장 공감 문구(신규 작성), icon 은 AsTab 의 인라인 SVG 키
+ * - title 은 원본 그대로, desc 는 고객 입장 공감 문구(신규 작성, \n = 줄바꿈), icon 은 AsTab 의 인라인 SVG 키
  */
 export const AS_WORRIES = [
-  { title: "설치업체 책임회피", desc: "고장 났는데 설치 업체는 '우리 책임 아니다'만 반복해요", icon: "shield" },
-  { title: "시공사 조작미숙", desc: "사용법을 물어봐도 시공 기사님도 잘 모르세요", icon: "tool" },
+  { title: "설치업체 책임회피", desc: "고장 났는데 설치 업체는\n'우리 책임 아니다'만 반복해요", icon: "shield" },
+  { title: "시공사 조작미숙", desc: "사용법을 물어봐도\n시공 기사님도 잘 모르세요", icon: "tool" },
   { title: "시공사 연락두절", desc: "AS 요청 전화를 해도 받지 않아요", icon: "phone" },
   { title: "설치업체 불친절", desc: "문의할 때마다 불친절한 응대에 마음이 상해요", icon: "chat" },
 ] as const;

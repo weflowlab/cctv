@@ -35,7 +35,7 @@ export default function InstallTab() {
             </h2>
             <p className="mt-[12px] text-[15px] leading-[1.6] tracking-[-0.3px] text-[#1d1d1f] lg:mt-[16px] lg:text-[20px] lg:tracking-[-0.44px]">
               깔끔한 공사부터 유지보수까지 확실한,
-              <SpaceOrBreak />
+              <br />
               {SITE.name}의 특가 이벤트 패키지입니다.
             </p>
             <p className="mt-[8px] text-[13px] leading-[1.6] tracking-[-0.26px] text-[#888] lg:text-[16px]">
@@ -80,7 +80,7 @@ export default function InstallTab() {
                   <h3 className="mt-[4px] text-[18px] font-bold leading-[26px] tracking-[-0.36px] text-[#222] lg:text-[22px] lg:leading-[32px]">
                     {step.title}
                   </h3>
-                  <p className="mt-[6px] text-[14px] leading-[22px] tracking-[-0.28px] text-[#666] lg:text-[16px] lg:leading-[24px]">
+                  <p className="mt-[6px] whitespace-pre-line text-[14px] leading-[22px] tracking-[-0.28px] text-[#666] lg:text-[16px] lg:leading-[24px]">
                     {step.desc}
                   </p>
                 </div>

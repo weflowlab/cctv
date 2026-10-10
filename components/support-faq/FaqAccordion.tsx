@@ -5,7 +5,8 @@
  * - 탭: [전체·설치·렌탈·AS·기타] — 누른 탭의 질문만 필터 (URL 변경 없음). 탭 바꾸면 열린 항목 닫힘.
  * - 아코디언: 한 번에 하나만 열림. 다시 누르면 닫힘.
  *   펼침 애니메이션은 grid-template-rows 0fr → 1fr 전환(0.3s)으로 높이 자동 계산 없이 부드럽게 처리.
- * - 질문 번호(Q1~)는 현재 보이는 목록 기준으로 매김.
+ * - 질문 번호(Q1~)는 현재 보이는 목록 기준으로 매김. 번호 칸 너비를 고정(두 자리 Q10. 기준)해 질문 글 시작선을 맞춤.
+ * - 답변은 같은 너비의 "A." 칸 + 본문 → 질문 글과 답변 글 시작선이 같음.
  * - 옵션 props (기본값이면 /faq 화면 그대로):
  *   items — 넘기면 그 목록만 표시하고 카테고리 탭은 숨김 (홈 FAQ BEST 5 용)
  *   tone  — "dark"(기본, /faq 어두운 배경) / "light"(흰 배경 위: 흰 카드 + 진한 글씨)
@@ -14,6 +15,9 @@ import { useState } from "react";
 import { FAQ_ITEMS, FAQ_TABS, type FaqCategory, type FaqItem } from "./data";
 
 type Tab = "전체" | FaqCategory;
+
+/** Q·A 표시 칸 — 두 자리 번호(Q10.)가 들어가는 고정 너비, 숫자 폭 균일 */
+const MARK_COL = "w-[42px] shrink-0 tabular-nums lg:w-[54px]";
 
 type FaqAccordionProps = {
   /** 고정 목록 (넘기면 탭 숨김) */
@@ -79,7 +83,7 @@ export default function FaqAccordion({ items: fixedItems, tone = "dark" }: FaqAc
                     aria-controls={panelId}
                     className="flex w-full cursor-pointer items-start gap-[8px] py-[20px] text-left text-[17px] font-semibold leading-[144%] tracking-[-0.6px] lg:py-[28px] lg:text-[22px]"
                   >
-                    <b className="shrink-0 text-point-strong">Q{i + 1}.</b>
+                    <b className={`${MARK_COL} text-point-strong`}>Q{i + 1}.</b>
                     <span className="flex-1">{item.question}</span>
                     {/* 펼침 표시: + 아이콘이 45° 회전해 × 로 */}
                     <span
@@ -102,13 +106,23 @@ export default function FaqAccordion({ items: fixedItems, tone = "dark" }: FaqAc
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <p
-                      className={`whitespace-pre-line pb-[20px] text-[15px] font-normal leading-[160%] tracking-[-0.36px] lg:pb-[28px] lg:pl-[40px] lg:text-[18px] ${
-                        light ? "text-[#555]" : "text-white/80"
-                      }`}
-                    >
-                      {item.answer}
-                    </p>
+                    <div className="flex items-start gap-[8px] pb-[20px] lg:pb-[28px]">
+                      {/* A. 표시 — 질문 번호 칸과 같은 너비 (글자 크기는 질문과 같게). 줄 높이 기준 위쪽 정렬 → "A." 와 답변 첫 줄의 가운데가 맞음 */}
+                      <b
+                        className={`${MARK_COL} text-[17px] font-semibold leading-[144%] tracking-[-0.6px] lg:text-[22px] ${
+                          light ? "text-[#aaa]" : "text-white/50"
+                        }`}
+                      >
+                        A.
+                      </b>
+                      <p
+                        className={`flex-1 whitespace-pre-line pt-[1px] text-[15px] font-normal leading-[160%] tracking-[-0.36px] lg:pt-[2px] lg:text-[18px] ${
+                          light ? "text-[#555]" : "text-white/80"
+                        }`}
+                      >
+                        {item.answer}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>

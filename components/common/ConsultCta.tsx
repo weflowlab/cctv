@@ -39,7 +39,7 @@ export default function ConsultCta({
           <Reveal
             as="h3"
             threshold={0.1}
-            className="break-keep text-[26px] font-bold leading-[1.4] tracking-[-0.28px] text-[#7fe0e2] lg:text-[42px] lg:leading-[1.38] lg:tracking-[-0.42px]"
+            className="break-keep text-[28px] font-bold leading-[1.4] tracking-[-0.3px] text-[#7fe0e2] lg:text-[46px] lg:leading-[1.38] lg:tracking-[-0.46px]"
           >
             {lead}
             <br />

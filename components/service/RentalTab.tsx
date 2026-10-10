@@ -4,7 +4,6 @@
  * - 구성: 히어로 → 혜택 7가지 → 렌탈 월 요금 슬라이더(원본 표-1.jpg 요금을 대수별로) + 견적 계산기 배너 → 진행 5단계(자동 진행)
  *         → 렌탈 통합 가입 센터 + 파트너 로고(기존 회사 자료 — LEGACY.partners 로 숨김) → 일시납(설치) 교차 링크
  */
-import Placeholder from "@/components/common/Placeholder";
 import Image from "next/image";
 import Reveal from "@/components/common/Reveal";
 import { LEGACY, SITE } from "@/lib/site";
@@ -57,20 +56,25 @@ export default function RentalTab() {
         </div>
       </section>
 
-      {/* ===== 혜택 7가지: 이미지 카드 그리드 (PC 4열 / 모바일 2열), 순차 slide-up ===== */}
+      {/* ===== 혜택 7가지: 이미지 카드 그리드 (PC 위 3개 · 아래 4개 — 12칸 격자에서 4칸/3칸씩 / 모바일 2열), 순차 slide-up ===== */}
       <section className="bg-white px-[16px] py-[60px] lg:px-0 lg:py-[120px]">
         <div className="mx-auto w-full max-w-[580px] lg:w-[1080px] lg:max-w-none">
           <SectionHeading eyebrow="BENEFIT" title={<>{SITE.name} 렌탈 <strong>혜택 7가지</strong></>} />
-          <ul className="mt-[32px] grid grid-cols-2 gap-[10px] lg:mt-[64px] lg:grid-cols-4 lg:gap-[20px]">
+          <ul className="mt-[32px] grid grid-cols-2 gap-[10px] lg:mt-[64px] lg:grid-cols-12 lg:gap-[20px]">
             {RENTAL_BENEFITS.map((b, i) => (
-              <Reveal as="li" key={b.title} delay={(i % 4) * 120} className="overflow-hidden rounded-[14px] bg-[#f6f7fa]">
+              <Reveal
+                as="li"
+                key={b.title}
+                delay={(i < 3 ? i : i - 3) * 120}
+                className={`overflow-hidden rounded-[14px] bg-[#f6f7fa] ${i < 3 ? "lg:col-span-4" : "lg:col-span-3"}`}
+              >
                 {/* 스톡 사진(CC0): public/images/stock/rental-benefit{1~7}-*.webp — 실제 사진 확보 시 교체 */}
                 <div className="relative aspect-[4/3] w-full">
                   <Image
                     src={BENEFIT_PHOTOS[i].src}
                     alt={BENEFIT_PHOTOS[i].alt}
                     fill
-                    sizes="(min-width: 1024px) 255px, (min-width: 580px) 285px, 50vw"
+                    sizes="(min-width: 1024px) 347px, (min-width: 580px) 285px, 50vw"
                     className="object-cover"
                   />
                 </div>
@@ -100,8 +104,8 @@ export default function RentalTab() {
       {/* ===== 렌탈 할부 통합 공식 가입 센터 + 제휴 브랜드 로고 (원본 홈 블록)
            기존 회사(대한민국CCTV) 제휴 자료 → LEGACY.partners 가 true 일 때만 표시 ===== */}
       {LEGACY.partners && (
-      <section className="bg-[#f6f7fa] px-[16px] py-[60px] lg:px-0 lg:py-[120px]">
-        <div className="mx-auto w-full max-w-[580px] lg:w-[1080px] lg:max-w-none">
+      <section className="bg-[#f6f7fa] py-[60px] lg:py-[120px]">
+        <div className="mx-auto w-full max-w-[612px] px-[16px] lg:w-[1080px] lg:max-w-none lg:px-0">
           <SectionHeading
             title={
               <>
@@ -113,7 +117,7 @@ export default function RentalTab() {
             desc={
               <>
                 일시납 공사의 목돈이 부담스러우신 고객님들을 위해
-                <SpaceOrBreak />
+                <br />
                 초기비용 0원과 최저가 월비용으로
                 <SpaceOrBreak />
                 전국 어디든 부담없는 설치가 가능한
@@ -122,13 +126,35 @@ export default function RentalTab() {
               </>
             }
           />
-          <ul className="mt-[32px] grid grid-cols-2 gap-[10px] sm:grid-cols-3 lg:mt-[56px] lg:grid-cols-5 lg:gap-[16px]">
-            {RENTAL_PARTNERS.map((name) => (
-              <li key={name} className="flex h-[72px] items-center justify-center rounded-[12px] bg-white px-[12px] lg:h-[100px]">
-                <Placeholder label={`${name} 로고 (원본 2024/12/ 로고 이미지)`} className="h-[40px] w-full max-w-[140px] lg:h-[56px]" />
-              </li>
-            ))}
-          </ul>
+        </div>
+
+        {/* 브랜드 로고 띠: 화면 끝까지 왼쪽으로 끝없이 흐름 (globals.css .marquee-left)
+            로고가 5개뿐이라 한 트랙에 4번 반복해 화면보다 길게 → 같은 트랙 복제(aria-hidden)로 끊김 없이 이어 붙임 */}
+        <div className="mt-[32px] flex w-full overflow-hidden lg:mt-[56px]">
+          {[false, true].map((isClone) => (
+            <ul
+              key={String(isClone)}
+              aria-hidden={isClone || undefined}
+              className="marquee-left flex shrink-0 gap-[10px] pr-[10px] lg:gap-[16px] lg:pr-[16px]"
+            >
+              {Array.from({ length: 4 }, () => RENTAL_PARTNERS).flat().map(({ name, file }, i) => (
+                <li
+                  key={`${file}-${i}`}
+                  className="flex h-[72px] w-[140px] shrink-0 items-center justify-center rounded-[12px] bg-white px-[16px] lg:h-[100px] lg:w-[200px] lg:px-[24px]"
+                >
+                  <div className="relative h-full w-full">
+                    <Image
+                      src={`/images/rental-partners/${file}.webp`}
+                      alt={isClone || i >= RENTAL_PARTNERS.length ? "" : `${name} 로고`}
+                      fill
+                      sizes="(min-width: 1024px) 200px, 140px"
+                      className="object-contain"
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ))}
         </div>
       </section>
       )}

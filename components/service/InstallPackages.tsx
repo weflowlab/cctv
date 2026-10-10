@@ -16,7 +16,7 @@
  */
 import Link from "next/link";
 import { useState } from "react";
-import Placeholder from "@/components/common/Placeholder";
+import Image from "next/image";
 import CalculatorBanner from "./CalculatorBanner";
 import {
   CAMERA_NAME,
@@ -107,10 +107,16 @@ export default function InstallPackages() {
           >
             {prices.map((price, i) => (
               <li key={i} className="flex flex-col overflow-hidden rounded-[12px] bg-white">
-                <Placeholder
-                  label={`CCTV ${i + 1}대 패키지 (원본 ${PACKAGE_IMAGES[placement][i]})`}
-                  className="aspect-[4/3] w-full border-0 border-b"
-                />
+                {/* 패키지 구성 사진 (기존 사이트 제품 사진) */}
+                <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-[#eee] bg-[#efefef]">
+                  <Image
+                    src={PACKAGE_IMAGES[placement][i]}
+                    alt={`CCTV ${i + 1}대 패키지 구성 — 녹화기·하드디스크·카메라 ${i + 1}대`}
+                    fill
+                    sizes="(min-width: 1024px) 250px, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
                 <div className="flex flex-1 flex-col px-[20px] pb-[20px] pt-[18px]">
                   <h3 className="text-[18px] font-bold leading-[26px] tracking-[-0.36px] text-[#222] lg:text-[20px] lg:leading-[28px]">
                     CCTV <span className="text-point-strong">{i + 1}대</span> 패키지
@@ -151,10 +157,16 @@ export default function InstallPackages() {
             <ul className="mt-[12px] grid grid-cols-3 gap-[8px] lg:mt-[16px] lg:grid-cols-5 lg:gap-[12px]">
               {fullset.map((item, i) => (
                 <li key={item.name} className="overflow-hidden rounded-[12px] bg-white">
-                  <Placeholder
-                    label={`${item.name} (원본 ${item.image})`}
-                    className="aspect-square w-full border-0 border-b"
-                  />
+                  {/* 구성품 사진 (기존 사이트 제품 사진에서 번호·이름 띠를 잘라낸 것) */}
+                  <div className="relative aspect-square w-full overflow-hidden border-b border-[#eee] bg-[#efefef]">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      sizes="(min-width: 1024px) 200px, 33vw"
+                      className="object-contain p-[8px] lg:p-[12px]"
+                    />
+                  </div>
                   <p className="flex gap-[4px] px-[8px] py-[8px] text-[12px] font-medium leading-[17px] tracking-[-0.24px] text-[#222] lg:gap-[6px] lg:px-[12px] lg:py-[12px] lg:text-[14px] lg:leading-[20px]">
                     <span className="font-bold text-point-strong">{String(i + 1).padStart(2, "0")}</span>
                     {item.name}

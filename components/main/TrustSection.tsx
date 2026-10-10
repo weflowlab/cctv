@@ -6,7 +6,6 @@
  * - 고객사 로고 이미지: public/images/clients/*.webp (기존 사이트 kkcctv.co.kr 홈에서 가져옴, 흰 배경 PNG 로 변환).
  */
 import Image from "next/image";
-import Placeholder from "@/components/common/Placeholder";
 import Reveal from "@/components/common/Reveal";
 import { SITE } from "@/lib/site";
 
@@ -61,11 +60,16 @@ export default function TrustSection({
         {showAward && (
           <Reveal
             threshold={0.1}
-            className="flex w-full flex-col items-center gap-[24px] rounded-[20px] bg-brand-light px-[24px] py-[40px] lg:flex-row lg:justify-center lg:gap-[64px] lg:py-[56px]"
+            className="flex w-full flex-col items-center gap-[24px] rounded-[20px] bg-brand-light px-[24px] py-[40px] lg:flex-row lg:items-center lg:justify-center lg:gap-[64px] lg:py-[56px]"
           >
-            <Placeholder
-              label="한국브랜드 선호도 3년 연속 1위 수상 메달 (원본 2025/07/스크린샷_2025-07-21_165045-removebg-preview.png)"
-              className="aspect-square w-[160px] shrink-0 rounded-full lg:w-[200px]"
+            {/* 메달 3개 이미지 (기존 사이트 원본 2025/07/스크린샷_2025-07-21_165045-removebg-preview.png → WebP)
+                PC: 오른쪽 문구가 길어 보여 메달을 9px 내려 문구 덩어리와 눈높이를 맞춤 */}
+            <Image
+              src="/images/award/kbpa-medals.webp"
+              alt="한국브랜드 선호도 1위 수상 메달 3개 (2018 · 2019 · 2020)"
+              width={621}
+              height={350}
+              className="h-auto w-[260px] shrink-0 lg:w-[360px] lg:translate-y-[9px]"
             />
             <div className="text-center lg:text-left">
               <h2 className="text-[24px] font-bold leading-[34px] tracking-[-0.5px] text-[#222] lg:text-[36px] lg:leading-[50px] lg:tracking-[-1px]">

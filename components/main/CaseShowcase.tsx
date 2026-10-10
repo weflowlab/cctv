@@ -1,16 +1,16 @@
 /**
- * 홈 시공사례 섹션 — "말보다 현장으로 보여 드립니다"
+ * 홈 시공사례 섹션 — "전국 어디든 직접 방문해 시공합니다" (주장) → 지역명이 붙은 실제 현장 카드 (증거)
  * - 데이터: getFeaturedCases(6) (components/cases/data — 메인 노출 우선, 부족하면 최신순).
- * - 카드: 대표 사진(images[0], Placeholder) + 장소 칩(PLACES 이름) + 지역·대수 + 제목 → /cases/<id>.
+ * - 카드: 대표 사진(임시 스톡 사진 caseImageSrc) + 장소 칩(PLACES 이름) + 지역·대수 + 제목 → /cases/<id>.
  * - 레이아웃: 모바일은 가로 스와이프(CSS scroll-snap, 다음 카드가 살짝 보이게) / PC 는 3열 그리드.
  *   자동 넘김 없음 → Swiper 없이 서버 컴포넌트로 처리.
  * - 하단 [시공사례 자세히 보기 → /cases].
  */
+import Image from "next/image";
 import Link from "next/link";
 import Eyebrow from "@/components/common/Eyebrow";
-import Placeholder from "@/components/common/Placeholder";
 import Reveal from "@/components/common/Reveal";
-import { getFeaturedCases, type CaseItem } from "@/components/cases/data";
+import { caseImageSrc, getFeaturedCases, type CaseItem } from "@/components/cases/data";
 import { PLACES } from "@/lib/site";
 import { ArrowRightIcon } from "./icons";
 
@@ -25,10 +25,13 @@ function CaseShowcaseCard({ item }: { item: CaseItem }) {
       className="group flex w-[78%] shrink-0 snap-start flex-col overflow-hidden rounded-[16px] border border-line bg-white transition-shadow duration-200 hover:shadow-[0_8px_16px_rgba(0,0,0,0.08)] sm:w-[46%] lg:w-auto lg:rounded-[20px]"
     >
       {/* 대표 사진 자리 (호버 시 살짝 확대) */}
-      <div className="overflow-hidden">
-        <Placeholder
-          label={item.images[0] ?? item.title}
-          className="aspect-[4/3] w-full border-0 transition-transform duration-300 group-hover:scale-[1.03]"
+      <div className="relative aspect-[4/3] w-full overflow-hidden">
+        <Image
+          src={caseImageSrc(item)}
+          alt={item.images[0] ?? item.title}
+          fill
+          sizes="(min-width: 1024px) 340px, 78vw"
+          className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
         />
       </div>
       <div className="flex flex-1 flex-col px-[18px] pb-[20px] pt-[16px] lg:px-[24px] lg:pb-[28px] lg:pt-[20px]">
@@ -61,12 +64,12 @@ export default function CaseShowcase() {
           {/* 섹션 라벨: 시공사례 */}
           <Eyebrow>OUR WORK</Eyebrow>
           <h2 className="text-[26px] font-bold leading-[1.35] tracking-[-0.26px] text-[#222] lg:text-[42px] lg:leading-[60px] lg:tracking-[-1px]">
-            말보다 <strong className="text-point-strong">현장</strong>으로
+            <strong className="text-point-strong">전국 어디든</strong>
             <br />
-            보여 드립니다
+            직접 방문해 시공합니다
           </h2>
           <p className="break-keep text-[15px] leading-[1.6] tracking-[-0.3px] text-sub lg:text-[18px]">
-            공간마다 구조와 동선이 다릅니다. 직접 보고 설계한 설치 현장을 확인해 보세요.
+            서울부터 지방까지, 직접 다녀온 현장마다 공간에 맞게 설계해 설치했습니다.
           </p>
         </div>
 

@@ -2,14 +2,20 @@
  * 시공사례 데이터
  * - 샘플 데이터 — 관리자 페이지(DB) 도입 시 교체, 필드는 DB 컬럼과 1:1
  *   (추후 Neon Postgres 테이블 + Vercel Blob 이미지로 대표가 직접 등록)
- * - images: 지금은 Placeholder label(사진 자리 설명). DB 도입 후 Vercel Blob URL 로 교체.
+ * - images: 사진 설명(alt). 화면 사진은 임시로 caseImageSrc() 스톡 사진 — DB 도입 후 Vercel Blob URL 로 교체.
  * - date: 표시용 문자열 "YYYY-MM" (Date 객체 쓰지 않음 — 프리렌더 안전)
  * - CASES 는 최신순으로 유지.
  */
 import { PLACES, type PlaceSlug } from "@/lib/site";
 
 export type CaseItem = {
-  /** slug 겸 id (예: "gangnam-cafe-2026-09") */
+  /**
+   * slug 겸 id — 상세 주소 /cases/<id> (검색 노출용 영문 키워드)
+   * 규칙: 지역-장소-cctv-서비스 (소문자, 하이픈) · 날짜는 넣지 않음 · 겹치면 끝에 -2, -3
+   *   서비스: installation(설치) / rental(렌탈) / repair(AS) / speaker(CCTV+스피커)
+   *   예) gangnam-cafe-cctv-installation, suwon-apartment-cctv-rental
+   * 관리자 페이지 도입 시 이 규칙으로 자동 생성(수정 가능)하면 된다.
+   */
   id: string;
   /** 예: "강남 카페 CCTV 8대 설치" */
   title: string;
@@ -33,7 +39,7 @@ export type CaseItem = {
 /** 샘플 시공사례 11건 (최신순) */
 export const CASES: CaseItem[] = [
   {
-    id: "gangnam-cafe-2026-09",
+    id: "gangnam-cafe-cctv-installation",
     title: "강남 카페 CCTV 8대 설치",
     place: "store",
     region: "서울 강남구",
@@ -46,7 +52,7 @@ export const CASES: CaseItem[] = [
     featured: true,
   },
   {
-    id: "suwon-apartment-2026-09",
+    id: "suwon-apartment-cctv-rental",
     title: "수원 아파트 CCTV 2대 렌탈",
     place: "home",
     region: "경기 수원시",
@@ -59,7 +65,7 @@ export const CASES: CaseItem[] = [
     featured: true,
   },
   {
-    id: "incheon-warehouse-2026-08",
+    id: "incheon-warehouse-cctv-installation",
     title: "인천 물류창고 CCTV 16대 설치",
     place: "factory",
     region: "인천 서구",
@@ -72,7 +78,7 @@ export const CASES: CaseItem[] = [
     featured: true,
   },
   {
-    id: "seongnam-office-2026-08",
+    id: "seongnam-bundang-office-cctv-installation",
     title: "성남 사무실 CCTV 6대 설치",
     place: "office",
     region: "경기 성남시 분당구",
@@ -85,7 +91,7 @@ export const CASES: CaseItem[] = [
     featured: true,
   },
   {
-    id: "daejeon-public-2026-07",
+    id: "daejeon-community-center-cctv-installation",
     title: "대전 주민센터 CCTV 10대 설치",
     place: "public",
     region: "대전 유성구",
@@ -98,7 +104,7 @@ export const CASES: CaseItem[] = [
     featured: true,
   },
   {
-    id: "busan-restaurant-2026-07",
+    id: "busan-haeundae-restaurant-cctv-speaker",
     title: "부산 음식점 CCTV 4대 + 스피커 설치",
     place: "store",
     region: "부산 해운대구",
@@ -111,7 +117,7 @@ export const CASES: CaseItem[] = [
     featured: true,
   },
   {
-    id: "yongin-house-2026-06",
+    id: "yongin-house-cctv-installation",
     title: "용인 단독주택 CCTV 5대 설치",
     place: "home",
     region: "경기 용인시",
@@ -124,7 +130,7 @@ export const CASES: CaseItem[] = [
     featured: false,
   },
   {
-    id: "hwaseong-factory-2026-06",
+    id: "hwaseong-factory-cctv-repair",
     title: "화성 공장 CCTV 12대 AS 점검",
     place: "factory",
     region: "경기 화성시",
@@ -137,7 +143,7 @@ export const CASES: CaseItem[] = [
     featured: false,
   },
   {
-    id: "seoul-mapo-office-2026-05",
+    id: "seoul-mapo-office-cctv-rental",
     title: "서울 마포 사무실 CCTV 3대 렌탈",
     place: "office",
     region: "서울 마포구",
@@ -150,7 +156,7 @@ export const CASES: CaseItem[] = [
     featured: false,
   },
   {
-    id: "cheongju-school-2026-05",
+    id: "cheongju-library-cctv-installation",
     title: "청주 공공도서관 CCTV 8대 설치",
     place: "public",
     region: "충북 청주시",
@@ -163,7 +169,7 @@ export const CASES: CaseItem[] = [
     featured: false,
   },
   {
-    id: "goyang-store-2026-04",
+    id: "goyang-convenience-store-cctv-repair",
     title: "고양 편의점 CCTV 6대 AS 교체",
     place: "store",
     region: "경기 고양시",
@@ -195,4 +201,35 @@ export function countCasesByPlace(): Record<PlaceSlug, number> {
 /** id 로 사례 1건 조회 (없으면 undefined) */
 export function getCase(id: string): CaseItem | undefined {
   return CASES.find((c) => c.id === id);
+}
+
+/**
+ * 임시 사례 사진 — 스톡 사진(CC0) public/images/stock/*.webp 를 돌려 씀 (중복 허용)
+ * - 실제 시공 사진 등록(DB·Blob 도입) 전까지만 사용. 같은 사례는 항상 같은 사진이 나오도록 id 로 시작 위치를 정함.
+ * - 스피커 사례는 스피커 사진, 나머지는 카메라·시공 사진.
+ */
+const STOCK_CAMERA = [
+  "hero-main-ceiling-camera",
+  "card-install-dome-camera",
+  "hero-rental-building-dome-camera",
+  "install-step4-wall-camera",
+  "rental-benefit5-bullet-cameras",
+  "card-rental-rooftop-camera",
+  "install-hero-technician-wall",
+  "rental-hero-white-wall-camera",
+  "rental-benefit4-dome-camera",
+  "as-diagnosis-network-rack",
+  "rental-benefit7-control-room",
+  "install-step3-electrician-panel",
+  "hero-as-technician-rack",
+  "as-old-camera",
+  "as-visit-repair",
+];
+const STOCK_SPEAKER = ["speaker-hero-woofer", "promo-speaker-mixing-console", "hero-speaker-bookshelf-speaker"];
+
+/** 사례 사진 경로 (idx 번째 사진) */
+export function caseImageSrc(item: CaseItem, idx = 0): string {
+  const pool = item.service === "speaker" ? STOCK_SPEAKER : STOCK_CAMERA;
+  const offset = [...item.id].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+  return `/images/stock/${pool[(offset + idx) % pool.length]}.webp`;
 }

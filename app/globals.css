@@ -132,10 +132,47 @@ img {
 .slide-in-down { animation: slideInDown 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .float-right { animation: floatingRight 12s linear infinite; }
 
+/* --- 상담 버튼 순차 흔들림 (FloatingContact) ---
+   5초 주기 중 앞 0.6초만 좌우로 흔들리고 나머지는 정지. 버튼마다 animation-delay 를 0.7초씩 밀어
+   전화 → 카톡 → 문의 순서로 차례차례 흔들린다. transform 만 쓰므로 호버 이동(translate 속성)과 겹치지 않음. */
+@keyframes fcShake {
+  0%, 12%, 100% { transform: rotate(0) scale(1); }
+  2.4% { transform: rotate(-10deg) scale(1.04); }
+  4.8% { transform: rotate(9deg) scale(1.04); }
+  7.2% { transform: rotate(-6deg) scale(1.02); }
+  9.6% { transform: rotate(3deg) scale(1); }
+}
+.fc-shake { animation: fcShake 5s ease-in-out infinite; }
+/* 버튼(링크)에 호버하면 안쪽 원 흔들림 멈춤 */
+.group:hover > .fc-shake, .fc-shake:hover { animation-play-state: paused; }
+
+/* --- 무한 흐름(marquee) 띠 ---
+   같은 트랙을 2번(원본 + aria-hidden 복제) 이어 붙이고 -100% 이동 → 끊김 없이 반복.
+   (CSS 모듈은 이 프로젝트 설정(next.config 의 *.css → Tailwind 로더)에서 클래스 이름이 연결되지 않아 전역 클래스로 둠)
+   · .marquee-left / .marquee-right : 홈 제휴 제조사 로고 2줄 (PC 50초 / 모바일 35초)
+   · .review-row / .review-track    : 홈 카카오톡 후기 (PC 60초 / 모바일 40초, 호버·포커스 시 멈춤) */
+@keyframes marqueeLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+@keyframes marqueeRight {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(0); }
+}
+.marquee-left { will-change: transform; animation: marqueeLeft 50s linear infinite; }
+.marquee-right { will-change: transform; animation: marqueeRight 50s linear infinite; }
+.review-track { will-change: transform; animation: marqueeLeft 60s linear infinite; }
+.review-row:hover .review-track,
+.review-row:focus-within .review-track { animation-play-state: paused; }
+@media screen and (max-width: 1023px) {
+  .marquee-left, .marquee-right { animation-duration: 35s; }
+  .review-track { animation-duration: 40s; }
+}
+
 /* 모션 최소화 설정 사용자는 애니메이션 생략 */
 @media (prefers-reduced-motion: reduce) {
   .reveal-pending { opacity: 1; }
-  .fade-in, .slide-in-left, .slide-in-right, .slide-in-up, .slide-in-down, .float-right {
+  .fade-in, .slide-in-left, .slide-in-right, .slide-in-up, .slide-in-down, .float-right, .fc-shake, .marquee-left, .marquee-right, .review-track {
     animation: none;
     opacity: 1;
   }

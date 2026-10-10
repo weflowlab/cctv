@@ -1,6 +1,6 @@
 /**
  * 홈 비용 비교 섹션 — keeper /security "기존 CCTV 렌탈비의 단 60% 비용으로" 자리
- * - 레이아웃: 전체 폭 연회색 배경 / PC 2단 [왼쪽: 칩 + 제목 + 설명 + 렌탈 상담 신청 버튼 + 렌탈 자세히(글자 링크)] [오른쪽: 비교 카드]
+ * - 레이아웃: 전체 폭 연회색 배경 / PC 2단 [왼쪽: 칩 + 제목 + 설명 + 렌탈 상담 신청 버튼] [오른쪽: 비교 카드]
  *   모바일은 문구 → 카드 → 버튼 순으로 세로 배치.
  * - 비교 카드는 렌탈 탭과 같은 RentalCompareCard (대수 슬라이더 + 자사/타사 월 요금 + 매월 절약액, RENTAL_MONTHLY 기준)
  * - 서버 컴포넌트 (카드만 클라이언트)
@@ -8,7 +8,7 @@
 import Reveal from "@/components/common/Reveal";
 import Eyebrow from "@/components/common/Eyebrow";
 import RentalCompareCard from "@/components/service/RentalCompareCard";
-import { HomeMoreLink, HomeTextLink } from "./HomeSection";
+import { HomeMoreLink } from "./HomeSection";
 
 export default function CostCompare() {
   return (
@@ -33,7 +33,6 @@ export default function CostCompare() {
           </p>
           <div className="mt-[32px] hidden flex-col items-start gap-[16px] lg:flex">
             <HomeMoreLink href="/contact?service=rental">렌탈 상담 신청하기</HomeMoreLink>
-            <HomeTextLink href="/service/rental">렌탈 혜택·진행 과정 보기</HomeTextLink>
           </div>
         </Reveal>
 
@@ -48,7 +47,6 @@ export default function CostCompare() {
         {/* ===== 모바일 전용 버튼 (카드 아래) ===== */}
         <div className="flex flex-col items-center gap-[14px] lg:hidden">
           <HomeMoreLink href="/contact?service=rental">렌탈 상담 신청하기</HomeMoreLink>
-          <HomeTextLink href="/service/rental">렌탈 혜택·진행 과정 보기</HomeTextLink>
         </div>
       </div>
     </section>

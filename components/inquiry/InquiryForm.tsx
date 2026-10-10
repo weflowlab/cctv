@@ -2,8 +2,8 @@
 
 /**
  * 상담 신청(견적 문의) 폼 (keeper components/contact/ContactForm 틀 복사 + 기존 사이트 필드)
- * - 필드: 성함*, 연락처*, 서비스 선택(칩형 다중선택), 희망 서비스일(date), 전달 내용(textarea),
- *         [필수] 개인정보 수집 및 이용 동의 (약관보기 → /terms/personal 새 창)
+ * - 필드: 성함*, 연락처*, 서비스 선택(칩형 다중선택), 희망 서비스일(DatePicker 달력 — 지난 날짜 선택 불가), 전달 내용(textarea),
+ *         [필수] 개인정보 수집 및 이용 동의 (약관보기 → 바로 아래 작은 안내 상자 열기/닫기, 전체 방침은 /terms/personal)
  * - 동작 (keeper 폼과 동일):
  *   · 제출 시 유효성 검사 → 첫 에러 필드로 포커스, 필드 아래 브랜드색 에러 문구, 에러 입력칸 테두리 브랜드색
  *   · 한 번 제출한 뒤부터는 입력할 때마다 재검사
@@ -20,6 +20,7 @@ import { Suspense, useEffect, useRef, useState, type FormEvent } from "react";
 import { parseQuoteQuery, type QuoteService } from "@/components/quote-calculator/data";
 import { SITE } from "@/lib/site";
 import Eyebrow from "@/components/common/Eyebrow";
+import DatePicker from "./DatePicker";
 
 /** 서비스 선택지 (기존 사이트 3개 + CCTV+스피커) */
 const SERVICE_OPTIONS = ["CCTV 설치", "CCTV 수리", "CCTV 렌탈", "CCTV+스피커"] as const;
@@ -98,6 +99,8 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   // 성공 팝업 노출 여부
   const [showSuccess, setShowSuccess] = useState(false);
+  // 약관보기 작은 안내 상자 열림
+  const [showTerms, setShowTerms] = useState(false);
 
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
@@ -231,14 +234,7 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
               <label htmlFor="inq-date" className={labelClass}>
                 희망 서비스일
               </label>
-              <input
-                id="inq-date"
-                name="date"
-                type="date"
-                value={values.date}
-                onChange={(e) => update({ date: e.target.value })}
-                className={inputClass(false)}
-              />
+              <DatePicker id="inq-date" value={values.date} onChange={(date) => update({ date })} className={inputClass(false)} />
             </div>
 
             {/* ===== 전달 내용 ===== */}
@@ -257,7 +253,7 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
               />
             </div>
 
-            {/* ===== 약관 동의: 원형 체크박스 + 문구(클릭 토글) + 약관보기(새 창) ===== */}
+            {/* ===== 약관 동의: 원형 체크박스 + 문구(클릭 토글) + 약관보기(아래 작은 안내 상자 토글) ===== */}
             <div className="mb-[16px] mt-[24px] flex flex-col lg:mt-[32px]">
               <div className="flex items-center gap-0">
                 <label className="relative flex cursor-pointer items-center gap-[8px]">
@@ -281,16 +277,33 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
                   onClick={() => update({ agree: !values.agree })}
                   className="ml-[8px] cursor-pointer text-[13px] font-medium leading-[140%] tracking-[-0.32px] text-[#333] lg:ml-[10px] lg:text-[16px]"
                 >
-                  [필수] 개인정보 수집 및 이용 동의
+                  [필수] 개인정보 수집 및 이용 동의 <span className="text-[#f27a1a]">*</span>
                 </p>
                 <button
                   type="button"
-                  onClick={() => window.open("/terms/personal", "_blank")}
-                  className="ml-auto flex h-full cursor-pointer items-center text-[12px] font-normal tracking-[-0.28px] text-[#999] underline outline-none focus-visible:text-point-strong lg:ml-[8px] lg:translate-y-[2px] lg:text-[14px]"
+                  onClick={() => setShowTerms((v) => !v)}
+                  aria-expanded={showTerms}
+                  aria-controls="inq-terms"
+                  className="ml-auto flex cursor-pointer items-center text-[12px] font-normal leading-[140%] tracking-[-0.28px] text-[#999] underline underline-offset-[3px] outline-none focus-visible:text-point-strong lg:ml-[10px] lg:text-[14px]"
                 >
-                  약관보기
+                  {showTerms ? "닫기" : "약관보기"}
                 </button>
               </div>
+              {/* 약관 요약: 2줄 핵심만 작게 */}
+              {showTerms && (
+                <div
+                  id="inq-terms"
+                  className="mt-[10px] rounded-[8px] bg-[#f6f7fa] px-[14px] py-[12px] text-[12px] leading-[1.6] tracking-[-0.24px] text-[#666] lg:text-[13px]"
+                >
+                  <p>
+                    <b className="font-semibold text-[#444]">1. 수집 항목 및 목적:</b> 성함, 연락처, 희망 서비스, 희망 서비스일, 문의
+                    내용을 견적·상담 및 확인 전화 안내를 위해 수집하며, 명시된 목적 외의 용도로 이용하지 않습니다.
+                  </p>
+                  <p className="mt-[6px]">
+                    <b className="font-semibold text-[#444]">2. 보유 및 이용 기간:</b> 상담 종료 후 1년까지
+                  </p>
+                </div>
+              )}
               <ErrorText>{errors.agree}</ErrorText>
             </div>
 

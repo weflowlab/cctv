@@ -4,12 +4,15 @@
  * - 구성: 히어로(동시 시공 카피 + 배너 이미지) → 혜택 3가지(시간 단축 / 비용 절감 / 통합 관리)
  * - 원본 자료가 배너 한 장뿐이라 섹션을 2개로 간결하게 유지. 원본에 없는 문구는 TODO 주석.
  */
-import Placeholder from "@/components/common/Placeholder";
 import Image from "next/image";
 import Reveal from "@/components/common/Reveal";
 import { SPEAKER_BENEFITS } from "./data";
 import { SectionHeading, SpaceOrBreak } from "./ui";
 import Eyebrow from "@/components/common/Eyebrow";
+import { ClockIcon, CoinIcon, LayersIcon } from "@/components/main/icons";
+
+/** 혜택 아이콘 (SPEAKER_BENEFITS 순서: 시간 단축 / 비용 절감 / 통합 관리) — 홈과 같은 라인 아이콘 */
+const BENEFIT_ICONS = [ClockIcon, CoinIcon, LayersIcon];
 
 export default function SpeakerTab() {
   return (
@@ -59,26 +62,29 @@ export default function SpeakerTab() {
             desc="CCTV와 스피커를 한 팀이 함께 시공해 드립니다."
           />
           <ul className="mt-[32px] grid grid-cols-1 gap-[12px] lg:mt-[64px] lg:grid-cols-3 lg:gap-[20px]">
-            {SPEAKER_BENEFITS.map((b, i) => (
-              <Reveal
-                as="li"
-                key={b.label}
-                delay={i * 150}
-                className="flex items-center gap-[16px] rounded-[16px] bg-[#f6f7fa] px-[24px] py-[24px] lg:flex-col lg:gap-[20px] lg:py-[48px] lg:text-center"
-              >
-                <div className="flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-full bg-white lg:h-[88px] lg:w-[88px]">
-                  <Placeholder label={`${b.label} 아이콘`} kind="icon" className="h-[32px] w-[32px] lg:h-[48px] lg:w-[48px]" />
-                </div>
-                <div>
-                  <h3 className="text-[14px] font-bold tracking-[-0.28px] text-point-strong lg:text-[18px]">{b.label}</h3>
-                  <p className="mt-[4px] text-[17px] font-bold leading-[25px] tracking-[-0.34px] text-[#222] lg:mt-[8px] lg:text-[22px] lg:leading-[32px]">
-                    {b.desc[0]}
-                    <SpaceOrBreak />
-                    {b.desc[1]}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
+            {SPEAKER_BENEFITS.map((b, i) => {
+              const Icon = BENEFIT_ICONS[i];
+              return (
+                <Reveal
+                  as="li"
+                  key={b.label}
+                  delay={i * 150}
+                  className="flex items-center gap-[16px] rounded-[16px] bg-[#f6f7fa] px-[24px] py-[24px] lg:flex-col lg:gap-[20px] lg:py-[48px] lg:text-center"
+                >
+                  <div className="flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-full bg-white text-point-strong lg:h-[88px] lg:w-[88px]">
+                    <Icon className="h-[30px] w-[30px] lg:h-[44px] lg:w-[44px]" />
+                  </div>
+                  <div>
+                    <h3 className="text-[14px] font-bold tracking-[-0.28px] text-point-strong lg:text-[18px]">{b.label}</h3>
+                    <p className="mt-[4px] text-[17px] font-bold leading-[25px] tracking-[-0.34px] text-[#222] lg:mt-[8px] lg:text-[22px] lg:leading-[32px]">
+                      {b.desc[0]}
+                      <SpaceOrBreak />
+                      {b.desc[1]}
+                    </p>
+                  </div>
+                </Reveal>
+              );
+            })}
           </ul>
         </div>
       </section>

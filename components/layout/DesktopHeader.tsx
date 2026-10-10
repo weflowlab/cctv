@@ -42,7 +42,7 @@ export default function DesktopHeader() {
                   key={key}
                   href={menu.href ?? key}
                   aria-current={selected ? "page" : undefined}
-                  className={`relative block select-none py-[8px] text-[17px] font-medium leading-[26px] tracking-[-0.5px] no-underline transition-colors duration-[250ms] ${textColor(
+                  className={`relative block select-none py-[8px] text-[17px] font-semibold leading-[26px] tracking-[-0.5px] no-underline transition-colors duration-[250ms] ${textColor(
                     headerStyle,
                   )} after:absolute after:bottom-0 after:left-0 after:block after:h-[2px] after:w-full after:origin-left after:bg-point after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100 ${
                     selected ? "after:scale-x-100" : "after:scale-x-0"
@@ -54,10 +54,15 @@ export default function DesktopHeader() {
             })}
           </nav>
 
-          {/* ===== 상담 신청하기 버튼 (→ /contact) ===== */}
+          {/* ===== 상담 신청하기 버튼 (→ /contact) — 눈에 띄게 채움 버튼
+               투명 헤더(어두운 히어로 위): 흰 배경 + 네이비 글자 / 흰 헤더: 네이비 배경 + 흰 글자 ===== */}
           <Link
             href={PRIMARY_CTA.href}
-            className="flex h-[42px] items-center justify-center rounded-[8px] bg-brand-light px-[18px] py-[8px] text-[15px] font-medium text-point-strong transition-colors duration-300 visited:text-point-strong hover:bg-point-light"
+            className={`flex h-[42px] items-center justify-center rounded-[8px] px-[18px] py-[8px] text-[15px] font-bold transition-colors duration-300 ${
+              headerStyle === "white"
+                ? "bg-brand text-white visited:text-white hover:bg-brand-strong"
+                : "bg-white text-brand visited:text-brand hover:bg-brand-light"
+            }`}
           >
             {PRIMARY_CTA.name}
           </Link>

@@ -55,7 +55,9 @@ export default function MobileHeader() {
             {isHome && !isOpen && (
               <Link
                 href={PRIMARY_CTA.href}
-                className="flex h-[32px] items-center justify-center rounded-[8px] bg-brand-light px-[16px] text-[14px] font-medium text-point-strong visited:text-point-strong"
+                className={`flex h-[32px] items-center justify-center rounded-[8px] px-[16px] text-[14px] font-bold ${
+                  barStyle === "white" ? "bg-brand text-white visited:text-white" : "bg-white text-brand visited:text-brand"
+                }`}
               >
                 상담 신청
               </Link>
@@ -99,7 +101,7 @@ export default function MobileHeader() {
                       className="flex h-[62px] w-full items-center justify-between border-b border-[#eee] px-[20px]"
                     >
                       <span
-                        className={`text-[18px] font-medium leading-[28px] tracking-[-0.5px] ${
+                        className={`text-[18px] font-semibold leading-[28px] tracking-[-0.5px] ${
                           selected ? "text-point-strong" : "text-[#333]"
                         }`}
                       >
@@ -116,7 +118,7 @@ export default function MobileHeader() {
               <Link
                 href={PRIMARY_CTA.href}
                 onClick={() => setIsOpen(false)}
-                className="flex h-[48px] w-full items-center justify-center rounded-[8px] bg-brand-light px-[16px] pb-[10px] pt-[8px] text-[16px] font-medium text-point-strong transition-colors duration-300 visited:text-point-strong hover:bg-point-light"
+                className="flex h-[48px] w-full items-center justify-center rounded-[8px] bg-brand px-[16px] pb-[10px] pt-[8px] text-[16px] font-bold text-white transition-colors duration-300 visited:text-white hover:bg-brand-strong"
               >
                 {PRIMARY_CTA.name}
               </Link>

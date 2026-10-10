@@ -3,28 +3,28 @@
 /**
  * 카카오톡 후기 섹션 — 고객이 대표에게 직접 보낸 카카오톡 대화 캡처 캐러셀
  * - 텍스트 후기(별점·이름·날짜) 대신 실제 대화 캡처 이미지를 보여 준다.
- * - 이미지: 고객이 보내 줄 캡처 약 10장 → 준비 전까지 REVIEW_SHOTS(label 만) 로 Placeholder 표시.
- *   TODO: 이미지 받으면 각 항목에 src 추가 후 Placeholder 를 next/image 로 교체.
- * - 카드: 세로로 긴 폰 화면 비율(9:19.5). Swiper 로 옆으로 넘김 (자동 넘김 없음),
- *   이전/다음 원형 버튼은 swiper 인스턴스(onSwiper 로 저장)의 slidePrev/slideNext 호출.
+ * - 이미지: 고객이 보내 줄 캡처 약 10장 (2026-10-12 전달 예정).
+ *   지금은 1차 시안용 예시 캡처 1장(public/images/reviews/sample-01.webp)을 10칸에 반복.
+ *   TODO(오픈 전 필수): 실제 고객 후기 캡처로 src·width·height 교체 — 예시 캡처는 업무 대화라 실제 후기가 아님.
+ * - 카드는 캡처 원본 비율 그대로(잘림 없음), 띠는 화면 끝까지 꽉 차게(좌우 페이드 없음).
+ * - 카드: 캡처 원본 비율. 왼쪽으로 끝없이 흐르는 띠(무한 루프, globals.css 의 .review-row / .review-track)
+ *   같은 카드 묶음을 2번(원본 + aria-hidden 복제) 이어 붙여 끊김 없이 반복. 마우스를 올리거나 포커스가 들어오면 멈춤.
+ *   이전/다음 버튼 없음.
  * - 카드 클릭 → 라이트박스(크게 보기): ESC·배경 클릭·닫기 버튼으로 닫기, 좌우 버튼·방향키로 이동, 열린 동안 배경 스크롤 잠금.
  */
+import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import Eyebrow from "@/components/common/Eyebrow";
-import type { Swiper as SwiperInstance } from "swiper";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import Placeholder from "@/components/common/Placeholder";
 import Reveal from "@/components/common/Reveal";
 import { ArrowLeftIcon, ArrowRightIcon } from "./icons";
 
-/** 카카오톡 후기 캡처 10장 (이미지 자리 설명만) */
+/** 카카오톡 후기 캡처 10장 — 지금은 예시 캡처 반복 */
 const REVIEW_SHOTS = Array.from({ length: 10 }, (_, i) => ({
   label: `고객 카카오톡 후기 캡처 ${String(i + 1).padStart(2, "0")}`,
+  src: "/images/reviews/sample-01.webp",
+  width: 1170,
+  height: 1863,
 }));
-
-const NAV_BUTTON =
-  "flex h-[40px] w-[40px] cursor-pointer items-center justify-center rounded-full border border-[#dedede] bg-white text-[#333] transition-colors duration-150 hover:border-brand hover:text-point-strong lg:h-[48px] lg:w-[48px]";
 
 /** 라이트박스: 선택한 캡처를 화면 가운데 크게 표시 */
 function Lightbox({
@@ -80,10 +80,13 @@ function Lightbox({
           <ArrowLeftIcon className="h-[14px] w-[16px]" />
         </button>
         <figure className="flex flex-col items-center">
-          <Placeholder
-            label={REVIEW_SHOTS[index].label}
-            className="aspect-[9/19.5] h-[min(80vh,760px)] max-w-[calc(100vw-120px)] rounded-[16px] bg-white"
-          />
+          <Image
+              src={REVIEW_SHOTS[index].src}
+              alt={REVIEW_SHOTS[index].label}
+              width={REVIEW_SHOTS[index].width}
+              height={REVIEW_SHOTS[index].height}
+              className="h-auto max-h-[min(80vh,760px)] w-auto max-w-[calc(100vw-120px)] rounded-[16px]"
+            />
           <figcaption className="mt-[10px] text-[13px] text-white/70">
             {index + 1} / {REVIEW_SHOTS.length}
           </figcaption>
@@ -97,8 +100,6 @@ function Lightbox({
 }
 
 export default function Reviews() {
-  // 이전/다음 버튼에서 사용할 swiper 인스턴스
-  const [swiper, setSwiper] = useState<SwiperInstance | null>(null);
   // 라이트박스로 연 캡처 번호 (null = 닫힘)
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
@@ -112,7 +113,7 @@ export default function Reviews() {
 
   return (
     // ===== 카카오톡 후기: 연회색 배경 =====
-    <section className="flex w-full justify-center overflow-hidden bg-[#f9f9f9] py-[80px] lg:py-[140px]">
+    <section className="flex w-full flex-col items-center overflow-hidden bg-[#f9f9f9] py-[80px] lg:py-[140px]">
       <div className="flex w-full max-w-[1080px] flex-col items-center">
         {/* ===== 섹션 헤더 ===== */}
         <Reveal threshold={0.1} className="flex flex-col items-center gap-[16px] px-[16px] text-center lg:gap-[20px] lg:px-0">
@@ -131,41 +132,40 @@ export default function Reviews() {
           </p>
         </Reveal>
 
-        {/* ===== 캡처 카드 슬라이더 (자동 넘김 없음) ===== */}
-        <div className="mt-[32px] w-full lg:mt-[56px]">
-          <Swiper
-            slidesPerView={1.7}
-            spaceBetween={12}
-            breakpoints={{ 640: { slidesPerView: 2.6, spaceBetween: 16 }, 1024: { slidesPerView: 4, spaceBetween: 24 } }}
-            onSwiper={setSwiper}
-            // 카드 그림자가 잘리지 않도록 상하 여백
-            className="px-[16px]! py-[12px]! lg:px-0!"
+      </div>
+
+      {/* ===== 캡처 카드 무한 흐름: 화면 끝까지 꽉 차게 / 원본 묶음 + 복제 묶음(aria-hidden) / 호버·포커스 시 멈춤 ===== */}
+      <div className="review-row mt-[32px] flex w-full items-start overflow-hidden py-[12px] lg:mt-[56px]">
+        {[false, true].map((isClone) => (
+          <ul
+            key={String(isClone)}
+            aria-hidden={isClone || undefined}
+            className={`review-track flex shrink-0 gap-[12px] pr-[12px] lg:gap-[24px] lg:pr-[24px]`}
           >
             {REVIEW_SHOTS.map((shot, idx) => (
-              <SwiperSlide key={shot.label}>
-                {/* 카드 클릭 → 라이트박스 */}
+              <li key={shot.label} className="w-[160px] shrink-0 lg:w-[240px]">
+                {/* 카드 클릭 → 라이트박스 (복제 묶음은 키보드 포커스 제외) */}
                 <button
                   type="button"
+                  tabIndex={isClone ? -1 : undefined}
                   aria-label={`${shot.label} 크게 보기`}
                   onClick={() => setOpenIdx(idx)}
-                  className="block w-full cursor-zoom-in overflow-hidden rounded-[16px] bg-white shadow-[0_4px_25px_0_rgba(0,0,0,0.06)] transition-shadow duration-200 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)] lg:rounded-[20px]"
+                  className="relative block w-full cursor-zoom-in overflow-hidden rounded-[16px] bg-white shadow-[0_4px_25px_0_rgba(0,0,0,0.06)] transition-shadow duration-200 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)] lg:rounded-[20px]"
                 >
-                  <Placeholder label={shot.label} className="aspect-[9/19.5] w-full border-0" />
+                  {/* 캡처 원본 비율 그대로 (잘림 없음) */}
+                  <Image
+                    src={shot.src}
+                    alt={isClone ? "" : shot.label}
+                    width={shot.width}
+                    height={shot.height}
+                    sizes="(min-width: 1024px) 240px, 160px"
+                    className="block h-auto w-full"
+                  />
                 </button>
-              </SwiperSlide>
+              </li>
             ))}
-          </Swiper>
-
-          {/* ===== 이전 / 다음 버튼 ===== */}
-          <div className="mt-[20px] flex justify-center gap-[8px] lg:mt-[32px]">
-            <button type="button" aria-label="이전 후기" className={NAV_BUTTON} onClick={() => swiper?.slidePrev()}>
-              <ArrowLeftIcon className="h-[12px] w-[14px] lg:h-[14px] lg:w-[16px]" />
-            </button>
-            <button type="button" aria-label="다음 후기" className={NAV_BUTTON} onClick={() => swiper?.slideNext()}>
-              <ArrowRightIcon className="h-[12px] w-[14px] lg:h-[14px] lg:w-[16px]" />
-            </button>
-          </div>
-        </div>
+          </ul>
+        ))}
       </div>
 
       {/* ===== 라이트박스 (카드 클릭 시) ===== */}

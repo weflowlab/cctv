@@ -5,13 +5,16 @@
  *   히어로(타사 제품도 수리) → 고객 고민 4가지 카드 → 수리 전문케어 서비스 5종 → AS 핵심 강점 4가지
  *   (원본 강점 9가지 전체는 회사소개로 이동 — 여기서는 AS 관련만)
  */
-import Placeholder from "@/components/common/Placeholder";
 import Image from "next/image";
 import Reveal from "@/components/common/Reveal";
 import { SITE } from "@/lib/site";
 import { AS_SERVICES, AS_STRENGTHS, AS_WORRIES } from "./data";
 import { SectionHeading, SpaceOrBreak } from "./ui";
 import Eyebrow from "@/components/common/Eyebrow";
+import { ClockIcon, PersonIcon, ShieldCheckIcon, WrenchIcon } from "@/components/about/strengthIcons";
+
+/** 핵심 강점 아이콘 (AS_STRENGTHS 순서: 24시간 방문 / 무상 AS / 타사 제품 수리 / 담당자) — 회사소개 9가지 약속과 같은 아이콘 */
+const STRENGTH_ICONS = [ClockIcon, ShieldCheckIcon, WrenchIcon, PersonIcon];
 
 type WorryIcon = (typeof AS_WORRIES)[number]["icon"];
 
@@ -45,12 +48,13 @@ export function WorryIconSvg({ name }: { name: WorryIcon }) {
           <path d="m12 8-1.5 3.5L13 13l-1 3" />
         </svg>
       );
-    case "tool": // 조작미숙 — 렌치 + 물음표
+    case "tool": // 조작미숙 — 물음표가 뜬 모니터 (사용법을 모름)
       return (
         <svg {...common}>
-          <path d="M14.5 6.5a4 4 0 0 1-5.3 5.3L4 17a1.4 1.4 0 0 0 2 2l5.2-5.2a4 4 0 0 0 5.3-5.3l-2.3 2.3-2-2 2.3-2.3Z" />
-          <path d="M18 14.5a1.8 1.8 0 1 1 2.2 1.8c-.4.1-.7.4-.7.8v.4" />
-          <path d="M19.5 20h.01" />
+          <rect x="3" y="4" width="18" height="12" rx="2" />
+          <path d="M8 20h8M12 16v4" />
+          <path d="M10 8.6a2 2 0 1 1 2.7 1.9c-.4.2-.7.5-.7 1v.3" />
+          <path d="M12 13.6h.01" />
         </svg>
       );
     case "phone": // 연락두절 — 수화기 + 사선
@@ -86,7 +90,7 @@ export default function AsTab() {
             </h2>
             <p className="mt-[12px] text-[15px] leading-[1.6] tracking-[-0.3px] text-[#1d1d1f] lg:mt-[16px] lg:text-[19px] lg:tracking-[-0.44px]">
               설치업체의 연락 두절, 불친절, 책임회피로
-              <SpaceOrBreak />
+              <br />
               AS를 제대로 받지 못하는 고객님들을 위해
               <br />
               <strong className="font-bold">타사 제품이라도 {SITE.name}가</strong>
@@ -133,7 +137,7 @@ export default function AsTab() {
                   <WorryIconSvg name={w.icon} />
                 </div>
                 <h3 className="text-[16px] font-bold tracking-[-0.32px] text-[#222] lg:text-[19px]">{w.title}</h3>
-                <p className="text-[13px] leading-[20px] tracking-[-0.26px] text-[#666] break-keep lg:text-[15px] lg:leading-[23px]">
+                <p className="whitespace-pre-line text-[13px] leading-[20px] tracking-[-0.26px] text-[#666] break-keep lg:text-[15px] lg:leading-[23px]">
                   &ldquo;{w.desc}&rdquo;
                 </p>
               </Reveal>
@@ -193,21 +197,24 @@ export default function AsTab() {
           {/* TODO: 문구 확정 (원본에 이 섹션 제목 없음) */}
           <SectionHeading eyebrow="WHY US" title="믿고 맡기는 AS" />
           <ul className="mt-[32px] grid grid-cols-2 gap-[10px] lg:mt-[64px] lg:grid-cols-4 lg:gap-[16px]">
-            {AS_STRENGTHS.map((s) => (
-              <li
-                key={s.img}
-                className="flex flex-col items-center gap-[12px] rounded-[14px] bg-[#f6f7fa] px-[12px] py-[24px] text-center lg:gap-[20px] lg:py-[40px]"
-              >
-                <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-brand-light lg:h-[88px] lg:w-[88px]">
-                  <Placeholder label={`강점 아이콘 (원본 ${s.img})`} kind="icon" className="h-[32px] w-[32px] lg:h-[48px] lg:w-[48px]" />
-                </div>
-                <p className="text-[14px] font-medium leading-[21px] tracking-[-0.28px] text-[#666] lg:text-[17px] lg:leading-[26px]">
-                  {s.title[0]}
-                  <br />
-                  <strong className="font-bold text-[#222]">{s.title[1]}</strong>
-                </p>
-              </li>
-            ))}
+            {AS_STRENGTHS.map((s, i) => {
+              const Icon = STRENGTH_ICONS[i];
+              return (
+                <li
+                  key={s.img}
+                  className="flex flex-col items-center gap-[12px] rounded-[14px] bg-[#f6f7fa] px-[12px] py-[24px] text-center lg:gap-[20px] lg:py-[40px]"
+                >
+                  <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-brand-light text-brand lg:h-[88px] lg:w-[88px]">
+                    <Icon className="h-[30px] w-[30px] lg:h-[44px] lg:w-[44px]" />
+                  </div>
+                  <p className="text-[14px] font-medium leading-[21px] tracking-[-0.28px] text-[#666] lg:text-[17px] lg:leading-[26px]">
+                    {s.title[0]}
+                    <br />
+                    <strong className="font-bold text-[#222]">{s.title[1]}</strong>
+                  </p>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </section>

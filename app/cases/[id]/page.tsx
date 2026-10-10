@@ -13,7 +13,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import CaseCard from "@/components/cases/CaseCard";
 import CaseGallery from "@/components/cases/CaseGallery";
-import { CASES, getCase } from "@/components/cases/data";
+import { CASES, caseImageSrc, getCase } from "@/components/cases/data";
 import { formatCaseDate, placeName, serviceName } from "@/components/cases/format";
 import ConsultCta from "@/components/common/ConsultCta";
 import { SITE } from "@/lib/site";
@@ -32,7 +32,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!item) return {};
   return {
     title: `${item.title} | ${SITE.name}`,
-    description: item.summary,
+    // 검색 설명: 지역·장소·서비스 키워드를 앞에 두고 현장 요약 (예: "서울 강남구 매장 CCTV 설치 사례 — …")
+    description: `${item.region} ${placeName(item.place)} ${serviceName(item.service)} 사례 — ${item.summary}`,
   };
 }
 
@@ -105,7 +106,7 @@ async function CaseDetail({ params }: { params: Props["params"] }) {
         </dl>
 
         {/* ===== 사진 갤러리: 대표 사진 + 썸네일 (클릭 전환 / 모바일 스와이프) ===== */}
-        <CaseGallery images={item.images} title={item.title} />
+        <CaseGallery images={item.images} srcs={item.images.map((_, i) => caseImageSrc(item, i))} title={item.title} />
 
         {/* ===== 현장 설명 + 견적 유도 버튼 ===== */}
         <section className="mt-[32px] lg:mt-[48px]">

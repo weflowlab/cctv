@@ -21,6 +21,17 @@ import Placeholder from "@/components/common/Placeholder";
 import Reveal from "@/components/common/Reveal";
 import { LEGACY, SITE } from "@/lib/site";
 import { PHILOSOPHY } from "./philosophy";
+import {
+  CalendarCheckIcon,
+  CameraPlusIcon,
+  ClockIcon,
+  HardHatIcon,
+  PersonIcon,
+  PhoneEyeIcon,
+  ShieldCheckIcon,
+  WonCoinIcon,
+  WrenchIcon,
+} from "./strengthIcons";
 
 /**
  * 조직도 노출 여부 — 현재 조직도 이미지는 기존 회사(대한민국CCTV) 자료라 숨김 (LEGACY.branches 와 같은 취지).
@@ -268,10 +279,16 @@ export function PhilosophySection() {
         </Title>
       </Reveal>
       <Reveal delay={200} className="w-full">
-        <Placeholder
-          label={`${SITE.name} 시공팀 대표 이미지 (현장에서 함께 일하는 모습)`}
-          className="aspect-[1920/760] w-full rounded-[4px] lg:rounded-[20px]"
-        />
+        {/* 스톡 사진(CC0): public/images/stock/install-hero-technician-wall.webp — 실제 시공팀 사진 확보 시 교체 */}
+        <div className="relative aspect-[1920/760] w-full overflow-hidden rounded-[4px] lg:rounded-[20px]">
+          <Image
+            src="/images/stock/install-hero-technician-wall.webp"
+            alt={`${SITE.name} 시공 기사가 건물 벽에서 작업하는 모습`}
+            fill
+            sizes="(min-width: 1024px) 1082px, 100vw"
+            className="object-cover"
+          />
+        </div>
       </Reveal>
 
       {/* ===== 철학 본문: 좌측 슬로건 / 우측 이름 뜻(UNITECH) 설명 → Unite 3카드 (지그재그) / 카드 Reveal 순차 등장 ===== */}
@@ -284,6 +301,7 @@ export function PhilosophySection() {
             하나된 기술과 책임 있는 시공으로
             <PcBr />
             고객의 공간과 일상을 끝까지 지키겠다는 약속,
+            <PcBr />
             그것이 우리의 철학입니다.
           </p>
         </Reveal>
@@ -360,10 +378,16 @@ export function ClosingSection() {
           </Title>
         </Reveal>
         <Reveal delay={100} className="w-full">
-          <Placeholder
-            label="현장을 지키는 사람들 — 시공·AS 기사님 단체 사진"
-            className="aspect-[1081/450] w-full rounded-[4px] lg:rounded-[20px]"
-          />
+          {/* 스톡 사진(CC0): public/images/stock/as-urgent-check.webp — 실제 기사님 단체 사진 확보 시 교체 */}
+          <div className="relative aspect-[1081/450] w-full overflow-hidden rounded-[4px] lg:rounded-[20px]">
+            <Image
+              src="/images/stock/as-urgent-check.webp"
+              alt="기사 두 명이 현장에서 장비를 점검하는 모습"
+              fill
+              sizes="(min-width: 1024px) 1082px, 100vw"
+              className="object-cover"
+            />
+          </div>
         </Reveal>
         <div className="flex flex-col items-center gap-[24px] lg:gap-[40px]">
           <Reveal delay={200}>
@@ -420,21 +444,21 @@ export function ClosingSection() {
 /* ------------------------------------------------------------------ */
 
 /**
- * 강점 카드 데이터 — 원본 AS 페이지 "1~9" 순서/문구 기준, icon 은 원본 아이콘 파일 경로
+ * 강점 카드 데이터 — 원본 AS 페이지 "1~9" 순서/문구 기준, Icon 은 원본 아이콘(2024/03/010~019.png) 대신 라인 아이콘
  * TODO: 신규 회사 정책 확인 — 무상 AS 1년 / 24시간 원격 감시 / 1:1 담당자 / 정기 점검 / 24시간 이내 방문 / 직영 공사팀은
  *       기존 회사(대한민국CCTV) 정책 수치. 유니텍CCTV 도 동일한지 고객 확인 필요.
  * - 02번 원문 "전국 인프라 구성으로 어디든 설치가 가능" 은 신규 회사가 단정할 수 없는 실적이라 브랜드 스토리 문구로 교체.
  */
 const STRENGTHS = [
-  { title: "당사 설치 시\n모든 부품 무상 AS 1년", icon: "2024/03/010.png" }, // TODO: 신규 회사 정책 확인
-  { title: "설치부터 수리까지\n한 곳에서 책임 시공", icon: "2024/03/011.png" },
-  { title: "스마트폰 24시간\n원격 감시 무료 제공", icon: "2024/03/012.png" },
-  { title: "1:1 유지 보수\n담당자 배정", icon: "2024/03/015.png" },
-  { title: "합리적인 견적의\n최저가 솔루션", icon: "2024/03/014.png" },
-  { title: "정기적인 점검", icon: "2024/03/018.png" },
-  { title: "의뢰 후 24시간 이내\n방문 진단 및 수리", icon: "2024/03/017.png" }, // TODO: 신규 회사 정책 확인
-  { title: "직영 공사팀의\n치밀한 공사와 맞춤 컨설팅", icon: "2024/03/013.png" },
-  { title: "증설 및 이전\n전문 서비스", icon: "2024/03/019.png" },
+  { title: "당사 설치 시\n모든 부품 무상 AS 1년", Icon: ShieldCheckIcon }, // TODO: 신규 회사 정책 확인
+  { title: "설치부터 수리까지\n한 곳에서 책임 시공", Icon: WrenchIcon },
+  { title: "스마트폰 24시간\n원격 감시 무료 제공", Icon: PhoneEyeIcon },
+  { title: "1:1 유지 보수\n담당자 배정", Icon: PersonIcon },
+  { title: "합리적인 견적의\n최저가 솔루션", Icon: WonCoinIcon },
+  { title: "정기적인 점검", Icon: CalendarCheckIcon },
+  { title: "의뢰 후 24시간 이내\n방문 진단 및 수리", Icon: ClockIcon }, // TODO: 신규 회사 정책 확인
+  { title: "직영 공사팀의\n치밀한 공사와 맞춤 컨설팅", Icon: HardHatIcon },
+  { title: "증설 및 이전\n전문 서비스", Icon: CameraPlusIcon },
 ];
 
 export function StrengthsSection() {
@@ -452,16 +476,15 @@ export function StrengthsSection() {
              같은 행(3개) 안에서 100ms 씩 지연을 줘 순차적으로 등장 ===== */}
         <ul className="mt-[16px] grid w-full grid-cols-2 gap-[10px] lg:mt-[24px] lg:grid-cols-3 lg:gap-[20px]">
           {STRENGTHS.map((item, i) => (
-            <Reveal as="li" key={item.icon} delay={(i % 3) * 100} className="h-full">
+            <Reveal as="li" key={item.title} delay={(i % 3) * 100} className="h-full">
               <div className="flex h-full flex-col items-center gap-[12px] rounded-[12px] bg-white px-[12px] py-[24px] text-center shadow-[0_4px_20px_rgba(0,0,0,0.05)] lg:gap-[20px] lg:rounded-[20px] lg:px-[24px] lg:py-[40px]">
                 <span className="text-[13px] font-bold text-point-strong lg:text-[18px]">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <Placeholder
-                  label={`강점 아이콘 (${item.icon})`}
-                  kind="icon"
-                  className="h-[48px] w-[48px] rounded-full lg:h-[80px] lg:w-[80px]"
-                />
+                {/* 아이콘: 옅은 틸 원 + 진한 틸 라인 아이콘 */}
+                <span className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-point-light text-point-strong lg:h-[80px] lg:w-[80px]">
+                  <item.Icon className="h-[28px] w-[28px] lg:h-[42px] lg:w-[42px]" />
+                </span>
                 <p className="whitespace-pre-line break-keep text-[14px] font-bold leading-[22px] text-[#202020] lg:text-[22px] lg:leading-[34px]">
                   {item.title}
                 </p>
@@ -485,9 +508,13 @@ export function AwardSection() {
     <section className="flex w-full flex-col items-center gap-[14px] px-[20px] py-[100px] lg:gap-[24px] lg:py-[160px]">
       {/* ===== 수상 메달 이미지 + 문구 / 정적 ===== */}
       <Reveal animation="fade-in">
-        <Placeholder
-          label="한국브랜드 선호도 수상 메달 (2025/07/스크린샷_2025-07-21_165045-removebg-preview.png)"
-          className="h-[160px] w-[160px] rounded-full lg:h-[240px] lg:w-[240px]"
+        {/* 메달 3개 이미지 (기존 사이트 원본 2025/07/스크린샷_2025-07-21_165045-removebg-preview.png → WebP) */}
+        <Image
+          src="/images/award/kbpa-medals.webp"
+          alt="한국브랜드 선호도 1위 수상 메달 3개 (2018 · 2019 · 2020)"
+          width={621}
+          height={350}
+          className="h-auto w-[260px] lg:w-[400px]"
         />
       </Reveal>
       <SectionBadge>Award</SectionBadge>

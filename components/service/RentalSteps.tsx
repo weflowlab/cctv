@@ -81,7 +81,6 @@ export default function RentalSteps() {
                 {i + 1}
               </span>
               <span className="flex flex-col lg:items-center">
-                <span className="text-[12px] font-medium tracking-[-0.24px] text-[#888] lg:text-[14px]">Service {i + 1}</span>
                 <span
                   className={`text-[17px] font-bold leading-[26px] tracking-[-0.34px] lg:text-[20px] lg:leading-[30px] ${
                     isActive ? "text-point-strong" : "text-[#222]"
