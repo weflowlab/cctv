@@ -125,11 +125,6 @@
 
 /* 유입 관리 */
 .analytics-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
-.analytics-2col .ad-dev-card { grid-column: 1 / -1; }
-.ad-dev-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-.ad-dev-col { min-width: 0; }
-.ad-dev-sub { margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
-.ad-dev-col + .ad-dev-col { border-left: 1px solid var(--border); padding-left: 1.5rem; }
 .traffic-metric-grid { display: grid; gap: 1rem; grid-template-columns: repeat(4, 1fr); }
 .br-mobile { display: none; }
 
@@ -140,9 +135,6 @@
 @media (max-width: 900px) {
   .analytics-2col { grid-template-columns: 1fr; }
   .analytics-2col .dev-card { order: 1; }
-  .analytics-2col .ad-dev-card { order: 2; }
-  .ad-dev-grid { grid-template-columns: 1fr; gap: 1.1rem; }
-  .ad-dev-col + .ad-dev-col { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 1rem; }
   .traffic-metric-grid { grid-template-columns: repeat(2, 1fr); }
 }
 

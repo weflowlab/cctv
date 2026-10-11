@@ -11,15 +11,15 @@
  *   · 제출 중 버튼 문구 "전송 중..." + 비활성
  *   · POST /api/inquiries 로 접수 (관리자 > 문의 관리) — 유입 경로(lib/attribution)를 함께 보내고, 기기는 서버가 판별
  *   · 사람에게 안 보이는 website 칸(허니팟)을 채운 봇 요청은 서버가 저장하지 않는다
- *   · 성공 시 폼 초기화 + 화면 가운데 성공 팝업 2초 노출 (keeper 와 달리 페이지 이동 없음)
+ *   · 성공 시 완료 화면(/contact/success)으로 이동 — 뒤로가기·새로고침이 자연스럽고, 완료 수를 주소 하나로 셀 수 있다
  *   · 실패 시 버튼 위에 오류 문구 (입력값은 그대로 유지)
  * - 견적 계산기 연동: /contact?service=rental|install&count=N&place=slug&res=200|500 로 들어오면
  *   서비스 칩 자동 선택 + "전달 내용"에 견적 요약을 미리 채움 (사용자가 수정 가능)
  *   · useSearchParams 는 정적 프리렌더 시 가장 가까운 Suspense 까지 클라이언트 렌더로 넘어가므로,
  *     Suspense fallback 으로 빈 폼을 그려 두어 초기 HTML 은 기존과 동일하게 유지
  */
-import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useRef, useState, type FormEvent } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useRef, useState, type FormEvent } from "react";
 import { parseQuoteQuery, type QuoteService } from "@/components/quote-calculator/data";
 import { attributionLine } from "@/lib/attribution";
 import { SITE } from "@/lib/site";
@@ -98,13 +98,12 @@ function CheckMark({ visible }: { visible: boolean }) {
 
 /** 폼 본체 — initial 로 받은 값으로 시작 (쿼리 없으면 빈 폼) */
 function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
+  const router = useRouter();
   const [values, setValues] = useState<Values>({ ...INITIAL, ...initial });
   const [errors, setErrors] = useState<Errors>({});
   // 한 번이라도 제출을 시도했는지 (이후 입력마다 재검사)
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // 성공 팝업 노출 여부
-  const [showSuccess, setShowSuccess] = useState(false);
   // 약관보기 작은 안내 상자 열림
   const [showTerms, setShowTerms] = useState(false);
   // 전송 실패 문구 (서버 오류·네트워크 끊김)
@@ -115,13 +114,6 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const agreeRef = useRef<HTMLInputElement>(null);
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
-
-  // 언마운트 시 팝업 타이머 정리
-  useEffect(() => {
-    const list = timers.current;
-    return () => list.forEach(clearTimeout);
-  }, []);
 
   // 값 변경 공통 처리: 제출 이후라면 즉시 재검사
   const update = (patch: Partial<Values>) => {
@@ -164,14 +156,8 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
       setSubmitError(`${reason} 계속 안 되면 ${SITE.phone} 로 전화 주세요.`);
       return;
     }
-    setIsSubmitting(false);
-
-    // 성공: 폼 초기화 + 팝업 2초 (페이지 이동 없음)
-    setShowSuccess(true);
-    setValues(INITIAL);
-    setErrors({});
-    setSubmitted(false);
-    timers.current.push(setTimeout(() => setShowSuccess(false), 2000));
+    // 성공: 완료 화면으로 (버튼은 이동할 때까지 "전송 중..." 유지 — 두 번 눌리지 않게)
+    router.push("/contact/success");
   };
 
   return (
@@ -361,27 +347,6 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
             </button>
           </div>
         </form>
-      </div>
-
-      {/* ===== 성공 팝업: 화면 중앙 고정, 2초간 노출 (opacity/visibility 0.5s 전환) ===== */}
-      <div
-        role="status"
-        aria-hidden={!showSuccess}
-        className={`fixed left-1/2 top-1/2 z-[100] block w-[calc(100%-32px)] max-w-[420px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[24px] bg-[#fafafa] px-[28px] py-[60px] text-center shadow-[0_4px_8px_0_rgba(0,0,0,0.06)] transition-[opacity,visibility] duration-500 ease-[ease] ${
-          showSuccess ? "visible opacity-100" : "invisible opacity-0"
-        }`}
-      >
-        <div className="mx-auto mb-[24px] flex h-[80px] w-[80px] items-center justify-center rounded-full bg-[linear-gradient(135deg,#4ade80_0%,#22c55e_100%)] text-[40px] text-white">
-          ✓
-        </div>
-        <h2 className="mb-[12px] text-[22px] font-bold text-[#1a1a1a]">문의가 접수되었습니다!</h2>
-        <p className="text-[15px] leading-[1.6] text-[#666666]">
-          빠른 시일 내에 담당자가
-          <br />
-          연락드릴 예정입니다.
-          <br />
-          급하신 경우 {SITE.phone} 로 전화 주세요.
-        </p>
       </div>
     </>
   );

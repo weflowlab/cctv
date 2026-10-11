@@ -51,6 +51,13 @@ export default function CaseManager() {
   const [orderOpen, setOrderOpen] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
+  // 완료 안내(초록)는 3초 뒤 사라진다 — 오류(빨강)는 다음 동작 때까지 남겨 둔다
+  useEffect(() => {
+    if (!msg?.ok) return;
+    const t = setTimeout(() => setMsg(null), 3000);
+    return () => clearTimeout(t);
+  }, [msg]);
+
   const load = async () => {
     setLoading(true);
     try {
@@ -101,7 +108,7 @@ export default function CaseManager() {
     const { ok } = await adminFetch(`/api/admin/cases/${c.id}`, { method: "DELETE" });
     if (ok) {
       setItems((prev) => prev.filter((x) => x.id !== c.id));
-      setMsg({ ok: true, text: "삭제했습니다." });
+      setMsg({ ok: true, text: "사례가 정상적으로 삭제되었습니다." });
     } else setMsg({ ok: false, text: "삭제하지 못했습니다." });
   };
 

@@ -2,8 +2,8 @@
 
 /**
  * 유입 관리 (weflow 관리자 "유입 관리" 이식) — 최근 30일 방문 기록 원본을 받아 화면에서 집계
- * - 방문자 = 세션(기기당 하루). 유입 소스는 첫 페이지 기준, 그날 광고 클릭이 있으면 광고 유입으로 센다
- * - 카드: 요약 지표 4개 → 가장 많이 들어온 곳 → 유입 경로 / 접속 기기 / 광고 기기·키워드·이탈
+ * - 방문자 = 세션(기기당 하루). 유입 소스는 그날 첫 페이지 기준 (광고 클릭을 따로 나누지 않는다)
+ * - 카드: 요약 지표 4개 → 가장 많이 들어온 곳 → 유입 경로 / 접속 기기
  *         → 날짜별 방문자(최근 14일) → 시간대별 / 이탈 페이지
  * - 데이터: GET /api/admin/analytics?days=30 (PageTracker 가 /api/track 으로 쌓은 기록)
  */
@@ -29,23 +29,10 @@ const SOURCE_KO: Record<string, string> = {
   threads: "스레드",
   daangn: "당근",
   direct: "직접 유입",
-  // 유료 광고 클릭은 같은 채널의 검색·SNS 유입과 따로 센다
-  "naver-ad": "네이버 광고",
-  "google-ad": "구글 광고",
-  // 인스타·페이스북은 같은 메타 광고가 노출된 자리만 다른 것 — 어디서 눌렀는지 보이게 따로 적는다
-  "facebook-ad": "페이스북 광고",
-  "instagram-ad": "인스타 광고",
-  "kakao-ad": "카카오 광고",
-  "threads-ad": "스레드 광고",
 };
 const SOURCE_COLOR: Record<string, string> = {
   kakao: "#fae100",
   naver: "#03c75a",
-  "naver-ad": "#15803d",
-  "google-ad": "#b91c1c",
-  "facebook-ad": "#1e40af",
-  "instagram-ad": "#be185d",
-  "kakao-ad": "#a16207",
   instagram: "#f06595",
   facebook: "#1877f2",
   google: "#ea4335",
@@ -54,7 +41,6 @@ const SOURCE_COLOR: Record<string, string> = {
   youtube: "#ff0000",
   band: "#00c73c",
   threads: "#333333",
-  "threads-ad": "#8e8e93",
   daangn: "#ff6f0f",
   direct: "#94a3b8",
 };
@@ -83,6 +69,7 @@ const PAGE_KO: Record<string, string> = {
   "/calculator": "견적 계산기",
   "/cases": "시공사례",
   "/contact": "상담 신청",
+  "/contact/success": "상담 신청 완료",
   "/faq": "자주 묻는 질문",
   "/terms/service": "이용약관",
   "/terms/personal": "개인정보처리방침",
@@ -269,59 +256,6 @@ function SectionHead({
   );
 }
 
-// 카드 안 칸 머리글 (전체 · 광고별 · 키워드별)
-function SubHead({ children }: { children: React.ReactNode }) {
-  return (
-    <p
-      style={{
-        margin: "0 0 0.7rem",
-        fontSize: "0.8rem",
-        fontWeight: 700,
-        letterSpacing: "0.04em",
-        color: "var(--text-muted)",
-      }}
-    >
-      {children}
-    </p>
-  );
-}
-
-// 한 항목(광고 매체·키워드)의 기기 구성 — 항목 이름 아래에 기기별로 한 줄씩,
-// 다른 카드와 같은 "라벨 · 막대 · n명 (nn%)" 형식. 퍼센트는 그 항목 안에서의 비중이다
-function DeviceSplitRow({ label, byDevice }: { label: string; byDevice: Record<string, number> }) {
-  const parts = Object.entries(byDevice).sort((a, b) => b[1] - a[1]);
-  const total = parts.reduce((s, r) => s + r[1], 0);
-  return (
-    <div>
-      <p
-        title={label}
-        style={{
-          margin: "0 0 0.45rem",
-          fontSize: "0.86rem",
-          fontWeight: 700,
-          color: "var(--text)",
-          wordBreak: "break-all",
-          lineHeight: 1.35,
-        }}
-      >
-        {label} <span style={{ fontWeight: 500, color: "var(--text-muted)" }}>· {total}명</span>
-      </p>
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-        {parts.map(([dev, n]) => (
-          <BarRow
-            key={dev}
-            label={DEVICE_KO[dev] || dev}
-            color={DEVICE_COLOR[dev] || "var(--accent)"}
-            value={n}
-            max={total}
-            right={`${n}명 (${Math.round((n / total) * 100)}%)`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
 function BarRow({
   label,
   color,
@@ -453,49 +387,17 @@ function TrafficView({
 
   // 유입 소스별 세션 (첫 페이지 기준)
   const sourceCount: Record<string, number> = {};
-  const keywordCount: Record<string, number> = {}; // 광고 키워드별 세션 (파워링크 n_keyword 등)
   const deviceCount: Record<string, number> = {};
-  // 광고로 온 세션의 기기 — 전체 / 광고 매체별 / 키워드별
-  const adDeviceCount: Record<string, number> = {};
-  const adDeviceBySource: Record<string, Record<string, number>> = {};
-  const adDeviceByKeyword: Record<string, Record<string, number>> = {};
   const exitCount: Record<string, number> = {};
-  const adExitCount: Record<string, number> = {}; // 광고 유입 세션의 이탈 페이지
   let bounced = 0;
   let durSum = 0,
     durN = 0;
   sessionList.forEach((views) => {
     const entry = views[0];
     const exit = views[views.length - 1];
-    // 세션(기기당 하루)은 첫 페이지 기준이지만, 그날 광고를 클릭한 적이 있으면 광고 유입으로 친다
-    // — 아침에 직접 들어왔다가 오후에 광고로 다시 온 사람이 '직접 유입'에 묻히지 않게
-    // 같은 날 광고를 여러 매체에서 눌렀으면 매체마다 따로 센다 (같은 매체 반복은 한 번).
-    // 광고 클릭이 없을 때만 첫 페이지의 유입 소스를 쓴다
-    const paidViews = views.filter((v) => v.medium === "cpc" || v.medium === "paid");
-    if (paidViews.length) {
-      new Set(paidViews.map((v) => `${normSource(v.source)}-ad`)).forEach((src) => {
-        sourceCount[src] = (sourceCount[src] || 0) + 1;
-      });
-      const kws = new Set(paidViews.map((v) => v.campaign).filter(Boolean));
-      kws.forEach((kw) => {
-        keywordCount[kw] = (keywordCount[kw] || 0) + 1;
-      });
-      // 기기는 세션(기기당 하루) 단위라 하나뿐 — 광고 매체·키워드 카드와 같은 단위로 센다
-      const dev = entry.device || "desktop";
-      adDeviceCount[dev] = (adDeviceCount[dev] || 0) + 1;
-      new Set(paidViews.map((v) => `${normSource(v.source)}-ad`)).forEach((src) => {
-        (adDeviceBySource[src] ||= {})[dev] = (adDeviceBySource[src][dev] || 0) + 1;
-      });
-      kws.forEach((kw) => {
-        (adDeviceByKeyword[kw] ||= {})[dev] = (adDeviceByKeyword[kw][dev] || 0) + 1;
-      });
-      // 광고 유입 이탈 페이지 — 키워드 카드와 같은 단위(키워드당 1회)로 세서
-      // 두 카드의 합계가 항상 일치한다 (한 기기가 키워드 2개로 오면 이탈도 2로)
-      adExitCount[exit.path] = (adExitCount[exit.path] || 0) + kws.size;
-    } else {
-      const src = normSource(entry.source);
-      sourceCount[src] = (sourceCount[src] || 0) + 1;
-    }
+    // 유입 소스는 그날 첫 페이지 기준 (광고 클릭도 따로 나누지 않고 그 채널로 센다)
+    const src = normSource(entry.source);
+    sourceCount[src] = (sourceCount[src] || 0) + 1;
     deviceCount[entry.device] = (deviceCount[entry.device] || 0) + 1;
     exitCount[exit.path] = (exitCount[exit.path] || 0) + 1;
     if (views.length === 1) bounced++;
@@ -512,29 +414,13 @@ function TrafficView({
 
   const sourceRows = Object.entries(sourceCount).sort((a, b) => b[1] - a[1]);
   const maxSource = Math.max(1, ...sourceRows.map((r) => r[1]));
-  const keywordRows = Object.entries(keywordCount).sort((a, b) => b[1] - a[1]);
-  const maxKeyword = Math.max(1, ...keywordRows.map((r) => r[1]));
   const deviceRows = Object.entries(deviceCount).sort((a, b) => b[1] - a[1]);
-  const adDeviceRows = Object.entries(adDeviceCount).sort((a, b) => b[1] - a[1]);
-  const adSessionTotal = adDeviceRows.reduce((s, r) => s + r[1], 0);
-  // 매체·키워드별은 세션 많은 순. 키워드는 잘라내지 않는다 —
-  // 아래 "어떤 키워드로 왔나요" 카드가 전부 보여 주는데 여기만 8개로 끊으면
-  // 같은 키워드인데 한쪽에만 있어 개수가 어긋나 보인다.
-  const sumDev = (m: Record<string, number>) => Object.values(m).reduce((a, b) => a + b, 0);
-  const adDeviceSourceRows = Object.entries(adDeviceBySource).sort((a, b) => sumDev(b[1]) - sumDev(a[1]));
-  const adDeviceKeywordRows = Object.entries(adDeviceByKeyword)
-    .sort((a, b) => sumDev(b[1]) - sumDev(a[1]));
   const exitRows = Object.entries(exitCount)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 6);
   const maxExit = Math.max(1, ...exitRows.map((r) => r[1]));
   // 이탈 페이지 합계 = 방문 수 (방문 한 건당 마지막 페이지 하나) — 퍼센트의 분모로 쓴다
   const exitTotal = Object.values(exitCount).reduce((a, b) => a + b, 0);
-  const adExitTotal = Object.values(adExitCount).reduce((a, b) => a + b, 0);
-  const adExitRows = Object.entries(adExitCount)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 6);
-  const maxAdExit = Math.max(1, ...adExitRows.map((r) => r[1]));
 
   // 일별 방문(세션 수) — 최근 14일
   const DAYS = 14;
@@ -745,129 +631,6 @@ function TrafficView({
           </div>
         </section>
 
-        {/* 광고로 온 고객의 기기 — 전체 → 광고 매체별 → 키워드별.
-            네이버 파워링크는 PC·모바일 입찰이 따로라 어디에 예산을 둘지 판단하는 근거가 된다.
-            광고 클릭이 한 건이라도 있을 때만 보인다 */}
-        {adSessionTotal > 0 && (
-        <section style={card} className="ad-dev-card">
-          <SectionHead
-            Icon={Smartphone}
-            tint="#15803d"
-            title="광고로 온 고객은 무엇으로 봤나요?"
-            desc={
-              <>
-                광고를 클릭해 들어온 고객의 접속 기기
-                <br className="br-mobile" /> — 광고별·키워드별
-              </>
-            }
-          />
-          {/* PC 는 두 칸 — 왼쪽에 전체(기기 3줄뿐이라 짧다)와 광고별을 위아래로, 오른쪽에 키워드별.
-              모바일은 세로로 쌓는다 */}
-          <div className="ad-dev-grid">
-            <div className="ad-dev-col">
-              <SubHead>전체</SubHead>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
-                {adDeviceRows.map(([dev, cnt]) => (
-                  <BarRow
-                    key={dev}
-                    label={DEVICE_KO[dev] || dev}
-                    color={DEVICE_COLOR[dev] || "var(--accent)"}
-                    value={cnt}
-                    max={Math.max(1, ...adDeviceRows.map((r) => r[1]))}
-                    right={`${cnt}명 (${Math.round((cnt / adSessionTotal) * 100)}%)`}
-                  />
-                ))}
-              </div>
-
-              <div className="ad-dev-sub">
-                <SubHead>광고별</SubHead>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
-                  {adDeviceSourceRows.map(([src, byDev]) => (
-                    <DeviceSplitRow key={src} label={SOURCE_KO[src] || src} byDevice={byDev} />
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="ad-dev-col">
-              <SubHead>키워드별</SubHead>
-              {adDeviceKeywordRows.length === 0 ? (
-                <p className="c-muted" style={{ margin: 0, fontSize: "0.9rem" }}>키워드 기록 없음</p>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
-                  {adDeviceKeywordRows.map(([kw, byDev]) => (
-                    <DeviceSplitRow
-                      key={kw}
-                      label={/^\d{12,}$/.test(kw) ? `ID …${kw.slice(-6)}` : kw}
-                      byDevice={byDev}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-        )}
-
-        {/* 광고 키워드별 유입 — 광고 클릭이 한 건이라도 있을 때만 보인다.
-            PC 는 광고 이탈 카드와 나란히 두 칸, 모바일은 기기 카드보다 위(order)로 온다 */}
-        {keywordRows.length > 0 && (
-        <section style={card}>
-          <SectionHead
-            Icon={LogIn}
-            tint="#15803d"
-            title="어떤 키워드로 왔나요?"
-            desc="광고를 클릭해 들어온 검색어"
-          />
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}
-          >
-            {(() => {
-              // 퍼센트는 키워드 유입끼리의 비중 — 합치면 100% 가 되게
-              const keywordTotal = keywordRows.reduce((s, r) => s + r[1], 0);
-              return keywordRows.map(([kw, cnt]) => (
-                <BarRow
-                  key={kw}
-                  // 검색어 대신 네이버 키워드 ID(숫자)만 넘어온 세션은 짧게 표기
-                  label={/^\d{12,}$/.test(kw) ? `ID …${kw.slice(-6)}` : kw}
-                  color="#15803d"
-                  value={cnt}
-                  max={maxKeyword}
-                  right={`${cnt}명 (${keywordTotal ? Math.round((cnt / keywordTotal) * 100) : 0}%)`}
-                  labelWidth={128}
-                  wrapLabel
-                />
-              ));
-            })()}
-          </div>
-        </section>
-        )}
-
-        {/* 광고 유입 이탈 페이지 — 광고를 보고 온 세션이 마지막으로 본 곳 */}
-        {adExitRows.length > 0 && (
-        <section style={card}>
-          <SectionHead
-            Icon={DoorOpen}
-            tint="#f59e0b"
-            title="광고로 온 고객은 어느 페이지에서 나갔나요?"
-            desc="광고를 클릭해 들어온 고객이 마지막으로 보고 떠난 페이지"
-          />
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}
-          >
-            {adExitRows.map(([path, cnt]) => (
-              <BarRow
-                key={path}
-                label={pageName(path)}
-                color="#f59e0b"
-                value={cnt}
-                max={maxAdExit}
-                right={`${cnt}명 (${adExitTotal ? Math.round((cnt / adExitTotal) * 100) : 0}%)`}
-              />
-            ))}
-          </div>
-        </section>
-        )}
       </div>
 
       {/* 일별 방문 추이 */}

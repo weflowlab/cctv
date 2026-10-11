@@ -2,7 +2,9 @@
 
 /**
  * 시공사례 등록·수정 (/admin/cases/new, /admin/cases/<id>)
- * - 입력: 제목 · 주소(영문) · 장소 · 서비스 · 지역 · 설치 대수 · 시공 시기 · 현장 설명 · 홈 노출 · 사진
+ * - 입력: 제목 · 주소(영문) · 장소 · 서비스 · 지역 · 설치 대수 · 시공 시기 · 현장 설명 · 사진
+ *   홈 노출은 여기서 받지 않고 목록 화면(노출 버튼·홈 노출 순서)에서만 정한다. 새 사례는 노출 안 함으로 시작,
+ *   수정할 때는 원래 값을 그대로 보낸다
  * - 주소(영문): 상세 페이지 /cases/<주소> 와 검색 노출용. 새 사례는 지역·장소·서비스로 자동으로 만든다
  *   (서울 강남구 · 매장 · 설치 → gangnam-store-cctv-installation). [직접 수정]을 누르면 고칠 수 있고,
  *   그때부터는 자동으로 바뀌지 않는다. 기존 사례는 주소가 바뀌면 검색·공유 링크가 끊기므로 자동으로 바꾸지 않는다.
@@ -353,10 +355,6 @@ export default function CaseEditor({ id }: { id: string }) {
               placeholder="어떤 공간에 어디를 비추도록 몇 대를 설치했는지, 고객 요청과 해결 방법 등을 적어 주세요."
               onChange={(e) => set({ summary: e.target.value })}
             />
-          </label>
-          <label style={{ gridColumn: "1 / -1", display: "flex", alignItems: "center", gap: "0.55rem", cursor: "pointer" }}>
-            <input type="checkbox" checked={form.featured} onChange={(e) => set({ featured: e.target.checked })} style={{ width: 18, height: 18, accentColor: "var(--accent)" }} />
-            <span style={{ fontWeight: 600, color: "var(--text-secondary)" }}>홈 화면 &quot;시공사례&quot;에 노출 (최대 9개, 순서는 목록의 홈 노출 순서에서)</span>
           </label>
         </div>
       </section>
