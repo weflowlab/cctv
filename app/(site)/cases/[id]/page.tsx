@@ -2,10 +2,10 @@
  * /cases/[id] — 시공사례 상세 (서버 컴포넌트)
  * - 구성: 목록으로 → 장소 칩 + 제목 → 메타(장소·지역·대수·서비스·날짜) → 사진 갤러리 → 현장 설명(summary)
  *   → [이 사례처럼 견적 받기 → /calculator] → 비슷한 공간 사례(같은 장소 최대 3개) → 하단 상담 CTA
- * - id: CASES 로 generateStaticParams 정적 생성, 없는 id 는 notFound()
+ * - id: 등록된 사례로 generateStaticParams 정적 생성 (이후 등록분은 첫 방문 때 생성), 없는 id 는 notFound()
  * - params 는 페이지 최상단에서 await 하지 않고 Suspense 안 하위 컴포넌트(CaseDetail)에서 읽는다
  *   (Cache Components 의 Instant Navigation 요구사항). 하단 CTA 는 Suspense 밖이라 즉시 표시.
- * - 데이터: components/cases/data.ts (샘플 — 관리자 페이지 DB 도입 시 교체)
+ * - 데이터: lib/cases.ts getCases() (DB — 관리자 > 시공사례 관리)
  */
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -14,7 +14,7 @@ import { Suspense } from "react";
 import CaseBackLink from "@/components/cases/CaseBackLink";
 import CaseCard from "@/components/cases/CaseCard";
 import CaseGallery from "@/components/cases/CaseGallery";
-import { CASES, caseImageSrc, getCase } from "@/components/cases/data";
+import { getCases } from "@/lib/cases";
 import { formatCaseDate, placeName, serviceName } from "@/components/cases/format";
 import ConsultCta from "@/components/common/ConsultCta";
 import { SITE } from "@/lib/site";
@@ -26,14 +26,19 @@ type Props = { params: Promise<{ id: string }> };
 const BACK_LINK_CLASS =
   "text-[14px] font-semibold tracking-[-0.3px] text-[#444] hover:text-point-strong lg:text-[16px]";
 
-export function generateStaticParams() {
-  return CASES.map((c) => ({ id: c.id }));
+/** id 로 사례 1건 조회 (없으면 undefined) */
+async function getCase(id: string) {
+  return (await getCases()).find((c) => c.id === id);
+}
+
+export async function generateStaticParams() {
+  return (await getCases()).map((c) => ({ id: c.id }));
 }
 
 /** SEO: "강남 카페 CCTV 8대 설치 | 유니텍CCTV" */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const item = getCase(id);
+  const item = await getCase(id);
   if (!item) return {};
   return {
     title: `${item.title} | ${SITE.name}`,
@@ -62,10 +67,11 @@ export default function CaseDetailPage({ params }: Props) {
 /** URL 의 id 로 사례를 찾아 상세 렌더 (없는 id → 404) */
 async function CaseDetail({ params }: { params: Props["params"] }) {
   const { id } = await params;
-  const item = getCase(id);
+  const cases = await getCases();
+  const item = cases.find((c) => c.id === id);
   if (!item) notFound();
 
-  const similar = CASES.filter((c) => c.place === item.place && c.id !== item.id).slice(0, 3);
+  const similar = cases.filter((c) => c.place === item.place && c.id !== item.id).slice(0, 3);
 
   const meta = [
     { label: "장소", value: placeName(item.place) },
@@ -115,7 +121,7 @@ async function CaseDetail({ params }: { params: Props["params"] }) {
         </dl>
 
         {/* ===== 사진 갤러리: 대표 사진 + 썸네일 (클릭 전환 / 모바일 스와이프) ===== */}
-        <CaseGallery images={item.images} srcs={item.images.map((_, i) => caseImageSrc(item, i))} title={item.title} />
+        <CaseGallery images={item.images} title={item.title} />
 
         {/* ===== 현장 설명 + 견적 유도 버튼 ===== */}
         <section className="mt-[32px] lg:mt-[48px]">

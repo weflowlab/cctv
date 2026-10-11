@@ -10,15 +10,18 @@ import CasePlaceChips from "@/components/cases/CasePlaceChips";
 import CasesHero from "@/components/cases/CasesHero";
 import CasesListMemo from "@/components/cases/CasesListMemo";
 import ConsultCta from "@/components/common/ConsultCta";
+import { countByPlace, getCases } from "@/lib/cases";
 
-export default function CasesListLayout({ children }: LayoutProps<"/cases">) {
+export default async function CasesListLayout({ children }: LayoutProps<"/cases">) {
+  // 칩 건수 — 캐시된 사례 목록에서 계산 (params 를 읽지 않으므로 껍데기는 그대로 정적)
+  const cases = await getCases();
   return (
     <>
       {/* ===== 타이틀 띠: 라벨 + 제목("{장소} CCTV 시공사례", SEO) + 설명 + 요약 숫자 3개 ===== */}
       <CasesHero />
 
       {/* ===== 장소 칩 바: 전체 / 가정 / 매장 / 사무실 / 공장·창고 / 기관 (페이지 이동, scroll={false}) ===== */}
-      <CasePlaceChips />
+      <CasePlaceChips total={cases.length} counts={countByPlace(cases)} />
 
       {/* ===== 목록 콘텐츠 (page.tsx): 안내 문구 또는 장소 소개 + 카드 그리드 ===== */}
       <section className="w-full pb-[120px] pt-[28px] lg:pb-[160px] lg:pt-[40px]">

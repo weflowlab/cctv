@@ -1,7 +1,7 @@
 /**
  * 홈 시공사례 섹션 — "전국 어디든 직접 방문해 시공합니다" (주장) → 지역명이 붙은 실제 현장 카드 (증거)
- * - 데이터: getFeaturedCases(6) (components/cases/data — 메인 노출 우선, 부족하면 최신순).
- * - 카드: 대표 사진(임시 스톡 사진 caseImageSrc) + 장소 칩(PLACES 이름) + 지역·대수 + 제목 → /cases/<id>.
+ * - 데이터: getCases() → pickFeatured(6) (DB — 관리자에서 "메인 노출" 체크한 사례 우선, 부족하면 최신순).
+ * - 카드: 대표 사진(첫 번째 사진) + 장소 칩(PLACES 이름) + 지역·대수 + 제목 → /cases/<id>.
  * - 레이아웃: 모바일은 가로 스와이프(CSS scroll-snap, 다음 카드가 살짝 보이게) / PC 는 3열 그리드.
  *   자동 넘김 없음 → Swiper 없이 서버 컴포넌트로 처리.
  * - 하단 [시공사례 자세히 보기 → /cases].
@@ -10,7 +10,8 @@ import Image from "next/image";
 import Link from "next/link";
 import Eyebrow from "@/components/common/Eyebrow";
 import Reveal from "@/components/common/Reveal";
-import { caseImageSrc, getFeaturedCases, type CaseItem } from "@/components/cases/data";
+import type { CaseItem } from "@/components/cases/data";
+import { getCases, pickFeatured } from "@/lib/cases";
 import { PLACES } from "@/lib/site";
 import { ArrowRightIcon } from "./icons";
 
@@ -27,8 +28,8 @@ function CaseShowcaseCard({ item }: { item: CaseItem }) {
       {/* 대표 사진 자리 (호버 시 살짝 확대) */}
       <div className="relative aspect-[4/3] w-full overflow-hidden">
         <Image
-          src={caseImageSrc(item)}
-          alt={item.images[0] ?? item.title}
+          src={item.images[0]?.url ?? "/images/stock/hero-main-ceiling-camera.webp"}
+          alt={item.images[0]?.alt ?? item.title}
           fill
           sizes="(min-width: 1024px) 340px, 78vw"
           className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
@@ -52,8 +53,8 @@ function CaseShowcaseCard({ item }: { item: CaseItem }) {
   );
 }
 
-export default function CaseShowcase() {
-  const cases = getFeaturedCases(6);
+export default async function CaseShowcase() {
+  const cases = pickFeatured(await getCases(), 6);
 
   return (
     // ===== 시공사례: 흰 배경 =====

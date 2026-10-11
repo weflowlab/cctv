@@ -7,12 +7,13 @@
  *   펼침 애니메이션은 grid-template-rows 0fr → 1fr 전환(0.3s)으로 높이 자동 계산 없이 부드럽게 처리.
  * - 질문 번호(Q1~)는 현재 보이는 목록 기준으로 매김. 번호 칸 너비를 고정(두 자리 Q10. 기준)해 질문 글 시작선을 맞춤.
  * - 답변은 같은 너비의 "A." 칸 + 본문 → 질문 글과 답변 글 시작선이 같음.
- * - 옵션 props (기본값이면 /faq 화면 그대로):
- *   items — 넘기면 그 목록만 표시하고 카테고리 탭은 숨김 (홈 FAQ BEST 5 용)
- *   tone  — "dark"(기본, /faq 어두운 배경) / "light"(흰 배경 위: 흰 카드 + 진한 글씨)
+ * - props:
+ *   items    — 질문 목록 (서버가 DB 에서 읽어 넘김 — lib/faqs.ts getFaqs)
+ *   showTabs — 카테고리 탭 표시 (기본 true. 홈 FAQ BEST 5 는 false)
+ *   tone     — "dark"(기본, /faq 어두운 배경) / "light"(흰 배경 위: 흰 카드 + 진한 글씨)
  */
 import { useState } from "react";
-import { FAQ_ITEMS, FAQ_TABS, type FaqCategory, type FaqItem } from "./data";
+import { FAQ_TABS, type FaqCategory, type FaqItem } from "./data";
 
 type Tab = "전체" | FaqCategory;
 
@@ -20,19 +21,21 @@ type Tab = "전체" | FaqCategory;
 const MARK_COL = "w-[42px] shrink-0 tabular-nums lg:w-[54px]";
 
 type FaqAccordionProps = {
-  /** 고정 목록 (넘기면 탭 숨김) */
-  items?: FaqItem[];
+  /** 질문 목록 */
+  items: FaqItem[];
+  /** 카테고리 탭 표시 — 기본 true */
+  showTabs?: boolean;
   /** 배경 톤 — 기본 dark */
   tone?: "dark" | "light";
 };
 
-export default function FaqAccordion({ items: fixedItems, tone = "dark" }: FaqAccordionProps = {}) {
+export default function FaqAccordion({ items: allItems, showTabs = true, tone = "dark" }: FaqAccordionProps) {
   const light = tone === "light";
   const [tab, setTab] = useState<Tab>("전체");
   // 열린 질문 (question 문자열을 키로 사용, null = 모두 닫힘)
   const [openKey, setOpenKey] = useState<string | null>(null);
 
-  const items = fixedItems ?? (tab === "전체" ? FAQ_ITEMS : FAQ_ITEMS.filter((f) => f.category === tab));
+  const items = !showTabs || tab === "전체" ? allItems : allItems.filter((f) => f.category === tab);
 
   const selectTab = (t: Tab) => {
     setTab(t);
@@ -41,8 +44,8 @@ export default function FaqAccordion({ items: fixedItems, tone = "dark" }: FaqAc
 
   return (
     <>
-      {/* ===== 카테고리 탭: 선택 브랜드색 배경, hover 시에도 브랜드색 (고정 목록이면 숨김) ===== */}
-      {!fixedItems && (
+      {/* ===== 카테고리 탭: 선택 브랜드색 배경, hover 시에도 브랜드색 (showTabs=false 면 숨김) ===== */}
+      {showTabs && (
         <div className="mx-0 mb-[40px] mt-[32px] flex w-full max-w-[1080px] flex-wrap items-center justify-center gap-[10px] px-[12px] lg:mb-[64px] lg:mt-[64px] lg:justify-start lg:gap-[14px] lg:px-0">
           {(["전체", ...FAQ_TABS] as Tab[]).map((t) => (
             <button

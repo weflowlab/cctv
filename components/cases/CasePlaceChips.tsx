@@ -8,51 +8,49 @@
  *   · 선택 브랜드 네이비/흰 글자, 미선택 #F5F5F5/#888
  *   · scroll={false} 로 칩 이동 시 스크롤이 맨 위로 튀지 않게
  *   · 바 전체를 sticky(헤더 높이만큼 아래)로 고정, 모바일에서 넘치면 가로 스크롤(슬라이드)
- *   · 칩 안에 사례 건수("전체 11", "가정 2") — CASES 에서 계산. 선택 칩에선 반투명 흰색 숫자.
+ *   · 칩 안에 사례 건수("전체 11", "가정 2") — 서버(레이아웃)가 DB 에서 센 값을 counts 로 넘겨준다. 선택 칩에선 반투명 흰색 숫자.
  *     건수 0 인 장소도 표시하되 흐리게(비활성처럼), 클릭은 가능(빈 상태 안내로 이동)
  */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
 import { PLACES, type PlaceSlug } from "@/lib/site";
-import { CASES, countCasesByPlace } from "./data";
 
 /** 선택 상태: undefined = 미확정(대기 중), null = 전체, slug = 장소 */
 type Current = PlaceSlug | null | undefined;
 
-/** 장소별 사례 건수 (모듈 로드 시 1회 계산 — 샘플 데이터, 추후 DB 집계로 교체) */
-const COUNTS = countCasesByPlace();
+type Chip = { slug: PlaceSlug | null; name: string; href: string; count: number };
 
-const CHIPS: { slug: PlaceSlug | null; name: string; href: string; count: number }[] = [
-  { slug: null, name: "전체", href: "/cases", count: CASES.length },
-  ...PLACES.map((p) => ({ slug: p.slug, name: p.name, href: `/cases/place/${p.slug}`, count: COUNTS[p.slug] })),
-];
-
-export default function CasePlaceChips() {
+/** total: 전체 건수, counts: 장소별 건수 */
+export default function CasePlaceChips({ total, counts }: { total: number; counts: Record<PlaceSlug, number> }) {
+  const chips: Chip[] = [
+    { slug: null, name: "전체", href: "/cases", count: total },
+    ...PLACES.map((p) => ({ slug: p.slug, name: p.name, href: `/cases/place/${p.slug}`, count: counts[p.slug] ?? 0 })),
+  ];
   return (
-    <Suspense fallback={<ChipsBar current={undefined} />}>
-      <ActiveChips />
+    <Suspense fallback={<ChipsBar chips={chips} current={undefined} />}>
+      <ActiveChips chips={chips} />
     </Suspense>
   );
 }
 
 /** URL 에서 현재 장소 추출 — /cases → 전체, /cases/place/<slug> → 해당 장소 */
-function ActiveChips() {
+function ActiveChips({ chips }: { chips: Chip[] }) {
   const pathname = usePathname();
   const [, , seg, slug] = pathname.split("/");
   const current: Current =
     seg === "place" ? (PLACES.find((p) => p.slug === slug)?.slug ?? undefined) : seg === undefined ? null : undefined;
-  return <ChipsBar current={current} />;
+  return <ChipsBar chips={chips} current={current} />;
 }
 
-function ChipsBar({ current }: { current: Current }) {
+function ChipsBar({ chips, current }: { chips: Chip[]; current: Current }) {
   return (
     <nav
       aria-label="장소 선택"
       className="sticky top-[var(--header-height-mobile)] z-10 w-full bg-white/95 py-[12px] backdrop-blur lg:top-[var(--header-height)] lg:py-[16px]"
     >
       <ul className="mx-auto flex max-w-[1112px] flex-nowrap gap-[6px] overflow-x-auto px-[16px] [scrollbar-width:none] lg:flex-wrap lg:gap-[10px] [&::-webkit-scrollbar]:hidden">
-        {CHIPS.map((chip) => {
+        {chips.map((chip) => {
           const selected = chip.slug === current;
           const empty = chip.count === 0;
           return (

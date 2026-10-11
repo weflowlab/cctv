@@ -1,28 +1,16 @@
 /**
  * 홈 FAQ BEST 5 — 상담 전에 가장 먼저 궁금해할 질문 5개만 아코디언으로
- * - 데이터: components/support-faq/data.ts FAQ_ITEMS 에서 질문 문자열(BEST_QUESTIONS)로 골라 순서대로 표시.
- *   FAQ 데이터의 질문 문구가 바뀌면 여기 문자열도 함께 바꿀 것 (못 찾은 질문은 조용히 빠짐).
- * - 아코디언: /faq 와 같은 FaqAccordion 재사용 — items 를 넘겨 탭 숨김, tone="light" 로 흰 배경용 색.
+ * - 데이터: getFaqs() 중 관리자 > FAQ 관리에서 "홈 BEST" 체크한 질문 (FAQ 순서대로, 최대 5개).
+ * - 아코디언: /faq 와 같은 FaqAccordion 재사용 — showTabs=false 로 탭 숨김, tone="light" 로 흰 배경용 색.
  * - 하단 [FAQ 전체 보기 → /faq].
  */
 import FaqAccordion from "@/components/support-faq/FaqAccordion";
-import { FAQ_ITEMS, type FaqItem } from "@/components/support-faq/data";
+import { FAQ_BEST_LIMIT } from "@/components/support-faq/data";
+import { getFaqs } from "@/lib/faqs";
 import { HomeSectionHeader, HomeTextLink } from "./HomeSection";
 
-/** 홈에 노출할 질문 (표시 순서) */
-const BEST_QUESTIONS = [
-  "시공 가능 지역이 어디인가요?",
-  "CCTV 설치 비용은 얼마인가요?",
-  "렌탈 시 초기 비용이 드나요?",
-  "다른 업체에서 설치한 CCTV도 수리해 주나요?",
-  "스마트폰으로 영상을 볼 수 있나요?",
-];
-
-const BEST_ITEMS = BEST_QUESTIONS.map((q) => FAQ_ITEMS.find((f) => f.question === q)).filter(
-  (f): f is FaqItem => Boolean(f),
-);
-
-export default function FaqBest() {
+export default async function FaqBest() {
+  const items = (await getFaqs()).filter((f) => f.best).slice(0, FAQ_BEST_LIMIT);
   return (
     // ===== FAQ BEST 5: 연틸 배경 =====
     <section className="flex w-full justify-center bg-point-light py-[80px] lg:py-[140px]">
@@ -38,7 +26,7 @@ export default function FaqBest() {
         />
 
         {/* ===== 아코디언 (한 번에 하나만 열림) ===== */}
-        <FaqAccordion items={BEST_ITEMS} tone="light" />
+        <FaqAccordion items={items} showTabs={false} tone="light" />
 
         <div className="mt-[32px] lg:mt-[56px]">
           <HomeTextLink href="/faq">FAQ 전체 보기</HomeTextLink>

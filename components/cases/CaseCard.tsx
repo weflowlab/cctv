@@ -8,7 +8,7 @@
  */
 import Link from "next/link";
 import Image from "next/image";
-import { caseImageSrc, type CaseItem } from "./data";
+import type { CaseItem } from "./data";
 import { formatCaseDate, placeName, serviceName } from "./format";
 
 export default function CaseCard({ item }: { item: CaseItem }) {
@@ -20,10 +20,10 @@ export default function CaseCard({ item }: { item: CaseItem }) {
       {/* ===== 대표 사진: 62% 비율 박스 / hover·focus 시 사진만 확대 ===== */}
       <div className="relative w-full overflow-hidden rounded-[20px] pb-[62%] lg:rounded-[28px]">
         <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.05] group-focus-visible:scale-[1.05]">
-          {/* 임시 스톡 사진 (caseImageSrc) — 실제 시공 사진 등록 시 교체 */}
+          {/* 대표 사진 = 첫 번째 사진 (관리자 > 시공사례 관리에서 순서 변경) */}
           <Image
-            src={caseImageSrc(item)}
-            alt={item.images[0] ?? item.title}
+            src={item.images[0]?.url ?? "/images/stock/hero-main-ceiling-camera.webp"}
+            alt={item.images[0]?.alt ?? item.title}
             fill
             sizes="(min-width: 1024px) 350px, 100vw"
             className="object-cover"

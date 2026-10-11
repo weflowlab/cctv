@@ -3,11 +3,14 @@
  * - 구성: 어두운 배경(#131320) + 브랜드색 블러 원형 배경 장식 → 제목 → 탭 + 아코디언(FaqAccordion)
  * - keeper 는 전부 펼침이지만 여기서는 아코디언 (FaqAccordion 참고).
  * - 섹션이 헤더 아래까지 깔리도록 헤더 높이만큼 음수 margin-top + padding-top.
+ * - 질문 목록: getFaqs() (DB, 캐시 — 관리자 > FAQ 관리에서 저장하면 바로 갱신)
  */
 import FaqAccordion from "./FaqAccordion";
 import Eyebrow from "@/components/common/Eyebrow";
+import { getFaqs } from "@/lib/faqs";
 
-export default function FaqSection() {
+export default async function FaqSection() {
+  const items = await getFaqs();
   return (
     <section className="relative -mt-[var(--header-height-mobile)] flex min-w-[360px] justify-center overflow-hidden bg-[#131320] pt-[var(--header-height-mobile)] lg:-mt-[var(--header-height)] lg:pt-[var(--header-height)]">
       {/* ===== 배경 장식: 브랜드색 블러 원 2개 (keeper 장식을 짧은 페이지에 맞게 축소) ===== */}
@@ -24,7 +27,7 @@ export default function FaqSection() {
         <h1 className="text-center text-[26px] font-bold leading-[144%] tracking-[-1px] lg:text-[42px]">자주 묻는 질문</h1>
 
         {/* ===== 카테고리 탭 + 아코디언 (클라이언트 컴포넌트) ===== */}
-        <FaqAccordion />
+        <FaqAccordion items={items} />
       </div>
     </section>
   );

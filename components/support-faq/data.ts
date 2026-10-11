@@ -1,7 +1,11 @@
 /**
  * ⚠️ 초안 — 사장님 검수 필요
  *
- * FAQ 데이터 (기존 사이트에는 FAQ 페이지가 없음)
+ * FAQ 초기(seed) 데이터 — 실제 데이터는 Neon Postgres faqs 테이블 (관리자 > FAQ 관리에서 수정)
+ * - 읽기: lib/faqs.ts getFaqs() — DB 미설정이면 아래 SEED_FAQS 로 대신 보여준다.
+ * - faqs 테이블을 처음 만들 때 한 번만 넣는다 (lib/schema.ts).
+ *
+ * (작성 근거 — 기존 사이트에는 FAQ 페이지가 없음)
  * - 기존 사이트 https://kkcctv.co.kr 의 설치 패키지 / 렌탈 / AS / 홈 / 장소별 페이지에 적힌 내용만 근거로 작성했다.
  *   렌탈 페이지 Q&A 아코디언 10문항도 옮기되, 겹치는 질문은 기존 항목에 병합.
  * - 신규 회사 정책이 확정되지 않은 항목(무상 AS 1년, 24시간 이내 방문, 서비스 지역, 렌탈 3년 이후 요금)과
@@ -15,12 +19,17 @@
 import { SITE } from "@/lib/site";
 
 export type FaqCategory = "설치" | "렌탈" | "AS" | "기타";
-export type FaqItem = { category: FaqCategory; question: string; answer: string };
+/** best: 홈 "자주 묻는 질문 BEST 5" 노출 여부 (관리자에서 체크) */
+export type FaqItem = { category: FaqCategory; question: string; answer: string; best: boolean };
+
+/** 홈 "자주 묻는 질문 BEST 5" 최대 개수 (관리자 체크 제한과 공통) */
+export const FAQ_BEST_LIMIT = 5;
 
 /** 탭 순서 ("전체"는 컴포넌트에서 앞에 붙임) */
 export const FAQ_TABS: FaqCategory[] = ["설치", "렌탈", "AS", "기타"];
 
-export const FAQ_ITEMS: FaqItem[] = [
+/** 작성 원본 (best 없이) */
+const DRAFT_FAQS: Omit<FaqItem, "best">[] = [
   // ----- 설치 -----
   {
     // 맨 앞(전체·설치 탭 1번) — 근거: 고객 확인 — 직접 방문 시공, 전국 시공 가능 (SITE.serviceArea)
@@ -141,3 +150,15 @@ export const FAQ_ITEMS: FaqItem[] = [
       "기본 한 달 정도 저장되며, 요청하시면 저장 기간을 더 늘릴 수 있습니다.",
   },
 ];
+
+/** 홈 BEST 5 로 처음 체크해 둘 질문 (표시 순서는 FAQ 전체 순서를 따른다) */
+const SEED_BEST = new Set([
+  "시공 가능 지역이 어디인가요?",
+  "CCTV 설치 비용은 얼마인가요?",
+  "렌탈 시 초기 비용이 드나요?",
+  "다른 업체에서 설치한 CCTV도 수리해 주나요?",
+  "스마트폰으로 영상을 볼 수 있나요?",
+]);
+
+/** 초기 데이터 (위에서부터 노출 순서) */
+export const SEED_FAQS: FaqItem[] = DRAFT_FAQS.map((f) => ({ ...f, best: SEED_BEST.has(f.question) }));

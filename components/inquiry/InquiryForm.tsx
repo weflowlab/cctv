@@ -9,7 +9,10 @@
  *   · 한 번 제출한 뒤부터는 입력할 때마다 재검사
  *   · 연락처는 숫자만 남기고 3-4-4 자동 하이픈 (maxLength 13)
  *   · 제출 중 버튼 문구 "전송 중..." + 비활성
+ *   · POST /api/inquiries 로 접수 (관리자 > 문의 관리) — 유입 경로(lib/attribution)를 함께 보내고, 기기는 서버가 판별
+ *   · 사람에게 안 보이는 website 칸(허니팟)을 채운 봇 요청은 서버가 저장하지 않는다
  *   · 성공 시 폼 초기화 + 화면 가운데 성공 팝업 2초 노출 (keeper 와 달리 페이지 이동 없음)
+ *   · 실패 시 버튼 위에 오류 문구 (입력값은 그대로 유지)
  * - 견적 계산기 연동: /contact?service=rental|install&count=N&place=slug&res=200|500 로 들어오면
  *   서비스 칩 자동 선택 + "전달 내용"에 견적 요약을 미리 채움 (사용자가 수정 가능)
  *   · useSearchParams 는 정적 프리렌더 시 가장 가까운 Suspense 까지 클라이언트 렌더로 넘어가므로,
@@ -18,6 +21,7 @@
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState, type FormEvent } from "react";
 import { parseQuoteQuery, type QuoteService } from "@/components/quote-calculator/data";
+import { attributionLine } from "@/lib/attribution";
 import { SITE } from "@/lib/site";
 import Eyebrow from "@/components/common/Eyebrow";
 import DatePicker from "./DatePicker";
@@ -102,6 +106,10 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
   const [showSuccess, setShowSuccess] = useState(false);
   // 약관보기 작은 안내 상자 열림
   const [showTerms, setShowTerms] = useState(false);
+  // 전송 실패 문구 (서버 오류·네트워크 끊김)
+  const [submitError, setSubmitError] = useState("");
+  // 허니팟 — 화면에 보이지 않는 칸. 사람은 비워 두고 봇만 채운다
+  const [website, setWebsite] = useState("");
 
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
@@ -140,8 +148,21 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
     if (errs.agree) return agreeRef.current?.focus();
 
     setIsSubmitting(true);
-    // TODO: API 연동 (성함·연락처·서비스·희망일·전달 내용 전송)
-    await new Promise((r) => setTimeout(r, 500));
+    setSubmitError("");
+    try {
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...values, website, source: attributionLine() }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !data.ok) throw new Error(data.error || "");
+    } catch (err) {
+      setIsSubmitting(false);
+      const reason = err instanceof Error && err.message ? err.message : "전송에 실패했습니다.";
+      setSubmitError(`${reason} 계속 안 되면 ${SITE.phone} 로 전화 주세요.`);
+      return;
+    }
     setIsSubmitting(false);
 
     // 성공: 폼 초기화 + 팝업 2초 (페이지 이동 없음)
@@ -307,6 +328,25 @@ function InquiryFormBody({ initial }: { initial?: Partial<Values> }) {
               )}
               <ErrorText>{errors.agree}</ErrorText>
             </div>
+
+            {/* ===== 허니팟: 화면·스크린리더·탭 이동에서 모두 숨김 (봇만 채움) ===== */}
+            <input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              className="absolute -left-[9999px] h-0 w-0 opacity-0"
+            />
+
+            {/* ===== 전송 실패 문구 ===== */}
+            {submitError && (
+              <p role="alert" className="mb-[12px] text-[13px] leading-[1.5] text-[#d93025] lg:text-[14px]">
+                {submitError}
+              </p>
+            )}
 
             {/* ===== 제출 버튼: 전송 중에는 비활성 + 문구 변경 ===== */}
             <button

@@ -2,7 +2,7 @@
  * /cases — 시공사례 전체 목록 (서버 컴포넌트)
  * - 타이틀 띠(설명·요약 숫자)·칩 바·CTA 는 app/cases/(list)/layout.tsx. 여기는 전체 카드 그리드만.
  * - 장소별 목록은 /cases/place/<slug> (장소 소개 블록 포함). 카드 클릭 → 상세 /cases/<id>.
- * - 데이터: components/cases/data.ts (샘플, 추후 관리자 페이지 DB)
+ * - 데이터: lib/cases.ts getCases() (DB — 관리자 > 시공사례 관리)
  */
 import type { Metadata } from "next";
 import CaseList from "@/components/cases/CaseList";

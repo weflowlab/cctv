@@ -4,16 +4,18 @@
  *   장소 선택은 URL 경로(/cases, /cases/place/<slug>)로 하고, 칩 바는 CasePlaceChips(레이아웃)가 담당.
  * - 구성: 카드 그리드 (최신순, featured 가 앞쪽). 대표 사례 1건을 크게 띄우던 배너는 제거.
  * - 카드 클릭 → 내부 상세 /cases/<id>
- * - 사례 수가 적어 무한 스크롤은 생략 (관리자 페이지 도입 후 건수가 늘면 페이지네이션 검토).
+ * - 사례 수가 적어 무한 스크롤은 생략 (건수가 늘면 페이지네이션 검토).
+ * - 데이터: getCases() (DB, 캐시 — 관리자에서 저장하면 바로 갱신)
  */
 import type { PlaceSlug } from "@/lib/site";
 import Reveal from "@/components/common/Reveal";
 import CaseCard from "./CaseCard";
-import { CASES } from "./data";
+import { getCases } from "@/lib/cases";
 
-export default function CaseList({ place }: { place: PlaceSlug | null }) {
+export default async function CaseList({ place }: { place: PlaceSlug | null }) {
+  const cases = await getCases();
   // 선택된 장소 사례만 (null = 전체)
-  const items = place ? CASES.filter((c) => c.place === place) : CASES;
+  const items = place ? cases.filter((c) => c.place === place) : cases;
   if (items.length === 0) {
     // ===== 빈 상태: 해당 장소 사례가 아직 없을 때 =====
     return (

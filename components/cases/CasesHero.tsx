@@ -3,13 +3,15 @@
  * - 흰 바탕에 제목만 덩그러니 있던 상단을 연한 브랜드색 띠로 채움
  * - PC: 왼쪽 [OUR WORK 라벨 + 큰 제목("CCTV 시공사례" / 장소별 "{장소} CCTV 시공사례") + 설명] / 오른쪽 [요약 숫자 2개]
  *   모바일: 세로로 쌓이고 숫자 2개는 한 줄 2칸
- * - 요약 숫자(CasesStats): 시공사례 건수 · 누적 설치 대수 — 현재 장소 기준으로 자동 계산
+ * - 요약 숫자(CasesStats): 시공사례 건수 · 누적 설치 대수 — 현재 장소 기준으로 자동 계산 (사례는 DB 에서 읽음)
  */
 import Eyebrow from "@/components/common/Eyebrow";
+import { getCases } from "@/lib/cases";
 import CasesStats from "./CasesStats";
 import CasesTitle from "./CasesTitle";
 
-export default function CasesHero() {
+export default async function CasesHero() {
+  const stats = (await getCases()).map(({ place, cameraCount }) => ({ place, cameraCount }));
   return (
     // ===== 타이틀 띠: 연한 네이비→흰색 그라데이션 + 우측 위 틸 빛 장식 =====
     <div className="relative w-full overflow-hidden bg-gradient-to-b from-[#eef3f9] to-white">
@@ -27,7 +29,7 @@ export default function CasesHero() {
         </div>
 
         {/* ===== 오른쪽: 요약 숫자 2개 (현재 장소 기준 자동 계산) ===== */}
-        <CasesStats />
+        <CasesStats cases={stats} />
       </div>
     </div>
   );

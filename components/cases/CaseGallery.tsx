@@ -5,14 +5,15 @@
  * - 구성: 대표 사진 크게(16:10) + 하단 썸네일 줄
  * - 동작: 썸네일 클릭 → 대표 사진 전환 / 모바일은 대표 사진을 좌우로 스와이프(40px 이상)해 이전·다음
  *   / 좌우 화살표 버튼(PC) / 우하단 "n / 전체" 표시
- * - 사진: srcs = 임시 스톡 사진 경로(caseImageSrc), images = 사진 설명(alt). 관리자 페이지 도입 후 Blob URL 로 교체.
+ * - 사진: images = [{ url, alt }] (관리자 업로드 사진은 Vercel Blob URL)
  */
 import { useRef, useState } from "react";
 import Image from "next/image";
+import type { CaseImage } from "./data";
 
 const SWIPE_THRESHOLD = 40;
 
-export default function CaseGallery({ images, srcs, title }: { images: string[]; srcs: string[]; title: string }) {
+export default function CaseGallery({ images, title }: { images: CaseImage[]; title: string }) {
   const [index, setIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const total = images.length;
@@ -44,8 +45,8 @@ export default function CaseGallery({ images, srcs, title }: { images: string[];
       >
         <div className="relative aspect-[16/10] w-full">
           <Image
-            src={srcs[index]}
-            alt={`${title} — ${images[index]}`}
+            src={images[index].url}
+            alt={`${title} — ${images[index].alt}`}
             fill
             sizes="(min-width: 1024px) 1080px, 100vw"
             className="object-cover"
@@ -86,19 +87,19 @@ export default function CaseGallery({ images, srcs, title }: { images: string[];
       {/* ===== 썸네일 줄: 클릭 시 대표 사진 전환, 선택된 썸네일은 brand 테두리 ===== */}
       {total > 1 && (
         <ul className="flex gap-[8px] overflow-x-auto [scrollbar-width:none] lg:gap-[12px] [&::-webkit-scrollbar]:hidden">
-          {images.map((label, i) => (
-            <li key={label} className="shrink-0">
+          {images.map((img, i) => (
+            <li key={`${img.url}-${i}`} className="shrink-0">
               <button
                 type="button"
                 onClick={() => setIndex(i)}
-                aria-label={`${i + 1}번째 사진 보기: ${label}`}
+                aria-label={`${i + 1}번째 사진 보기: ${img.alt}`}
                 aria-current={i === index}
                 className={`block w-[88px] cursor-pointer overflow-hidden rounded-[8px] border-2 transition-opacity lg:w-[120px] lg:rounded-[12px] ${
                   i === index ? "border-brand" : "border-transparent opacity-60 hover:opacity-100"
                 }`}
               >
                 <span className="relative block aspect-[16/10] w-full">
-                  <Image src={srcs[i]} alt="" fill sizes="120px" className="object-cover" />
+                  <Image src={img.url} alt="" fill sizes="120px" className="object-cover" />
                 </span>
               </button>
             </li>

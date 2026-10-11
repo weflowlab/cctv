@@ -1,12 +1,21 @@
 /**
- * 시공사례 데이터
- * - 샘플 데이터 — 관리자 페이지(DB) 도입 시 교체, 필드는 DB 컬럼과 1:1
- *   (추후 Neon Postgres 테이블 + Vercel Blob 이미지로 대표가 직접 등록)
- * - images: 사진 설명(alt). 화면 사진은 임시로 caseImageSrc() 스톡 사진 — DB 도입 후 Vercel Blob URL 로 교체.
+ * 시공사례 데이터 타입 + 초기(seed) 데이터
+ * - 실제 데이터는 Neon Postgres cases 테이블 (관리자 > 시공사례 관리에서 등록·수정·삭제)
+ *   읽기: lib/cases.ts getCases() — DB 미설정(DATABASE_URL 없음)이면 아래 SEED_CASES 로 대신 보여준다.
+ * - SEED_CASES 는 cases 테이블을 처음 만들 때 한 번 넣는 샘플 11건 (lib/schema.ts). 관리자에서 지우면 다시 생기지 않는다.
+ * - images: [{ url, alt }] — 관리자 업로드 사진은 Vercel Blob URL, 샘플은 public/images/stock 스톡 사진
  * - date: 표시용 문자열 "YYYY-MM" (Date 객체 쓰지 않음 — 프리렌더 안전)
- * - CASES 는 최신순으로 유지.
  */
-import { PLACES, type PlaceSlug } from "@/lib/site";
+import type { PlaceSlug } from "@/lib/site";
+
+export type CaseService = "install" | "rental" | "as" | "speaker";
+
+export type CaseImage = {
+  /** 사진 주소 (Vercel Blob URL 또는 /images/... 경로) */
+  url: string;
+  /** 사진 설명 (대체 텍스트) */
+  alt: string;
+};
 
 export type CaseItem = {
   /**
@@ -14,7 +23,6 @@ export type CaseItem = {
    * 규칙: 지역-장소-cctv-서비스 (소문자, 하이픈) · 날짜는 넣지 않음 · 겹치면 끝에 -2, -3
    *   서비스: installation(설치) / rental(렌탈) / repair(AS) / speaker(CCTV+스피커)
    *   예) gangnam-cafe-cctv-installation, suwon-apartment-cctv-rental
-   * 관리자 페이지 도입 시 이 규칙으로 자동 생성(수정 가능)하면 된다.
    */
   id: string;
   /** 예: "강남 카페 CCTV 8대 설치" */
@@ -25,19 +33,22 @@ export type CaseItem = {
   region: string;
   /** 설치 대수 */
   cameraCount: number;
-  service: "install" | "rental" | "as" | "speaker";
-  /** 한두 문장 */
+  service: CaseService;
+  /** 한두 문장 (현장 설명) */
   summary: string;
-  /** 이미지 자리 설명(Placeholder label). 추후 Vercel Blob URL */
-  images: string[];
+  /** 사진 목록 (첫 장이 대표 사진) */
+  images: CaseImage[];
   /** "2026-09" (표시용 문자열) */
   date: string;
   /** 메인 노출 */
   featured: boolean;
 };
 
-/** 샘플 시공사례 11건 (최신순) */
-export const CASES: CaseItem[] = [
+/** 샘플 원본 — images 가 사진 설명 문자열 */
+type SampleCase = Omit<CaseItem, "images"> & { images: string[] };
+
+/** 샘플 시공사례 11건 (최신순) — images 는 사진 설명만, 사진은 seed 시 스톡 사진으로 채움 */
+const SAMPLE_CASES: SampleCase[] = [
   {
     id: "gangnam-cafe-cctv-installation",
     title: "강남 카페 CCTV 8대 설치",
@@ -183,26 +194,6 @@ export const CASES: CaseItem[] = [
   },
 ];
 
-/** 메인 노출용 — featured 우선, 부족하면 최신순으로 채움 */
-export function getFeaturedCases(limit = 6): CaseItem[] {
-  const featured = CASES.filter((c) => c.featured);
-  const rest = CASES.filter((c) => !c.featured);
-  return [...featured, ...rest].slice(0, limit);
-}
-
-
-/** 장소별 사례 건수 (칩 바 표시용) — 사례가 없는 장소는 0 */
-export function countCasesByPlace(): Record<PlaceSlug, number> {
-  const counts = Object.fromEntries(PLACES.map((p) => [p.slug, 0])) as Record<PlaceSlug, number>;
-  for (const c of CASES) counts[c.place] += 1;
-  return counts;
-}
-
-/** id 로 사례 1건 조회 (없으면 undefined) */
-export function getCase(id: string): CaseItem | undefined {
-  return CASES.find((c) => c.id === id);
-}
-
 /**
  * 임시 사례 사진 — 스톡 사진(CC0) public/images/stock/*.webp 를 돌려 씀 (중복 허용)
  * - 실제 시공 사진 등록(DB·Blob 도입) 전까지만 사용. 같은 사례는 항상 같은 사진이 나오도록 id 로 시작 위치를 정함.
@@ -227,9 +218,15 @@ const STOCK_CAMERA = [
 ];
 const STOCK_SPEAKER = ["speaker-hero-woofer", "promo-speaker-mixing-console", "hero-speaker-bookshelf-speaker"];
 
-/** 사례 사진 경로 (idx 번째 사진) */
-export function caseImageSrc(item: CaseItem, idx = 0): string {
+/** 샘플 사례의 idx 번째 스톡 사진 경로 (같은 사례는 항상 같은 사진) */
+function stockSrc(item: SampleCase, idx: number): string {
   const pool = item.service === "speaker" ? STOCK_SPEAKER : STOCK_CAMERA;
   const offset = [...item.id].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
   return `/images/stock/${pool[(offset + idx) % pool.length]}.webp`;
 }
+
+/** 초기 데이터 11건 (최신순) — 사진 설명마다 스톡 사진을 붙인 형태 */
+export const SEED_CASES: CaseItem[] = SAMPLE_CASES.map((c) => ({
+  ...c,
+  images: c.images.map((alt, i) => ({ url: stockSrc(c, i), alt })),
+}));

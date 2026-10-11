@@ -5,30 +5,33 @@
  * - 현재 주소에 맞춰 계산: /cases 는 전체, /cases/place/<slug> 는 그 장소 사례만
  *   (타이틀 띠는 레이아웃에 있어 params 를 못 읽으므로 URL(usePathname)에서 장소를 판단)
  * - usePathname 이 확정되지 않는 경우를 위해 Suspense — 대기 중엔 전체 기준 숫자
- * - 값은 등록된 사례(CASES)에서 자동 계산 (지금은 샘플 데이터, 관리자 DB 도입 시 실제 값)
+ * - 값은 등록된 사례에서 자동 계산 — 사례 목록(장소·대수만)은 서버(CasesHero)가 DB 에서 읽어 넘겨준다
  */
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
 import { PLACES, type PlaceSlug } from "@/lib/site";
-import { CASES } from "./data";
+import type { CaseItem } from "./data";
 
-export default function CasesStats() {
+/** 숫자 계산에 필요한 값만 */
+export type CaseStat = Pick<CaseItem, "place" | "cameraCount">;
+
+export default function CasesStats({ cases }: { cases: CaseStat[] }) {
   return (
-    <Suspense fallback={<StatsGrid place={null} />}>
-      <PlaceAwareStats />
+    <Suspense fallback={<StatsGrid cases={cases} place={null} />}>
+      <PlaceAwareStats cases={cases} />
     </Suspense>
   );
 }
 
-function PlaceAwareStats() {
+function PlaceAwareStats({ cases }: { cases: CaseStat[] }) {
   const pathname = usePathname();
   const slug = pathname.startsWith("/cases/place/") ? pathname.split("/")[3] : null;
   const place = PLACES.find((p) => p.slug === slug)?.slug ?? null;
-  return <StatsGrid place={place} />;
+  return <StatsGrid cases={cases} place={place} />;
 }
 
-function StatsGrid({ place }: { place: PlaceSlug | null }) {
-  const items = place ? CASES.filter((c) => c.place === place) : CASES;
+function StatsGrid({ cases, place }: { cases: CaseStat[]; place: PlaceSlug | null }) {
+  const items = place ? cases.filter((c) => c.place === place) : cases;
   const cameras = items.reduce((sum, c) => sum + c.cameraCount, 0);
 
   const stats = [
