@@ -11,7 +11,15 @@ export const metadata: Metadata = { title: "문의 관리" };
 export default function AdminInquiriesPage() {
   return (
     <>
-      <PageHead title="문의 관리" desc="상담 신청 페이지로 들어온 문의입니다. 화살표를 누르면 유입 경로·기기·전달 내용이 보입니다." />
+      <PageHead
+        title="문의 관리"
+        desc={
+          <>
+            상담 신청 페이지로 들어온 문의입니다.
+            <br className="br-mobile" /> 화살표를 누르면 유입 경로·기기·전달 내용이 보입니다.
+          </>
+        }
+      />
       <InquiryManager />
     </>
   );

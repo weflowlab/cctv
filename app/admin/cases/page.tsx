@@ -11,7 +11,15 @@ export const metadata: Metadata = { title: "시공사례 관리" };
 export default function AdminCasesPage() {
   return (
     <>
-      <PageHead title="시공사례 관리" desc="등록·수정·삭제하면 시공사례 페이지와 홈 화면에 바로 반영됩니다." />
+      <PageHead
+        title="시공사례 관리"
+        desc={
+          <>
+            등록·수정·삭제하면
+            <br className="br-mobile" /> 시공사례 페이지와 홈 화면에 바로 반영됩니다.
+          </>
+        }
+      />
       <CaseManager />
     </>
   );

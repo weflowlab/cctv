@@ -128,6 +128,14 @@
 .traffic-metric-grid { display: grid; gap: 1rem; grid-template-columns: repeat(4, 1fr); }
 .br-mobile { display: none; }
 
+/* 시공사례 목록 도구줄 */
+.case-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
+.case-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.case-tools { display: flex; gap: 0.5rem; }
+
+/* FAQ 상단 버튼 */
+.faq-actions { display: flex; gap: 0.5rem; }
+
 /* 시공사례 편집 */
 .case-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.25rem; }
 .case-photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 0.9rem; }
@@ -146,11 +154,29 @@
   .admin-drawer { display: flex !important; }
   .stat-grid-4, .stat-grid-2 { grid-template-columns: repeat(2, 1fr); }
   .admin-main { padding: 1.25rem 1rem 5rem; }
-  .refresh-label { display: none; }
-  .admin-refresh-btn { padding: 0.35rem 0.6rem !important; }
   .case-form-grid { grid-template-columns: 1fr; }
   .case-photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .br-mobile { display: inline; }
+  .hide-mobile { display: none; }
+
+  /* 시공사례 도구줄 — 칩 한 줄 가로 스크롤(화면 끝까지), 아래 줄은 정렬 · 새로고침 · 등록을 같은 간격으로 */
+  /* flex-wrap 을 꼭 끈다 — 세로 방향 + wrap 이면 줄 폭이 내용 폭이 되어 칩·버튼이 화면 밖으로 밀린다 */
+  .case-toolbar { flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 0.7rem; }
+  .case-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+    scrollbar-width: none;
+  }
+  .case-chips::-webkit-scrollbar { display: none; }
+  /* 정렬 · 새로고침 · 등록 — 양 끝에 붙이고 사이 간격은 똑같이 */
+  .case-tools { justify-content: space-between; }
+  .case-tools .case-sort { flex: 0 1 auto; min-width: 0; }
+
+  /* FAQ — 변경이 있을 때(취소 버튼 보일 때)만 취소·저장을 오른쪽 끝으로 */
+  .faq-actions.is-dirty { width: 100%; }
+  .faq-actions.is-dirty > :nth-child(2) { margin-left: auto; }
 }
 
 @media (max-width: 480px) {

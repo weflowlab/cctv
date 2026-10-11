@@ -134,6 +134,8 @@ export default function CaseManager() {
           fontSize: "0.9rem",
           fontWeight: 700,
           cursor: "pointer",
+          flexShrink: 0,
+          whiteSpace: "nowrap",
         }}
       >
         {label} <span style={{ opacity: 0.6, fontWeight: 600 }}>{count}</span>
@@ -231,14 +233,15 @@ export default function CaseManager() {
       </section>
 
       {/* ===== 목록 도구줄: 장소 칩 · 정렬 · 새로고침 · 등록 (아래 표에만 해당) ===== */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.75rem", flexWrap: "wrap" }}>
-        <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+      {/* 모바일: 칩은 한 줄 가로 스크롤, 그 아래 줄에 정렬(넓게) · 새로고침 · 등록 — admin.css .case-toolbar */}
+      <div className="case-toolbar">
+        <div className="case-chips">
           {chip(null, "전체", items.length)}
           {PLACES.map((p) => chip(p.slug, p.name, items.filter((c) => c.place === p.slug).length))}
         </div>
-        <div style={{ display: "flex", gap: "0.5rem" }}>
+        <div className="case-tools">
           <select
-            className="form-input"
+            className="form-input case-sort"
             aria-label="정렬"
             value={sort}
             onChange={(e) => setSort(e.target.value as SortKey)}
@@ -252,7 +255,8 @@ export default function CaseManager() {
           </select>
           <RefreshButton loading={loading} onClick={load} />
           <Link href="/admin/cases/new" className="btn-primary" style={{ textDecoration: "none" }}>
-            <Plus size={16} /> 새 시공사례 등록
+            <Plus size={16} />
+            <span className="hide-mobile">새 시공사례 </span>등록
           </Link>
         </div>
       </div>

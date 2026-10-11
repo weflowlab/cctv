@@ -160,7 +160,8 @@ export default function FaqManager() {
           </b>
           {dirty && <span style={{ marginLeft: "0.5rem", color: "var(--accent)", fontWeight: 700 }}>· 저장하지 않은 변경이 있습니다</span>}
         </p>
-        <div style={{ display: "flex", gap: "0.5rem" }}>
+        {/* 모바일에서 취소 버튼이 뜨면(변경 있음) 취소·저장은 오른쪽으로 — admin.css .faq-actions */}
+        <div className={`faq-actions${dirty ? " is-dirty" : ""}`}>
           <button type="button" className="btn-outline" onClick={add} disabled={!loaded}>
             <Plus size={16} /> 질문 추가
           </button>

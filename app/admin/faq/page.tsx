@@ -13,7 +13,12 @@ export default function AdminFaqPage() {
     <>
       <PageHead
         title="FAQ 관리"
-        desc="자주 묻는 질문 페이지에 위에서부터 순서대로 노출됩니다. 변경 후 [저장]을 눌러야 반영됩니다."
+        desc={
+          <>
+            자주 묻는 질문 페이지에 위에서부터 순서대로 노출됩니다.
+            <br className="br-mobile" /> 변경 후 [저장]을 눌러야 반영됩니다.
+          </>
+        }
       />
       <FaqManager />
     </>
