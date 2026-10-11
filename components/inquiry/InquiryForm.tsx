@@ -5,7 +5,7 @@
  * - 필드: 성함*, 연락처*, 서비스 선택(칩형 다중선택), 희망 서비스일(DatePicker 달력 — 지난 날짜 선택 불가), 전달 내용(textarea),
  *         [필수] 개인정보 수집 및 이용 동의 (약관보기 → 바로 아래 작은 안내 상자 열기/닫기, 전체 방침은 /terms/personal)
  * - 동작 (keeper 폼과 동일):
- *   · 제출 시 유효성 검사 → 첫 에러 필드로 포커스, 필드 아래 브랜드색 에러 문구, 에러 입력칸 테두리 브랜드색
+ *   · 제출 시 유효성 검사 → 첫 에러 필드로 포커스, 필드 아래 빨간 에러 문구, 에러 입력칸 테두리 빨간색
  *   · 한 번 제출한 뒤부터는 입력할 때마다 재검사
  *   · 연락처는 숫자만 남기고 3-4-4 자동 하이픈 (maxLength 13)
  *   · 제출 중 버튼 문구 "전송 중..." + 비활성
@@ -50,9 +50,10 @@ const INITIAL: Values = { name: "", phone: "", services: [], date: "", message: 
 /** keeper zod 스키마와 동일한 검사 규칙/문구 (필수: 성함·연락처·동의) */
 function validate(v: Values): Errors {
   const e: Errors = {};
-  if (v.name.trim().length < 2) e.name = "성함은 필수입니다.";
-  if (!/^01\d-\d{3,4}-\d{4}$/.test(v.phone)) e.phone = "010-0000-0000 형식으로 입력해주세요.";
-  if (v.agree !== true) e.agree = "개인정보 수집 및 이용에 동의해주세요.";
+  if (v.name.trim().length < 2) e.name = "이름을 입력해 주세요";
+  if (!v.phone) e.phone = "연락처를 입력해 주세요";
+  else if (!/^01\d-\d{3,4}-\d{4}$/.test(v.phone)) e.phone = "연락처 형식으로 입력해주세요";
+  if (v.agree !== true) e.agree = "개인정보 수집에 동의해 주세요";
   return e;
 }
 
@@ -64,20 +65,20 @@ function formatPhone(raw: string) {
     .replace(/-{1,2}$/g, "");
 }
 
-/** 입력칸 공통 스타일 (에러 시 테두리 브랜드색, 포커스 시 브랜드색) */
+/** 입력칸 공통 스타일 (에러 시 테두리 빨간색, 포커스 시 브랜드색) */
 // 글자 16px: iOS 사파리는 16px 미만 입력칸을 누르면 화면을 자동 확대하므로 모바일도 16px
 const inputClass = (hasError: boolean) =>
-  `h-[52px] w-full rounded-[8px] border bg-white px-[12px] py-[16px] text-[16px] font-normal leading-[140%] tracking-[-0.32px] text-[#4a5565] outline-0 placeholder:text-[#999] focus:border-brand lg:h-[54px] lg:px-[18px] lg:text-[16px] ${
-    hasError ? "border-brand" : "border-[#dadde5]"
+  `h-[52px] w-full rounded-[8px] border bg-white px-[12px] py-[16px] text-[16px] font-normal leading-[140%] tracking-[-0.32px] text-[#4a5565] outline-0 placeholder:text-[#999] lg:h-[54px] lg:px-[18px] lg:text-[16px] ${
+    hasError ? "border-[#e5484d]" : "border-[#dadde5] focus:border-brand"
   }`;
 
 const labelClass =
   "mb-[8px] text-[13px] font-medium leading-[140%] tracking-[-0.32px] text-[#1e2939] lg:mb-[12px] lg:text-[16px]";
 
-/** 필드 아래 에러 문구 */
+/** 필드 아래 에러 문구 — 앞에 "* " 를 붙여 "* 이름을 입력해 주세요" 처럼 */
 function ErrorText({ children, className = "" }: { children?: string; className?: string }) {
   if (!children) return null;
-  return <p className={`mt-[6px] text-[12px] text-point-strong ${className}`}>{children}</p>;
+  return <p className={`mt-[6px] text-[12px] text-[#e5484d] lg:text-[13px] ${className}`}>* {children}</p>;
 }
 
 /** 체크 아이콘 (keeper 체크박스 내부 SVG) */

@@ -96,9 +96,9 @@ export function parseInquiry(
 
   const name = str(b.name, 30);
   const phone = str(b.phone, 13);
-  if (name.length < 2) return { kind: "reject", error: "성함을 입력해 주세요." };
-  if (!/^01\d-\d{3,4}-\d{4}$/.test(phone)) return { kind: "reject", error: "연락처를 010-0000-0000 형식으로 입력해 주세요." };
-  if (b.agree !== true) return { kind: "reject", error: "개인정보 수집 및 이용에 동의해 주세요." };
+  if (name.length < 2) return { kind: "reject", error: "이름을 입력해 주세요" };
+  if (!/^01\d-\d{3,4}-\d{4}$/.test(phone)) return { kind: "reject", error: "연락처 형식으로 입력해주세요" };
+  if (b.agree !== true) return { kind: "reject", error: "개인정보 수집에 동의해 주세요" };
 
   const services = (Array.isArray(b.services) ? b.services : []).filter(
     (s): s is string => typeof s === "string" && SERVICE_OPTIONS.includes(s),
