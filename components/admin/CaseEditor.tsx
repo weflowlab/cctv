@@ -59,10 +59,9 @@ async function shrinkImage(file: File): Promise<File> {
 
 type Form = Omit<CaseItem, "cameraCount"> & { cameraCount: string };
 
-export default function CaseEditor({ id }: { id: string }) {
-  const router = useRouter();
-  const isNew = id === "new";
-  const [form, setForm] = useState<Form>(() => ({
+/** 새 사례 등록 화면의 빈 입력값 */
+function emptyForm(): Form {
+  return {
     id: suggestSlug("", "store", "install"),
     title: "",
     place: "store",
@@ -73,7 +72,13 @@ export default function CaseEditor({ id }: { id: string }) {
     images: [],
     date: thisMonth(),
     featured: false,
-  }));
+  };
+}
+
+export default function CaseEditor({ id }: { id: string }) {
+  const router = useRouter();
+  const isNew = id === "new";
+  const [form, setForm] = useState<Form>(emptyForm);
   /** 주소를 자동으로 따라가지 않는 상태 — 기존 사례이거나 직접 고치기 시작했을 때 */
   const [slugTouched, setSlugTouched] = useState(!isNew);
   /** 주소 입력칸 펼침 */
@@ -88,6 +93,30 @@ export default function CaseEditor({ id }: { id: string }) {
   const fileRef = useRef<HTMLInputElement>(null);
   /** 이번 편집에서 새로 올린 사진 — 저장 전에 빼면 Blob 에서 바로 지운다 */
   const uploaded = useRef(new Set<string>());
+
+  /*
+   * 화면에 들어올 때마다 새로 시작한다.
+   * Next.js 16 은 최근 본 화면을 숨겨 두었다가 다시 보여 주며 입력값까지 그대로 살려 둔다 —
+   * 그래서 등록 후 [새 시공사례 등록]을 다시 누르면 방금 쓴 내용이 남아 있었다.
+   * 효과(effect)는 화면이 다시 보일 때마다 새로 실행되므로 여기서 비운다.
+   * 화면을 떠날 때(정리 함수)는 저장하지 않고 올려 둔 사진을 Blob 에서 지운다.
+   */
+  useEffect(() => {
+    const pending = uploaded.current;
+    if (isNew) {
+      /* eslint-disable react-hooks/set-state-in-effect -- 숨겨 둔 화면이 다시 보일 때 입력값 초기화 */
+      setForm(emptyForm());
+      setSlugTouched(false);
+      setSlugEditing(false);
+      setMsg(null);
+      setPhotoMsg("");
+      /* eslint-enable react-hooks/set-state-in-effect */
+    }
+    return () => {
+      for (const url of pending) adminFetch("/api/admin/upload", jsonInit("DELETE", { url }));
+      pending.clear();
+    };
+  }, [isNew]);
 
   useEffect(() => {
     if (isNew) return;
