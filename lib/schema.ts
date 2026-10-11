@@ -120,4 +120,7 @@ async function create() {
       ),
     );
   }
+
+  // 홈 노출 순서 칸 (2026-10 추가 — 이미 만든 테이블에도 붙인다)
+  await sql`ALTER TABLE cases ADD COLUMN IF NOT EXISTS feature_rank integer`;
 }

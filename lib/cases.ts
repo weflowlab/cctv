@@ -5,12 +5,13 @@
  * - DB 는 snake_case, 앱은 camelCase — 변환은 toCase() 가 담당
  */
 import { cacheLife, cacheTag } from "next/cache";
-import { SEED_CASES, type CaseImage, type CaseItem, type CaseService } from "@/components/cases/data";
+import { MAX_FEATURED, SEED_CASES, type CaseImage, type CaseItem, type CaseService } from "@/components/cases/data";
 import { PLACES, type PlaceSlug } from "@/lib/site";
 import { getSql, hasDb, toIso } from "./db";
 import { ensureSchema } from "./schema";
 
 export const CASES_TAG = "cases";
+export { MAX_FEATURED };
 
 /** 관리자 목록용 — 공개 필드 + 등록·수정 시각 */
 export type AdminCase = CaseItem & { createdAt: string; updatedAt: string };
@@ -29,6 +30,7 @@ function toCase(row: Record<string, unknown>): AdminCase {
     images: Array.isArray(row.images) ? (row.images as CaseImage[]) : [],
     date: row.date as string,
     featured: Boolean(row.featured),
+    featuredOrder: row.feature_rank == null ? null : Number(row.feature_rank),
     createdAt: toIso(row.created_at),
     updatedAt: toIso(row.updated_at),
   };
@@ -60,12 +62,20 @@ export async function getCases(): Promise<CaseItem[]> {
     images: c.images,
     date: c.date,
     featured: c.featured,
+    featuredOrder: c.featuredOrder,
   }));
 }
 
-/** 메인 노출용 — featured 우선, 부족하면 최신순으로 채움 */
-export function pickFeatured(cases: CaseItem[], limit = 6): CaseItem[] {
-  return [...cases.filter((c) => c.featured), ...cases.filter((c) => !c.featured)].slice(0, limit);
+/**
+ * 홈 노출 사례 — 관리자가 "홈 노출"로 고른 것만, 정한 순서대로 (최대 MAX_FEATURED)
+ * 순서가 없는 것(초기 데이터 등)은 뒤로, 그 안에서는 시공 시기 최신순. 남는 칸을 다른 사례로 채우지 않는다
+ */
+export function pickFeatured(cases: CaseItem[]): CaseItem[] {
+  const rank = (c: CaseItem) => c.featuredOrder ?? Number.MAX_SAFE_INTEGER;
+  return cases
+    .filter((c) => c.featured)
+    .sort((a, b) => rank(a) - rank(b)) // 안정 정렬 — 같은 값이면 최신순 유지
+    .slice(0, MAX_FEATURED);
 }
 
 /** 장소별 사례 건수 (칩 바 표시용) — 사례가 없는 장소는 0 */
@@ -97,13 +107,25 @@ async function uniqueId(base: string, exceptId?: string): Promise<string> {
   for (let n = 2; ; n++) if (!taken.has(`${base}-${n}`)) return `${base}-${n}`;
 }
 
+/** 홈 노출을 더 켤 수 있는지 — 자기 자신(exceptId)은 빼고 센다 */
+export async function canFeature(exceptId?: string): Promise<boolean> {
+  await ensureSchema();
+  const [row] = await getSql()`SELECT count(*) AS n FROM cases WHERE featured AND id <> ${exceptId ?? ""}`;
+  return Number(row?.n ?? 0) < MAX_FEATURED;
+}
+
+export const FEATURED_FULL_ERROR = `홈에는 최대 ${MAX_FEATURED}개까지 노출할 수 있습니다. 다른 사례의 홈 노출을 먼저 꺼 주세요.`;
+
 export async function createCase(input: CaseInput): Promise<AdminCase> {
   await ensureSchema();
   const id = await uniqueId(input.id);
+  // 새로 노출하는 사례는 홈 순서 맨 뒤에 붙인다
   const rows = await getSql()`
-    INSERT INTO cases (id, title, place, region, camera_count, service, summary, images, date, featured)
+    INSERT INTO cases (id, title, place, region, camera_count, service, summary, images, date, featured, feature_rank)
     VALUES (${id}, ${input.title}, ${input.place}, ${input.region}, ${input.cameraCount}, ${input.service},
-            ${input.summary}, ${JSON.stringify(input.images)}::jsonb, ${input.date}, ${input.featured})
+            ${input.summary}, ${JSON.stringify(input.images)}::jsonb, ${input.date}, ${input.featured},
+            CASE WHEN ${input.featured}::boolean
+              THEN (SELECT COALESCE(max(feature_rank), -1) + 1 FROM cases WHERE featured) END)
     RETURNING *`;
   return toCase(rows[0]);
 }
@@ -117,17 +139,37 @@ export async function updateCase(currentId: string, input: CaseInput): Promise<A
       id = ${id}, title = ${input.title}, place = ${input.place}, region = ${input.region},
       camera_count = ${input.cameraCount}, service = ${input.service}, summary = ${input.summary},
       images = ${JSON.stringify(input.images)}::jsonb, date = ${input.date}, featured = ${input.featured},
+      feature_rank = CASE
+        WHEN NOT ${input.featured}::boolean THEN NULL
+        WHEN featured THEN feature_rank
+        ELSE (SELECT COALESCE(max(feature_rank), -1) + 1 FROM cases WHERE featured) END,
       updated_at = now()
     WHERE id = ${currentId}
     RETURNING *`;
   return rows.length ? toCase(rows[0]) : null;
 }
 
-/** 메인 노출만 켜고 끈다 (목록의 토글) */
+/** 홈 노출만 켜고 끈다 (목록의 토글) — 켜면 홈 순서 맨 뒤, 끄면 순서 비움 */
 export async function setCaseFeatured(id: string, featured: boolean): Promise<AdminCase | null> {
   await ensureSchema();
-  const rows = await getSql()`UPDATE cases SET featured = ${featured}, updated_at = now() WHERE id = ${id} RETURNING *`;
+  const rows = await getSql()`
+    UPDATE cases SET
+      featured = ${featured},
+      feature_rank = CASE
+        WHEN NOT ${featured}::boolean THEN NULL
+        WHEN featured THEN feature_rank
+        ELSE (SELECT COALESCE(max(feature_rank), -1) + 1 FROM cases WHERE featured) END,
+      updated_at = now()
+    WHERE id = ${id}
+    RETURNING *`;
   return rows.length ? toCase(rows[0]) : null;
+}
+
+/** 홈 노출 순서 저장 — ids 순서대로 0, 1, 2 … (홈 노출 중인 사례만 반영) */
+export async function setFeaturedOrder(ids: string[]): Promise<void> {
+  await ensureSchema();
+  const sql = getSql();
+  await sql.transaction(ids.map((id, i) => sql`UPDATE cases SET feature_rank = ${i} WHERE id = ${id} AND featured`));
 }
 
 /** 삭제 — 지운 사례를 돌려준다 (사진 정리용). 없으면 null */
@@ -140,7 +182,7 @@ export async function deleteCase(id: string): Promise<AdminCase | null> {
 /* ===================== 값 검사 ===================== */
 
 export const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const MAX_IMAGES = 20;
+const MAX_IMAGES = 5;
 
 function str(v: unknown, max: number): string {
   return typeof v === "string" ? v.trim().slice(0, max) : "";
@@ -176,10 +218,11 @@ export function parseCaseInput(body: unknown): { value: CaseInput } | { error: s
   const rawImages = Array.isArray(b.images) ? b.images : [];
   if (rawImages.length > MAX_IMAGES) return { error: `사진은 ${MAX_IMAGES}장까지 올릴 수 있습니다.` };
   const images: CaseImage[] = [];
-  for (const raw of rawImages as Record<string, unknown>[]) {
+  for (const [i, raw] of (rawImages as Record<string, unknown>[]).entries()) {
     const url = str(raw?.url, 1000);
     if (!isImageUrl(url)) return { error: "사진 주소가 올바르지 않습니다. 다시 올려 주세요." };
-    images.push({ url, alt: str(raw?.alt, 100) || title });
+    // 사진 설명은 관리자가 따로 넣지 않는다 — 비어 있으면 "현장 사진 n" (상세에서 "제목 — 현장 사진 n" 으로 읽힘)
+    images.push({ url, alt: str(raw?.alt, 100) || `현장 사진 ${i + 1}` });
   }
   if (images.length === 0) return { error: "사진을 1장 이상 올려 주세요." };
 

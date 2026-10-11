@@ -1,6 +1,6 @@
 import { revalidateTag } from "next/cache";
 import { denyUnlessAdmin } from "@/lib/adminAuth";
-import { CASES_TAG, createCase, listCases, parseCaseInput } from "@/lib/cases";
+import { canFeature, CASES_TAG, createCase, FEATURED_FULL_ERROR, listCases, parseCaseInput } from "@/lib/cases";
 
 /** GET /api/admin/cases — 전체 시공사례 (최신순) */
 export async function GET() {
@@ -15,6 +15,7 @@ export async function POST(req: Request) {
   if (denied) return denied;
   const parsed = parseCaseInput(await req.json().catch(() => null));
   if ("error" in parsed) return Response.json({ ok: false, error: parsed.error }, { status: 400 });
+  if (parsed.value.featured && !(await canFeature())) return Response.json({ ok: false, error: FEATURED_FULL_ERROR }, { status: 400 });
   const item = await createCase(parsed.value);
   revalidateTag(CASES_TAG, { expire: 0 });
   return Response.json({ ok: true, item }, { status: 201 });

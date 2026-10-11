@@ -11,10 +11,7 @@ export const metadata: Metadata = { title: "유입 관리" };
 export default function AdminTrafficPage() {
   return (
     <>
-      <PageHead
-        title="유입 관리"
-        desc="최근 30일 방문 기록입니다. 방문자는 기기당 하루 1명으로 셉니다. (본인 방문 제외: 사이트 주소 뒤에 ?notrack=1 을 붙여 한 번 접속)"
-      />
+      <PageHead title="유입 관리" />
       <TrafficManager />
     </>
   );

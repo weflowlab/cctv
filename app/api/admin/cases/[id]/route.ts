@@ -1,7 +1,16 @@
 import { revalidateTag } from "next/cache";
 import { denyUnlessAdmin } from "@/lib/adminAuth";
 import { removeBlobImages } from "@/lib/blob";
-import { CASES_TAG, deleteCase, getCaseById, parseCaseInput, setCaseFeatured, updateCase } from "@/lib/cases";
+import {
+  canFeature,
+  CASES_TAG,
+  deleteCase,
+  FEATURED_FULL_ERROR,
+  getCaseById,
+  parseCaseInput,
+  setCaseFeatured,
+  updateCase,
+} from "@/lib/cases";
 
 type Ctx = RouteContext<"/api/admin/cases/[id]">;
 
@@ -25,6 +34,8 @@ export async function PUT(req: Request, { params }: Ctx) {
 
   const before = await getCaseById(id);
   if (!before) return notFound();
+  if (parsed.value.featured && !before.featured && !(await canFeature(id)))
+    return Response.json({ ok: false, error: FEATURED_FULL_ERROR }, { status: 400 });
   const item = await updateCase(id, parsed.value);
   if (!item) return notFound();
   const kept = new Set(item.images.map((img) => img.url));
@@ -34,13 +45,15 @@ export async function PUT(req: Request, { params }: Ctx) {
   return Response.json({ ok: true, item });
 }
 
-/** PATCH /api/admin/cases/:id — { featured } 메인 노출만 토글 */
+/** PATCH /api/admin/cases/:id — { featured } 홈 노출만 토글 */
 export async function PATCH(req: Request, { params }: Ctx) {
   const denied = await denyUnlessAdmin();
   if (denied) return denied;
   const body = (await req.json().catch(() => ({}))) as { featured?: unknown };
   if (typeof body.featured !== "boolean") return Response.json({ ok: false, error: "잘못된 요청입니다." }, { status: 400 });
-  const item = await setCaseFeatured((await params).id, body.featured);
+  const { id } = await params;
+  if (body.featured && !(await canFeature(id))) return Response.json({ ok: false, error: FEATURED_FULL_ERROR }, { status: 400 });
+  const item = await setCaseFeatured(id, body.featured);
   if (!item) return notFound();
   revalidateTag(CASES_TAG, { expire: 0 });
   return Response.json({ ok: true, item });

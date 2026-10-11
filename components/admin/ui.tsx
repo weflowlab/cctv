@@ -7,7 +7,7 @@
  * - 기간 선택: PeriodSelect(프리셋 + 달력 범위) · periodRange · withinPeriod
  * - 색 변수는 app/admin/admin.css 의 .admin-root 에 정의
  */
-import { CalendarDays, ChevronDown } from "lucide-react";
+import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 /* ===================== API 호출 ===================== */
@@ -45,7 +45,7 @@ export function fmt(iso: string) {
 
 /** 페이지 머리 — 작은 라벨 + 큰 제목 + 설명, 오른쪽 액션 */
 export function PageHead({
-  eyebrow = "관리자",
+  eyebrow = "관리자 대시보드",
   title,
   desc,
   action,
@@ -96,7 +96,7 @@ export function StatCard({
     >
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.55rem" }}>
         <span style={{ width: 8, height: 8, borderRadius: 999, background: color === "navy" ? "var(--accent)" : "var(--point)", flexShrink: 0 }} />
-        <p className="emphasized" style={{ color: "var(--text-muted)", margin: 0, fontSize: "0.92rem" }}>
+        <p className="emphasized" style={{ color: "var(--text-secondary)", margin: 0, fontSize: "0.92rem" }}>
           {label}
         </p>
       </div>
@@ -503,6 +503,120 @@ export function PeriodSelect({ value, onChange }: { value: PeriodSel; onChange: 
                   확인
                 </button>
               </div>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ===================== 월 선택 (시공 시기) ===================== */
+
+/**
+ * 연·월 선택 — 브라우저 기본 달력 대신 기간 선택과 같은 모양의 팝오버
+ * value / onChange: "YYYY-MM". 이번 달 이후는 고를 수 없다 (시공이 끝난 사례만 등록)
+ */
+export function MonthPicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const [y, m] = value.split("-").map(Number);
+  const [viewY, setViewY] = useState(y);
+  // 이번 달 기준 (월이 바뀌면 다음 렌더에서 반영)
+  const now = new Date();
+  const curY = now.getFullYear();
+  const curM = now.getMonth() + 1;
+
+  const navBtn: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 30,
+    height: 30,
+    borderRadius: 8,
+    border: "1px solid var(--border)",
+    background: "var(--surface)",
+    color: "var(--text-secondary)",
+    cursor: "pointer",
+  };
+
+  return (
+    <div style={{ position: "relative" }}>
+      <button
+        type="button"
+        className="form-input"
+        onClick={() => {
+          setViewY(y);
+          setOpen((o) => !o);
+        }}
+        style={{ display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer", textAlign: "left" }}
+      >
+        <span>
+          {y}년 {m}월
+        </span>
+        <CalendarDays size={17} style={{ color: "var(--text-muted)" }} />
+      </button>
+
+      {open && (
+        <>
+          <div style={{ position: "fixed", inset: 0, zIndex: 80 }} onClick={() => setOpen(false)} />
+          <div
+            style={{
+              position: "absolute",
+              top: "calc(100% + 6px)",
+              left: 0,
+              zIndex: 81,
+              width: "min(300px, calc(100vw - 2.5rem))",
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+              borderRadius: 14,
+              padding: "0.9rem",
+              boxShadow: "0 16px 44px rgba(10, 45, 91, 0.14)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.75rem" }}>
+              <button type="button" style={navBtn} onClick={() => setViewY(viewY - 1)} aria-label="이전 해">
+                <ChevronLeft size={16} />
+              </button>
+              <strong style={{ fontSize: "1rem" }}>{viewY}년</strong>
+              <button
+                type="button"
+                style={{ ...navBtn, opacity: viewY >= curY ? 0.35 : 1 }}
+                disabled={viewY >= curY}
+                onClick={() => setViewY(viewY + 1)}
+                aria-label="다음 해"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0.4rem" }}>
+              {Array.from({ length: 12 }, (_, i) => i + 1).map((mm) => {
+                const selected = viewY === y && mm === m;
+                const future = viewY > curY || (viewY === curY && mm > curM);
+                return (
+                  <button
+                    key={mm}
+                    type="button"
+                    disabled={future}
+                    onClick={() => {
+                      onChange(`${viewY}-${pad(mm)}`);
+                      setOpen(false);
+                    }}
+                    style={{
+                      padding: "0.55rem 0",
+                      borderRadius: 8,
+                      border: `1px solid ${selected ? "var(--accent)" : "var(--border)"}`,
+                      background: selected ? "var(--accent)" : "var(--surface)",
+                      color: selected ? "#fff" : future ? "var(--text-muted)" : "var(--text)",
+                      opacity: future ? 0.4 : 1,
+                      fontWeight: selected ? 800 : 600,
+                      fontSize: "0.9rem",
+                      cursor: future ? "default" : "pointer",
+                    }}
+                  >
+                    {mm}월
+                  </button>
+                );
+              })}
             </div>
           </div>
         </>

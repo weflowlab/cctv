@@ -197,11 +197,14 @@ export default function FaqManager() {
                 >
                   <span style={{ width: 24, flexShrink: 0, fontSize: "0.8rem", fontWeight: 700, color: "var(--text-muted)" }}>{String(i + 1).padStart(2, "0")}</span>
                   <span
+                    // 분류 칩은 글자 수와 관계없이 같은 너비 (AS · 설치 · 렌탈 · 기타)
                     style={{
                       flexShrink: 0,
+                      width: 44,
+                      textAlign: "center",
                       fontSize: "0.78rem",
                       fontWeight: 700,
-                      padding: "0.15rem 0.55rem",
+                      padding: "0.15rem 0",
                       borderRadius: 6,
                       background: "var(--accent-light)",
                       color: "var(--accent)",
@@ -291,7 +294,6 @@ export default function FaqManager() {
         </ul>
       )}
 
-      {items.length > 0 && <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "0.9rem" }}>{actions}</div>}
     </div>
   );
 }

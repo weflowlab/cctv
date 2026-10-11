@@ -1,6 +1,7 @@
 /**
  * 홈 시공사례 섹션 — "전국 어디든 직접 방문해 시공합니다" (주장) → 지역명이 붙은 실제 현장 카드 (증거)
- * - 데이터: getCases() → pickFeatured(6) (DB — 관리자에서 "메인 노출" 체크한 사례 우선, 부족하면 최신순).
+ * - 데이터: getCases() → pickFeatured() (DB — 관리자에서 "메인 노출"로 고른 사례만, 정한 순서대로 최대 9개).
+ *   고른 사례가 없으면 섹션을 숨긴다.
  * - 카드: 대표 사진(첫 번째 사진) + 장소 칩(PLACES 이름) + 지역·대수 + 제목 → /cases/<id>.
  * - 레이아웃: 모바일은 가로 스와이프(CSS scroll-snap, 다음 카드가 살짝 보이게) / PC 는 3열 그리드.
  *   자동 넘김 없음 → Swiper 없이 서버 컴포넌트로 처리.
@@ -54,7 +55,8 @@ function CaseShowcaseCard({ item }: { item: CaseItem }) {
 }
 
 export default async function CaseShowcase() {
-  const cases = pickFeatured(await getCases(), 6);
+  const cases = pickFeatured(await getCases());
+  if (cases.length === 0) return null;
 
   return (
     // ===== 시공사례: 흰 배경 =====

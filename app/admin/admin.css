@@ -68,6 +68,18 @@
 }
 .admin-root .form-input:focus { border-color: var(--accent); }
 .admin-root textarea.form-input { resize: vertical; line-height: 1.6; }
+/* 드롭다운 — 브라우저 기본 모양 대신 입력칸과 같은 모양 + 오른쪽 꺾쇠 */
+.admin-root select.form-input {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  padding-right: 2.6rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238a94a6' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+}
+.admin-root select.form-input:hover,
+.admin-root button.form-input:hover { border-color: var(--outline); }
 
 /* --- 버튼 --- */
 .admin-root .btn-primary,

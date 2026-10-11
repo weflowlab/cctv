@@ -8,6 +8,9 @@
  */
 import type { PlaceSlug } from "@/lib/site";
 
+/** 홈에 노출할 수 있는 최대 사례 수 — 홈 시공사례가 PC 3열이라 3×3 (관리자 화면·서버 공통) */
+export const MAX_FEATURED = 9;
+
 export type CaseService = "install" | "rental" | "as" | "speaker";
 
 export type CaseImage = {
@@ -40,8 +43,10 @@ export type CaseItem = {
   images: CaseImage[];
   /** "2026-09" (표시용 문자열) */
   date: string;
-  /** 메인 노출 */
+  /** 메인(홈) 노출 */
   featured: boolean;
+  /** 홈 노출 순서 (작을수록 앞, 노출 안 하면 없음) — 관리자 > 시공사례 관리 > 홈 노출 순서 */
+  featuredOrder?: number | null;
 };
 
 /** 샘플 원본 — images 가 사진 설명 문자열 */

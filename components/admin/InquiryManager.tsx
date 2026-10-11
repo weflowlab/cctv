@@ -79,6 +79,16 @@ export function InquiryTable({
   onDelete: (id: string) => void;
   onSeeAll?: () => void;
 }) {
+  const exportButton = (
+    <button
+      type="button"
+      className="btn-outline"
+      style={{ borderRadius: "999px", padding: "0.45rem 1rem" }}
+      onClick={() => window.open("/api/admin/inquiries/export", "_blank")}
+    >
+      <Download size={15} /> 엑셀 다운로드
+    </button>
+  );
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const colSpan = 8;
   const bd = "1px solid var(--border-subtle)";
@@ -88,8 +98,9 @@ export function InquiryTable({
 
   return (
     <section>
+      {/* 표 머리 — (제목 · 전체 보기) 줄 아래 오른쪽에 엑셀 다운로드 (weflow 배치) */}
       {(title || onSeeAll) && (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.5rem" }}>
           {title && (
             <h2 className="title-3 emphasized" style={{ color: "var(--text)", margin: 0 }}>
               {title}
@@ -99,14 +110,15 @@ export function InquiryTable({
             <button
               type="button"
               onClick={onSeeAll}
-              className="semibold"
-              style={{ background: "none", border: "none", color: "var(--point-strong)", cursor: "pointer", padding: 0, marginLeft: "auto" }}
+              className="emphasized"
+              style={{ background: "none", border: "none", color: "#006b70", cursor: "pointer", padding: 0, marginLeft: "auto" }}
             >
               전체 보기 →
             </button>
           )}
         </div>
       )}
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>{exportButton}</div>
       <div style={{ overflowX: "auto", borderRadius: "16px", border: "1px solid var(--border)", background: "var(--surface)" }}>
         <table style={{ width: "100%", minWidth: "860px", borderCollapse: "separate", borderSpacing: 0, fontSize: "0.96rem", textAlign: "left" }}>
           <thead>
@@ -243,65 +255,72 @@ export function RefreshButton({ loading, onClick }: { loading: boolean; onClick:
   );
 }
 
+/* ===================== 요약 카드 · 도구줄 (전체 현황 · 문의 관리 공통) ===================== */
+
+/** 요약 카드 4장 — 전체 / 대기중 / 진행중 / 완료된 문의 (기간과 관계없이 전체 기준) */
+export function InquiryStats({ inquiries }: { inquiries: Inquiry[] }) {
+  const count = (s: InquiryStatus) => inquiries.filter((r) => r.status === s).length;
+  return (
+    <div className="stat-grid-4">
+      <StatCard label="전체 문의" value={inquiries.length} />
+      <StatCard label="대기중 문의" value={count("pending")} color="teal" />
+      <StatCard label="진행중 문의" value={count("in_progress")} />
+      <StatCard label="완료된 문의" value={count("done")} color="teal" />
+    </div>
+  );
+}
+
+/** 기간 · 상태 필터로 거른 목록 + 도구줄(왼쪽 기간·상태 칩 / 오른쪽 새로고침) */
+export function useInquiryFilter(inquiries: Inquiry[], initialPeriod: PeriodSel) {
+  const [filter, setFilter] = useState<Filter>("전체");
+  const [period, setPeriod] = useState<PeriodSel>(initialPeriod);
+  const inPeriod = withinPeriod(inquiries, period);
+  const rows = filter === "전체" ? inPeriod : inPeriod.filter((r) => STATUS_KO[r.status] === filter);
+
+  const toolbar = (loading: boolean, onRefresh: () => void) => (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
+        <PeriodSelect value={period} onChange={setPeriod} />
+        <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+          {FILTERS.map((f) => (
+            <button
+              key={f}
+              type="button"
+              onClick={() => setFilter(f)}
+              style={{
+                background: filter === f ? "var(--accent)" : "var(--surface)",
+                color: filter === f ? "var(--on-accent)" : "var(--text-secondary)",
+                border: `1px solid ${filter === f ? "var(--accent)" : "var(--border)"}`,
+                borderRadius: "999px",
+                padding: "0.45rem 1.1rem",
+                fontSize: "0.92rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                transition: "all 0.15s",
+              }}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+      </div>
+      <RefreshButton loading={loading} onClick={onRefresh} />
+    </div>
+  );
+
+  return { rows, toolbar };
+}
+
 /* ===================== /admin/inquiries ===================== */
 
 export default function InquiryManager() {
   const { inquiries, loading, error, load, updateStatus, remove } = useInquiries();
-  const [filter, setFilter] = useState<Filter>("전체");
-  const [period, setPeriod] = useState<PeriodSel>({ key: "all" });
-
-  const inPeriod = withinPeriod(inquiries, period);
-  const rows = filter === "전체" ? inPeriod : inPeriod.filter((r) => STATUS_KO[r.status] === filter);
-  const count = (s: InquiryStatus) => inPeriod.filter((r) => r.status === s).length;
+  const { rows, toolbar } = useInquiryFilter(inquiries, { key: "today" });
 
   return (
     <>
-      <div className="stat-grid-4">
-        <StatCard label="기간 내 문의" value={inPeriod.length} />
-        <StatCard label="대기" value={count("pending")} color="teal" />
-        <StatCard label="진행중" value={count("in_progress")} />
-        <StatCard label="완료" value={count("done")} color="teal" />
-      </div>
-
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
-          <PeriodSelect value={period} onChange={setPeriod} />
-          <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
-            {FILTERS.map((f) => (
-              <button
-                key={f}
-                type="button"
-                onClick={() => setFilter(f)}
-                style={{
-                  background: filter === f ? "var(--accent)" : "var(--surface)",
-                  color: filter === f ? "var(--on-accent)" : "var(--text-secondary)",
-                  border: `1px solid ${filter === f ? "var(--accent)" : "var(--border)"}`,
-                  borderRadius: "999px",
-                  padding: "0.45rem 1.1rem",
-                  fontSize: "0.92rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  transition: "all 0.15s",
-                }}
-              >
-                {f}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div style={{ display: "flex", gap: "0.5rem" }}>
-          <button
-            type="button"
-            className="btn-outline"
-            style={{ borderRadius: "999px", padding: "0.45rem 1rem" }}
-            onClick={() => window.open("/api/admin/inquiries/export", "_blank")}
-          >
-            <Download size={15} /> 엑셀 다운로드
-          </button>
-          <RefreshButton loading={loading} onClick={load} />
-        </div>
-      </div>
-
+      <InquiryStats inquiries={inquiries} />
+      {toolbar(loading, load)}
       {error && <p style={{ margin: 0, color: "var(--danger)" }}>{error}</p>}
       <InquiryTable rows={rows} loading={loading} onStatusChange={updateStatus} onDelete={remove} />
     </>

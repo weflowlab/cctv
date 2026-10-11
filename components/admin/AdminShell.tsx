@@ -14,7 +14,6 @@ import { SITE } from "@/lib/site";
 import { ADMIN_UNAUTHORIZED_EVENT } from "./ui";
 
 const MENUS = [
-  { href: "/admin", label: "전체 현황", exact: true },
   { href: "/admin/inquiries", label: "문의 관리" },
   { href: "/admin/cases", label: "시공사례 관리" },
   { href: "/admin/faq", label: "FAQ 관리" },
@@ -22,19 +21,32 @@ const MENUS = [
 ];
 
 function isActive(pathname: string, m: (typeof MENUS)[number]) {
-  return m.exact ? pathname === m.href : pathname === m.href || pathname.startsWith(`${m.href}/`);
+  return pathname === m.href || pathname.startsWith(`${m.href}/`);
 }
 
-/** 브랜드 표기 — 사이트 로고와 같은 "UNITECH CCTV" 2색 + 관리자 */
-function Brand({ small }: { small?: boolean }) {
+/**
+ * 브랜드 표기 — 사이트 로고와 같은 "UNITECH CCTV" 2색 + 관리자
+ * - stacked: "관리자"를 로고 아랫줄에 (PC 사이드바)
+ * - noLabel: "관리자" 글자 없이 (로그인 화면)
+ */
+function Brand({ small, noLabel, stacked }: { small?: boolean; noLabel?: boolean; stacked?: boolean }) {
   const [brand, ...rest] = SITE.nameEn.split(" ");
   return (
-    <Link href="/admin" style={{ display: "flex", alignItems: "baseline", gap: "0.5rem", textDecoration: "none" }}>
+    <Link
+      href="/admin/inquiries"
+      style={{
+        display: "flex",
+        flexDirection: stacked ? "column" : "row",
+        alignItems: stacked ? "flex-start" : "baseline",
+        gap: stacked ? "0.3rem" : "0.5rem",
+        textDecoration: "none",
+      }}
+    >
       <span style={{ fontWeight: 800, fontSize: small ? "1.1rem" : "1.3rem", letterSpacing: "0.02em", whiteSpace: "nowrap" }}>
         <span style={{ color: "var(--accent)" }}>{brand}</span>{" "}
         <span style={{ color: "var(--point)" }}>{rest.join(" ")}</span>
       </span>
-      <span style={{ color: "var(--text-muted)", fontSize: small ? "0.8rem" : "0.9rem", fontWeight: 600 }}>관리자</span>
+      {!noLabel && <span style={{ color: "var(--text-muted)", fontSize: small ? "0.8rem" : "0.9rem", fontWeight: 600 }}>관리자</span>}
     </Link>
   );
 }
@@ -137,7 +149,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         style={{ background: "var(--surface)", borderRight: "1px solid var(--border)", flexShrink: 0, display: "flex", flexDirection: "column" }}
       >
         <div style={{ padding: "1.75rem 1.4rem 0.5rem" }}>
-          <Brand />
+          <Brand stacked />
         </div>
         <nav style={{ padding: "1.1rem 0.85rem", display: "flex", flexDirection: "column", gap: "0.3rem", flex: 1 }}>
           {MENUS.map((m) => navButton(m, false))}
@@ -286,12 +298,12 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
       >
         <div style={{ textAlign: "center", marginBottom: "2rem" }}>
           <div style={{ display: "flex", justifyContent: "center", marginBottom: "0.9rem" }}>
-            <Brand />
+            <Brand noLabel />
           </div>
           <h1 className="emphasized" style={{ margin: "0 0 0.35rem", fontSize: "1.5rem" }}>
             관리자 로그인
           </h1>
-          <p style={{ color: "var(--text-muted)", margin: 0 }}>{SITE.name} 관리자 대시보드</p>
+          <p style={{ color: "var(--text-secondary)", margin: 0, fontWeight: 600 }}>{SITE.name} 관리자 대시보드</p>
         </div>
         <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           <div>
