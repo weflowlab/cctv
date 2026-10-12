@@ -4,11 +4,13 @@
  * 홈 히어로 슬라이더 (keeper HeroBanner 틀 + 신규 회사 카피)
  * - 투명 헤더 밑으로 깔리도록 음수 margin-top(헤더 높이만큼) 적용. 헤더 투명/흰색 전환은 HomeHeaderScroll 담당.
  * - 높이: 첫 화면을 꽉 채움(100svh — 모바일 주소창이 보일 때 기준이라 덜컥거리지 않음)
- *   · 모바일: 화면 아래 고정 상담 바(60px, FloatingContact) 위까지만 — 최소 560px
+ *   · 모바일: 화면 아래 고정 상담 바(60px, FloatingContact) 위까지 — 최소 560px.
+ *     바 높이보다 2px 덜 빼서 사진이 바 밑으로 2px 들어가게 한다 — 딱 맞추면 인앱 브라우저 등 일부 기종에서
+ *     계산 오차로 바 위에 얇은 흰 줄이 보였다. 2px 는 바에 덮여 화면 차이는 없다.
  *   · PC: 화면 전체 — 키가 낮은 화면에서도 카피·버튼이 잘리지 않게 최소 640px 배경은 슬라이드별 사진(스톡 CC0, next/image) + 어두운 그라데이션, 카피는 그 위에 표시.
- * - Swiper 옵션: loop, autoplay 5초(사용자 조작 후에도 계속), Pagination(clickable, 커스텀 원형 불릿).
- * - 점(불릿): PC 는 Swiper 페이지네이션(하단 고정). 모바일은 각 슬라이드 버튼 바로 아래에 직접 그린 점(SlideDots)
- *   — 버튼과 점 간격이 휴대폰 키와 상관없이 일정하고, 카피·버튼·점 묶음이 통째로 세로 가운데에 온다.
+ * - Swiper 옵션: loop, autoplay 5초(사용자 조작 후에도 계속).
+ * - 점(불릿): Swiper 페이지네이션 대신 각 슬라이드 버튼 바로 아래에 직접 그린 점(SlideDots, PC·모바일 공통)
+ *   — 버튼과 점 간격이 화면 높이와 상관없이 일정하고, 카피·버튼·점 묶음이 통째로 세로 가운데에 온다.
  * - 슬라이드 4장: 메인(내 공간 견적 계산하기 / 상담 신청하기) → 렌탈 → AS 수리 → CCTV+스피커.
  *   각 장 = 문제 공감(1줄) → 해결 약속(2줄, 강조) → 설명 → [견적 계산기(장마다 문구 다름)] [상담 신청하기].
  * - 초기화 전에는 opacity 0 → onBeforeInit 에서 1 로 페이드 인 (레이아웃 깜빡임 방지).
@@ -20,7 +22,7 @@ import Link from "next/link";
 import Eyebrow from "@/components/common/Eyebrow";
 import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination } from "swiper/modules";
+import { Autoplay } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import Image from "next/image";
@@ -97,16 +99,6 @@ const SLIDES: Slide[] = [
   },
 ];
 
-/** pagination 옵션: 커스텀 클래스의 div 불릿 (keeper 그대로) */
-const PAGINATION = {
-  clickable: true,
-  type: "bullets" as const,
-  bulletClass: "custom-bullet",
-  bulletActiveClass: "custom-bullet-active",
-  renderBullet: (_index: number, className: string) =>
-    `<div class="${className}"></div>`,
-};
-
 /**
  * 모바일 카피 묶음 위 여백 — 묶음은 (위 여백 ~ 아래 여백) 사이 세로 가운데에 놓인다.
  * 수상 배지가 있으면 헤더 + 배지(약 76px)까지 비워 둬야 "배지 아래 ~ 상담 바 위"의 가운데에 온다.
@@ -135,10 +127,10 @@ function SlideContent({ slide, idx, onGo }: { slide: Slide; idx: number; onGo?: 
       {/* 카피 가독성용 어두운 그라데이션 (모바일: 위→아래 / PC: 왼쪽→오른쪽) */}
       <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(12,11,9,0.85)_0%,rgba(12,11,9,0.55)_60%,rgba(12,11,9,0.3)_100%)] lg:bg-[linear-gradient(90deg,rgba(12,11,9,0.85)_0%,rgba(12,11,9,0.5)_55%,rgba(12,11,9,0.1)_100%)]" />
 
-      {/* ===== 카피 + 버튼 (+ 모바일 점): 모바일 가운데 정렬 / PC 1080px 안에서 왼쪽 정렬, 세로 가운데
+      {/* ===== 카피 + 버튼 + 점: 모바일 가운데 정렬 / PC 1080px 안에서 왼쪽 정렬, 세로 가운데
            위 여백(헤더 높이)만 있으면 아래로 처져 보여 아래 여백(pb)으로 살짝 끌어올림 ===== */}
       <div
-        className={`relative z-[2] flex w-full max-w-[1080px] flex-col items-center px-[16px] ${MOBILE_PT} pb-[44px] text-center text-white lg:items-start lg:px-0 lg:pt-[var(--header-height)] lg:pb-[96px] lg:text-left`}>
+        className={`relative z-[2] flex w-full max-w-[1080px] flex-col items-center px-[16px] ${MOBILE_PT} pb-[46px] text-center text-white lg:items-start lg:px-0 lg:pt-[var(--header-height)] lg:pb-[40px] lg:text-left`}>
         {/* 슬라이드 라벨: 공용 Eyebrow (틸 글자 + 짧은 라인, 모바일 가운데 / PC 왼쪽) */}
         {/* 라벨 ↔ 짧은 라인 간격을 라인 ↔ 메인 문구 간격과 같게 (모바일 14px / PC 24px) */}
         <Eyebrow dark korean align="left" className="mb-[14px] !gap-[14px] max-lg:items-center lg:mb-[24px] lg:!gap-[24px]">
@@ -175,17 +167,17 @@ function SlideContent({ slide, idx, onGo }: { slide: Slide; idx: number; onGo?: 
             );
           })}
         </div>
-        {/* 모바일 점 — 버튼 아래 50px 고정 간격 (PC 는 Swiper 페이지네이션) */}
+        {/* 슬라이드 점 — 버튼 아래 고정 간격 (모바일 50px 가운데 / PC 72px 왼쪽) */}
         <SlideDots active={idx} onGo={onGo} />
       </div>
     </div>
   );
 }
 
-/** 모바일 슬라이드 점 — 누르면 그 슬라이드로 (Swiper 준비 전 정적 화면에서는 표시만) */
+/** 슬라이드 점 — 누르면 그 슬라이드로 (Swiper 준비 전 정적 화면에서는 표시만) */
 function SlideDots({ active, onGo }: { active: number; onGo?: (i: number) => void }) {
   return (
-    <div className="mt-[50px] flex items-center justify-center gap-[8px] lg:hidden">
+    <div className="mt-[50px] flex items-center justify-center gap-[8px] lg:mt-[72px] lg:justify-start">
       {SLIDES.map((s, i) => (
         <button
           key={s.id}
@@ -239,29 +231,22 @@ export default function HeroSlider() {
     <section className="relative -mt-[var(--header-height-mobile)] w-full overflow-hidden bg-black lg:-mt-[var(--header-height)]">
       <div
         className={[
-          "relative h-[max(560px,calc(100svh-60px-env(safe-area-inset-bottom)))] lg:h-[max(640px,100svh)] w-full",
-          // Swiper 페이지네이션: PC 만 (하단 60px, 1080px 폭 안에서 왼쪽 정렬) — 모바일은 슬라이드 안 SlideDots
-          "max-lg:[&_.swiper-pagination]:hidden! [&_.swiper-pagination]:absolute [&_.swiper-pagination]:bottom-[60px] [&_.swiper-pagination]:left-1/2 [&_.swiper-pagination]:z-[2] [&_.swiper-pagination]:flex [&_.swiper-pagination]:-translate-x-1/2 [&_.swiper-pagination]:items-center [&_.swiper-pagination]:justify-center [&_.swiper-pagination]:gap-[8px]",
-          "lg:[&_.swiper-pagination]:bottom-[60px] lg:[&_.swiper-pagination]:w-[1080px] lg:[&_.swiper-pagination]:justify-start",
-          // 원형 불릿: 기본 테두리만, 활성 시 채움 (0.2s 전환)
-          "[&_.custom-bullet]:h-[10px] [&_.custom-bullet]:w-[10px] [&_.custom-bullet]:cursor-pointer [&_.custom-bullet]:rounded-full [&_.custom-bullet]:border [&_.custom-bullet]:border-white [&_.custom-bullet]:bg-transparent [&_.custom-bullet]:transition-all [&_.custom-bullet]:duration-200",
-          "[&_.custom-bullet-active]:bg-white!",
+          "relative h-[max(560px,calc(100svh-58px-env(safe-area-inset-bottom)))] w-full lg:h-[max(640px,100svh)]",
         ].join(" ")}
       >
         {/* 프리렌더/서버: 첫 슬라이드 정적 표시 → 브라우저: Swiper 슬라이더 */}
         {!isClient ? (
-          <div className="h-[max(560px,calc(100svh-60px-env(safe-area-inset-bottom)))] lg:h-[max(640px,100svh)]">
+          <div className="h-[max(560px,calc(100svh-58px-env(safe-area-inset-bottom)))] lg:h-[max(640px,100svh)]">
             <SlideContent slide={SLIDES[0]} idx={0} />
           </div>
         ) : (
           <Swiper
             style={{ opacity: ready ? 1 : 0, transition: "opacity 0.2s" }}
-            className="h-[max(560px,calc(100svh-60px-env(safe-area-inset-bottom)))] lg:h-[max(640px,100svh)]"
-            modules={[Pagination, Autoplay]}
+            className="h-[max(560px,calc(100svh-58px-env(safe-area-inset-bottom)))] lg:h-[max(640px,100svh)]"
+            modules={[Autoplay]}
             direction="horizontal"
             loop
             autoplay={{ delay: 5000, disableOnInteraction: false }}
-            pagination={PAGINATION}
             // 초기화 직전에 보이도록 전환
             onBeforeInit={() => setReady(true)}
             onSwiper={setSwiper}
