@@ -7,6 +7,8 @@
  *   · 모바일: 화면 아래 고정 상담 바(60px, FloatingContact) 위까지만 — 최소 560px
  *   · PC: 화면 전체 — 키가 낮은 화면에서도 카피·버튼이 잘리지 않게 최소 640px 배경은 슬라이드별 사진(스톡 CC0, next/image) + 어두운 그라데이션, 카피는 그 위에 표시.
  * - Swiper 옵션: loop, autoplay 5초(사용자 조작 후에도 계속), Pagination(clickable, 커스텀 원형 불릿).
+ * - 점(불릿): PC 는 Swiper 페이지네이션(하단 고정). 모바일은 각 슬라이드 버튼 바로 아래에 직접 그린 점(SlideDots)
+ *   — 버튼과 점 간격이 휴대폰 키와 상관없이 일정하고, 카피·버튼·점 묶음이 통째로 세로 가운데에 온다.
  * - 슬라이드 4장: 메인(내 공간 견적 계산하기 / 상담 신청하기) → 렌탈 → AS 수리 → CCTV+스피커.
  *   각 장 = 문제 공감(1줄) → 해결 약속(2줄, 강조) → 설명 → [견적 계산기(장마다 문구 다름)] [상담 신청하기].
  * - 초기화 전에는 opacity 0 → onBeforeInit 에서 1 로 페이드 인 (레이아웃 깜빡임 방지).
@@ -19,6 +21,7 @@ import Eyebrow from "@/components/common/Eyebrow";
 import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import Image from "next/image";
 import useIsClient from "@/components/common/useIsClient";
@@ -104,8 +107,14 @@ const PAGINATION = {
     `<div class="${className}"></div>`,
 };
 
+/**
+ * 모바일 카피 묶음 위 여백 — 묶음은 (위 여백 ~ 아래 여백) 사이 세로 가운데에 놓인다.
+ * 수상 배지가 있으면 헤더 + 배지(약 76px)까지 비워 둬야 "배지 아래 ~ 상담 바 위"의 가운데에 온다.
+ */
+const MOBILE_PT = LEGACY.award ? "pt-[calc(var(--header-height-mobile)+88px)]" : "pt-[calc(var(--header-height-mobile)+12px)]";
+
 /** 슬라이드 한 장의 내용 (배경 + 그라데이션 + 카피 + 버튼) */
-function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
+function SlideContent({ slide, idx, onGo }: { slide: Slide; idx: number; onGo?: (i: number) => void }) {
   // 첫 슬라이드 카피는 페이지의 h1, 나머지는 h2
   const Heading = idx === 0 ? "h1" : "h2";
   return (
@@ -126,11 +135,13 @@ function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
       {/* 카피 가독성용 어두운 그라데이션 (모바일: 위→아래 / PC: 왼쪽→오른쪽) */}
       <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(12,11,9,0.85)_0%,rgba(12,11,9,0.55)_60%,rgba(12,11,9,0.3)_100%)] lg:bg-[linear-gradient(90deg,rgba(12,11,9,0.85)_0%,rgba(12,11,9,0.5)_55%,rgba(12,11,9,0.1)_100%)]" />
 
-      {/* ===== 카피 + 버튼: 모바일 가운데 정렬 / PC 1080px 안에서 왼쪽 정렬
-           헤더 높이만큼 위 여백(pt, 모바일은 헤더 60px + 12px = 예전 72px 기준 위치 유지)만 있으면 덩어리가 아래로 처져 보여, 아래 여백(pb)을 줘 위로 끌어올림 ===== */}
-      <div className="relative z-[2] flex w-full max-w-[1080px] flex-col items-center px-[16px] pt-[calc(var(--header-height-mobile)+12px)] pb-[48px] text-center text-white lg:items-start lg:px-0 lg:pt-[var(--header-height)] lg:pb-[96px] lg:text-left">
+      {/* ===== 카피 + 버튼 (+ 모바일 점): 모바일 가운데 정렬 / PC 1080px 안에서 왼쪽 정렬, 세로 가운데
+           위 여백(헤더 높이)만 있으면 아래로 처져 보여 아래 여백(pb)으로 살짝 끌어올림 ===== */}
+      <div
+        className={`relative z-[2] flex w-full max-w-[1080px] flex-col items-center px-[16px] ${MOBILE_PT} pb-[44px] text-center text-white lg:items-start lg:px-0 lg:pt-[var(--header-height)] lg:pb-[96px] lg:text-left`}>
         {/* 슬라이드 라벨: 공용 Eyebrow (틸 글자 + 짧은 라인, 모바일 가운데 / PC 왼쪽) */}
-        <Eyebrow dark korean align="left" className="mb-[14px] max-lg:items-center lg:mb-[24px]">
+        {/* 라벨 ↔ 짧은 라인 간격을 라인 ↔ 메인 문구 간격과 같게 (모바일 14px / PC 24px) */}
+        <Eyebrow dark korean align="left" className="mb-[14px] !gap-[14px] max-lg:items-center lg:mb-[24px] lg:!gap-[24px]">
           {slide.eyebrow}
         </Eyebrow>
         <Heading className="break-keep text-[26px] font-bold leading-[1.4] tracking-[-1px] lg:text-[52px] lg:leading-[1.3] lg:tracking-[-2px]">
@@ -144,7 +155,7 @@ function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
           {slide.desc}
         </p>
         {/* 버튼 2개: 모바일은 짧은 문구로 가로 2칸 꽉 채움 / PC 는 긴 문구 + 화살표. 앞에 아이콘(계산기 / 체크 클립보드) */}
-        <div className="mt-[28px] grid w-full max-w-[360px] grid-cols-2 gap-[8px] lg:mt-[44px] lg:flex lg:w-auto lg:max-w-none lg:gap-[12px]">
+        <div className="mt-[36px] grid w-full max-w-[360px] grid-cols-2 gap-[8px] lg:mt-[44px] lg:flex lg:w-auto lg:max-w-none lg:gap-[12px]">
           {slide.buttons.map((btn, bIdx) => {
             const Icon = btn.icon === "calc" ? CalculatorIcon : ClipboardCheckIcon;
             return (
@@ -164,7 +175,29 @@ function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
             );
           })}
         </div>
+        {/* 모바일 점 — 버튼 아래 50px 고정 간격 (PC 는 Swiper 페이지네이션) */}
+        <SlideDots active={idx} onGo={onGo} />
       </div>
+    </div>
+  );
+}
+
+/** 모바일 슬라이드 점 — 누르면 그 슬라이드로 (Swiper 준비 전 정적 화면에서는 표시만) */
+function SlideDots({ active, onGo }: { active: number; onGo?: (i: number) => void }) {
+  return (
+    <div className="mt-[50px] flex items-center justify-center gap-[8px] lg:hidden">
+      {SLIDES.map((s, i) => (
+        <button
+          key={s.id}
+          type="button"
+          aria-label={`${i + 1}번째 슬라이드`}
+          aria-current={i === active}
+          onClick={() => onGo?.(i)}
+          className={`h-[10px] w-[10px] cursor-pointer rounded-full border border-white transition-colors duration-200 ${
+            i === active ? "bg-white" : "bg-transparent"
+          }`}
+        />
+      ))}
     </div>
   );
 }
@@ -199,6 +232,7 @@ export default function HeroSlider() {
   // Swiper 초기화 여부 → 컨테이너 페이드 인
   const [ready, setReady] = useState(false);
   const isClient = useIsClient();
+  const [swiper, setSwiper] = useState<SwiperType | null>(null);
 
   return (
     // ===== 히어로 섹션: 헤더 높이만큼 위로 당겨 투명 헤더 밑에 깔림 =====
@@ -206,8 +240,8 @@ export default function HeroSlider() {
       <div
         className={[
           "relative h-[max(560px,calc(100svh-60px-env(safe-area-inset-bottom)))] lg:h-[max(640px,100svh)] w-full",
-          // 페이지네이션 위치: 하단 80px(모바일, 가운데) / 60px(PC, 1080px 폭 안에서 왼쪽 정렬)
-          "[&_.swiper-pagination]:absolute [&_.swiper-pagination]:bottom-[80px] [&_.swiper-pagination]:left-1/2 [&_.swiper-pagination]:z-[2] [&_.swiper-pagination]:flex [&_.swiper-pagination]:-translate-x-1/2 [&_.swiper-pagination]:items-center [&_.swiper-pagination]:justify-center [&_.swiper-pagination]:gap-[8px]",
+          // Swiper 페이지네이션: PC 만 (하단 60px, 1080px 폭 안에서 왼쪽 정렬) — 모바일은 슬라이드 안 SlideDots
+          "max-lg:[&_.swiper-pagination]:hidden! [&_.swiper-pagination]:absolute [&_.swiper-pagination]:bottom-[60px] [&_.swiper-pagination]:left-1/2 [&_.swiper-pagination]:z-[2] [&_.swiper-pagination]:flex [&_.swiper-pagination]:-translate-x-1/2 [&_.swiper-pagination]:items-center [&_.swiper-pagination]:justify-center [&_.swiper-pagination]:gap-[8px]",
           "lg:[&_.swiper-pagination]:bottom-[60px] lg:[&_.swiper-pagination]:w-[1080px] lg:[&_.swiper-pagination]:justify-start",
           // 원형 불릿: 기본 테두리만, 활성 시 채움 (0.2s 전환)
           "[&_.custom-bullet]:h-[10px] [&_.custom-bullet]:w-[10px] [&_.custom-bullet]:cursor-pointer [&_.custom-bullet]:rounded-full [&_.custom-bullet]:border [&_.custom-bullet]:border-white [&_.custom-bullet]:bg-transparent [&_.custom-bullet]:transition-all [&_.custom-bullet]:duration-200",
@@ -230,11 +264,12 @@ export default function HeroSlider() {
             pagination={PAGINATION}
             // 초기화 직전에 보이도록 전환
             onBeforeInit={() => setReady(true)}
+            onSwiper={setSwiper}
           >
             {SLIDES.map((slide, idx) => {
               return (
                 <SwiperSlide key={slide.id} className="min-h-full">
-                  <SlideContent slide={slide} idx={idx} />
+                  <SlideContent slide={slide} idx={idx} onGo={(i) => swiper?.slideToLoop(i)} />
                 </SwiperSlide>
               );
             })}
