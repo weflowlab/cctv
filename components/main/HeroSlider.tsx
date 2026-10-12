@@ -3,7 +3,9 @@
 /**
  * 홈 히어로 슬라이더 (keeper HeroBanner 틀 + 신규 회사 카피)
  * - 투명 헤더 밑으로 깔리도록 음수 margin-top(헤더 높이만큼) 적용. 헤더 투명/흰색 전환은 HomeHeaderScroll 담당.
- * - 높이 640px(PC·모바일 동일), 배경은 슬라이드별 사진(스톡 CC0, next/image) + 어두운 그라데이션, 카피는 그 위에 표시.
+ * - 높이: 첫 화면을 꽉 채움(100svh — 모바일 주소창이 보일 때 기준이라 덜컥거리지 않음)
+ *   · 모바일: 화면 아래 고정 상담 바(60px, FloatingContact) 위까지만 — 최소 560px
+ *   · PC: 화면 전체 — 키가 낮은 화면에서도 카피·버튼이 잘리지 않게 최소 640px 배경은 슬라이드별 사진(스톡 CC0, next/image) + 어두운 그라데이션, 카피는 그 위에 표시.
  * - Swiper 옵션: loop, autoplay 5초(사용자 조작 후에도 계속), Pagination(clickable, 커스텀 원형 불릿).
  * - 슬라이드 4장: 메인(내 공간 견적 계산하기 / 상담 신청하기) → 렌탈 → AS 수리 → CCTV+스피커.
  *   각 장 = 문제 공감(1줄) → 해결 약속(2줄, 강조) → 설명 → [견적 계산기(장마다 문구 다름)] [상담 신청하기].
@@ -126,7 +128,7 @@ function SlideContent({ slide, idx }: { slide: Slide; idx: number }) {
 
       {/* ===== 카피 + 버튼: 모바일 가운데 정렬 / PC 1080px 안에서 왼쪽 정렬
            헤더 높이만큼 위 여백(pt, 모바일은 헤더 60px + 12px = 예전 72px 기준 위치 유지)만 있으면 덩어리가 아래로 처져 보여, 아래 여백(pb)을 줘 위로 끌어올림 ===== */}
-      <div className="relative z-[2] flex w-full max-w-[1080px] flex-col items-center px-[16px] pt-[calc(var(--header-height-mobile)+12px)] pb-[44px] text-center text-white lg:items-start lg:px-0 lg:pt-[var(--header-height)] lg:pb-[56px] lg:text-left">
+      <div className="relative z-[2] flex w-full max-w-[1080px] flex-col items-center px-[16px] pt-[calc(var(--header-height-mobile)+12px)] pb-[48px] text-center text-white lg:items-start lg:px-0 lg:pt-[var(--header-height)] lg:pb-[96px] lg:text-left">
         {/* 슬라이드 라벨: 공용 Eyebrow (틸 글자 + 짧은 라인, 모바일 가운데 / PC 왼쪽) */}
         <Eyebrow dark korean align="left" className="mb-[14px] max-lg:items-center lg:mb-[24px]">
           {slide.eyebrow}
@@ -203,7 +205,7 @@ export default function HeroSlider() {
     <section className="relative -mt-[var(--header-height-mobile)] w-full overflow-hidden bg-black lg:-mt-[var(--header-height)]">
       <div
         className={[
-          "relative h-[640px] w-full",
+          "relative h-[max(560px,calc(100svh-60px-env(safe-area-inset-bottom)))] lg:h-[max(640px,100svh)] w-full",
           // 페이지네이션 위치: 하단 80px(모바일, 가운데) / 60px(PC, 1080px 폭 안에서 왼쪽 정렬)
           "[&_.swiper-pagination]:absolute [&_.swiper-pagination]:bottom-[80px] [&_.swiper-pagination]:left-1/2 [&_.swiper-pagination]:z-[2] [&_.swiper-pagination]:flex [&_.swiper-pagination]:-translate-x-1/2 [&_.swiper-pagination]:items-center [&_.swiper-pagination]:justify-center [&_.swiper-pagination]:gap-[8px]",
           "lg:[&_.swiper-pagination]:bottom-[60px] lg:[&_.swiper-pagination]:w-[1080px] lg:[&_.swiper-pagination]:justify-start",
@@ -214,13 +216,13 @@ export default function HeroSlider() {
       >
         {/* 프리렌더/서버: 첫 슬라이드 정적 표시 → 브라우저: Swiper 슬라이더 */}
         {!isClient ? (
-          <div className="h-[640px]">
+          <div className="h-[max(560px,calc(100svh-60px-env(safe-area-inset-bottom)))] lg:h-[max(640px,100svh)]">
             <SlideContent slide={SLIDES[0]} idx={0} />
           </div>
         ) : (
           <Swiper
             style={{ opacity: ready ? 1 : 0, transition: "opacity 0.2s" }}
-            className="h-[640px]"
+            className="h-[max(560px,calc(100svh-60px-env(safe-area-inset-bottom)))] lg:h-[max(640px,100svh)]"
             modules={[Pagination, Autoplay]}
             direction="horizontal"
             loop
