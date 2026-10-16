@@ -1,7 +1,7 @@
 /**
  * 홈(메인) 전용 인라인 SVG 아이콘 모음
  * - 화살표/체크: keeper components/home/icons.tsx 에서 복사.
- * - 장소 아이콘(가정/매장/사무실/공장·창고/기관): 단순 라인 아이콘 (stroke=currentColor, 24x24).
+ * - 장소 아이콘(주택·빌라/상가·매장/사무실·빌딩/공장·축사/관공서·시설/건설·산업현장): 단순 라인 아이콘 (stroke=currentColor, 24x24).
  * - 스피커 혜택 아이콘(시간/비용/통합관리): 단순 라인 아이콘.
  * - 홈 "한눈에 보는" 장점 아이콘(설계/수리/스피커/구성품): 단순 라인 아이콘.
  */
@@ -97,12 +97,24 @@ export function OfficeIcon(props: IconProps) {
   );
 }
 
-/** 공장·창고 — 톱니 지붕 공장 */
+/** 공장·축사 — 톱니 지붕 공장 */
 export function FactoryIcon(props: IconProps) {
   return (
     <LineIcon {...props}>
       <path d="M3 21V10l5 3V10l5 3V10l5 3V4h3v17H3Z" />
       <path d="M7 17h2M11 17h2M15 17h2" />
+    </LineIcon>
+  );
+}
+
+/** 건설·산업현장 — 안전모 */
+export function ConstructionIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <path d="M4 17a8 8 0 0 1 16 0" />
+      <path d="M2 17h20v2.5H2z" />
+      <path d="M10 9V6h4v3" />
+      <path d="M12 9v4" />
     </LineIcon>
   );
 }

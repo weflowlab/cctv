@@ -42,7 +42,7 @@ export const QUESTIONS: Question[] = [
     short: "공간",
     label: "어떤 공간에 설치하시나요?",
     answers: PLACES.map((p) => ({ value: p.slug, label: p.name, desc: p.includes.join("·") })),
-    cols: "grid-cols-2 lg:grid-cols-5",
+    cols: "grid-cols-2 lg:grid-cols-3",
   },
   {
     key: "area",

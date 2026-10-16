@@ -20,7 +20,7 @@ export default async function CasesListLayout({ children }: LayoutProps<"/cases"
       {/* ===== 타이틀 띠: 라벨 + 제목("{장소} CCTV 시공사례", SEO) + 설명 + 요약 숫자 3개 ===== */}
       <CasesHero />
 
-      {/* ===== 장소 칩 바: 전체 / 가정 / 매장 / 사무실 / 공장·창고 / 기관 (페이지 이동, scroll={false}) ===== */}
+      {/* ===== 장소 칩 바: 전체 / 주택·빌라 / 상가·매장 / 사무실·빌딩 / 공장·축사 / 관공서·시설 / 건설·산업현장 (페이지 이동, scroll={false}) ===== */}
       <CasePlaceChips total={cases.length} counts={countByPlace(cases)} />
 
       {/* ===== 목록 콘텐츠 (page.tsx): 안내 문구 또는 장소 소개 + 카드 그리드 ===== */}

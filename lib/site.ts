@@ -48,13 +48,18 @@ export const LEGACY = {
   branches: false, // 전국 지사 7곳 (2026-10-10 사용자 요청으로 숨김)
 } as const;
 
-/** 장소 분류 (홈 아이콘 · 장소별 CCTV 칩 · 시공사례 필터 공통) */
+/**
+ * 장소 분류 (홈 장소 카드 · 시공사례 칩 · 견적 계산기 공통)
+ * - slug 는 주소(/cases/place/<slug>)와 DB(cases.place) 값이라 바꾸지 않는다. 이름만 바꿀 것.
+ * - 2026-10-16: 이름 변경(가정→주택·빌라 등) + 건설·산업현장(construction) 추가, 공사현장은 공장에서 이쪽으로
+ */
 export const PLACES = [
-  { slug: "home", name: "가정", includes: ["아파트", "주택"] },
-  { slug: "store", name: "매장", includes: ["음식점", "매장", "프랜차이즈", "병원"] },
-  { slug: "office", name: "사무실", includes: ["사무실", "빌딩"] },
-  { slug: "factory", name: "공장·창고", includes: ["기업공장", "창고", "공사현장", "축사"] },
-  { slug: "public", name: "기관", includes: ["관공서", "군사시설"] },
+  { slug: "home", name: "주택·빌라", includes: ["아파트", "주택", "빌라"] },
+  { slug: "store", name: "상가·매장", includes: ["음식점", "매장", "프랜차이즈", "병원"] },
+  { slug: "office", name: "사무실·빌딩", includes: ["사무실", "빌딩"] },
+  { slug: "factory", name: "공장·축사", includes: ["기업공장", "창고", "축사"] },
+  { slug: "public", name: "관공서·시설", includes: ["관공서", "공공시설", "군사시설"] },
+  { slug: "construction", name: "건설·산업현장", includes: ["공사현장", "산업현장"] },
 ] as const;
 
 export type PlaceSlug = (typeof PLACES)[number]["slug"];

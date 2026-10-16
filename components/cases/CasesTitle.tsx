@@ -5,7 +5,7 @@
  * - /cases            → "CCTV 시공사례"
  * - /cases/place/store → "매장 CCTV 시공사례" (장소별 검색 노출용으로 h1 에 장소명 포함)
  * - 레이아웃(params 를 읽지 않음)에 두기 위해 URL(usePathname)에서 직접 판단.
- *   5개 장소 주소는 빌드 때 미리 생성되므로 프리렌더 HTML 에도 장소명이 들어간 제목이 나간다.
+ *   장소 6개 주소는 빌드 때 미리 생성되므로 프리렌더 HTML 에도 장소명이 들어간 제목이 나간다.
  *   usePathname 이 확정되지 않는 경우(알 수 없는 주소)를 위해 Suspense 로 감싸고, 대기 중엔 "CCTV 시공사례".
  */
 import { usePathname } from "next/navigation";

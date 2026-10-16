@@ -3,7 +3,8 @@
  * - 출처: 기존 홈페이지 kkcctv.co.kr "장소별 CCTV" 페이지 (1.가정 / 2.매장 / 3.사무실 / 4.공장 / 5.기관 보안)
  * - 화면에는 heading + summary(원문을 2~3문장으로 요약)만 표시. paragraphs 는 원문 보존용(현재 미표시).
  * - 장소 slug/이름/포함 업종은 공통 상수 PLACES(@/lib/site) 를 사용하고, 여기에는 본문만 둔다.
- * - 공장·창고(factory) = 원본 '공장 보안', 기관(public) = 원본 '기관 보안'
+ * - 공장·축사(factory) = 원본 '공장 보안', 관공서·시설(public) = 원본 '기관 보안'
+ * - 건설·산업현장(construction) 은 원본에 없는 분류라 새로 썼다 (근거 없는 수치·약속은 넣지 않음)
  * - (구 components/places/data.ts — 장소별 CCTV 메뉴를 시공사례로 합치며 이동)
  */
 import type { PlaceSlug } from "@/lib/site";
@@ -19,7 +20,7 @@ export type PlaceContent = {
 
 export const PLACE_CONTENT: Record<PlaceSlug, PlaceContent> = {
   home: {
-    heading: "가정 보안",
+    heading: "주택·빌라 보안",
     summary:
       "따로 사시는 부모님 댁, 우리 집 현관 앞처럼 가족이 머무는 공간일수록 CCTV 가 든든한 방범 수단이 됩니다. 범죄자는 사전 답사 단계에서 CCTV 가 설치된 집을 피하기 마련입니다. 아파트·주택은 케이블 타공 위치가 가장 중요해, 현장을 보고 깔끔한 배선 경로부터 잡아 드립니다.",
     paragraphs: [
@@ -30,7 +31,7 @@ export const PLACE_CONTENT: Record<PlaceSlug, PlaceContent> = {
     ],
   },
   store: {
-    heading: "매장 보안",
+    heading: "상가·매장 보안",
     summary:
       "매장에서 사고나 분쟁이 생겼을 때 가장 확실한 근거는 녹화 영상입니다. 사각지대·저화질·늦은 대처로 손해 보는 일이 없도록 고화질로 빈틈없이 설치하고, 스마트폰으로 언제 어디서나 매장을 실시간 확인할 수 있게 해 드립니다.",
     paragraphs: [
@@ -41,7 +42,7 @@ export const PLACE_CONTENT: Record<PlaceSlug, PlaceContent> = {
     ],
   },
   office: {
-    heading: "사무실 보안",
+    heading: "사무실·빌딩 보안",
     summary:
       "사무실에는 보안이 필요한 자료와 장비가 많아 내부 모니터링이 필수입니다. PC·스마트폰으로 FHD 영상을 언제든 확인할 수 있고, 화재·도난에도 영상이 유실되지 않는 구성을 권해 드립니다. 정보유출·도난·화재 사고에 신속하게 대처할 수 있습니다.",
     paragraphs: [
@@ -53,7 +54,7 @@ export const PLACE_CONTENT: Record<PlaceSlug, PlaceContent> = {
     ],
   },
   factory: {
-    heading: "공장 보안",
+    heading: "공장·축사 보안",
     summary:
       "고가 자재와 택배 물량이 많은 공장·창고는 제대로 된 CCTV 가 꼭 필요합니다. 얼굴 식별이 가능한 고화질 카메라와 스마트폰 실시간·다시 보기로 24시간 외부 침입을 차단하고, 현장 관리 효율까지 높여 드립니다.",
     paragraphs: [
@@ -63,7 +64,7 @@ export const PLACE_CONTENT: Record<PlaceSlug, PlaceContent> = {
     ],
   },
   public: {
-    heading: "기관 보안",
+    heading: "관공서·시설 보안",
     summary:
       "관공서·공공시설은 보안 목적과 경비 구역에 맞춘 설치, 그리고 꾸준한 유지관리가 핵심입니다. 전문 인력의 신속한 설치와 AS 전담 인력의 관리로 장애 없이 운영하고, 초고화질 영상 보안과 출입통제로 중요 자료의 유출을 막습니다.",
     paragraphs: [
@@ -71,5 +72,11 @@ export const PLACE_CONTENT: Record<PlaceSlug, PlaceContent> = {
       "전문 인력을 통한 신속한 설치와 AS 전담 인력을 통한 꼼꼼한 관리 서비스를 제공하기 때문에 안정적인 유지관리를 할 수 있답니다.",
       "초고화질 영상 보안, 방범 서비스 및 출입통제 서비스를 통하여 정부 공공시설의 안전을 지키고, 중요 자료 및 기밀자료 등의 유출을 방지하는 관리 서비스를 제공합니다.",
     ],
+  },
+  construction: {
+    heading: "건설·산업현장 보안",
+    summary:
+      "자재와 장비가 밤새 쌓여 있는 공사현장·산업현장은 도난과 외부인 출입 관리가 중요합니다. 넓은 부지와 출입구, 자재 보관 구역을 놓치지 않게 카메라를 배치하고, 스마트폰으로 현장을 실시간 확인할 수 있게 해 드립니다. 공정에 따라 위치를 옮기는 증설·이전도 상담해 드립니다.",
+    paragraphs: [],
   },
 };

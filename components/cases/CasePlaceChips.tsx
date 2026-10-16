@@ -4,11 +4,11 @@
  * 시공사례 장소 칩 바 — 현재 장소는 URL(usePathname)에서 판단
  * - app/cases/(list)/layout.tsx 에서 params 없이 렌더 (칩 이동 시 즉시 보임 / Instant Navigation 대응).
  *   usePathname 미확정 시를 위해 Suspense 로 감싸고, 대기 중엔 선택 없는 칩 바를 보여준다.
- * - 칩: [전체 → /cases] + PLACES 5개 [→ /cases/place/<slug>] 를 Link 로 나열
+ * - 칩: [전체 → /cases] + PLACES 6개 [→ /cases/place/<slug>] 를 Link 로 나열
  *   · 선택 브랜드 네이비/흰 글자, 미선택 #F5F5F5/#888
  *   · scroll={false} 로 칩 이동 시 스크롤이 맨 위로 튀지 않게
  *   · 바 전체를 sticky(헤더 높이만큼 아래)로 고정, 모바일에서 넘치면 가로 스크롤(슬라이드)
- *   · 칩 안에 사례 건수("전체 11", "가정 2") — 서버(레이아웃)가 DB 에서 센 값을 counts 로 넘겨준다. 선택 칩에선 반투명 흰색 숫자.
+ *   · 칩 안에 사례 건수("전체 11", "주택·빌라 2") — 서버(레이아웃)가 DB 에서 센 값을 counts 로 넘겨준다. 선택 칩에선 반투명 흰색 숫자.
  *     건수 0 인 장소도 표시하되 흐리게(비활성처럼), 클릭은 가능(빈 상태 안내로 이동)
  */
 import Link from "next/link";
