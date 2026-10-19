@@ -2,7 +2,7 @@
  * /about (회사소개) 페이지 섹션 모음 — 서버 컴포넌트 (등장 애니메이션만 클라이언트 Reveal 로 감쌈)
  * - keeper /story 페이지(Why Keeper → 브랜드 철학 → "그리고 우리는 믿습니다") 의 레이아웃·수치를 따르고
  *   색만 브랜드 토큰(brand 네이비 / point 틸)으로 바꿈. 카피는 회사소개 스토리 카피(about_copy) 기준.
- * - 구성: ① 브랜드 스토리(문제 제기 → 네이비 배경 위 "하나로 묶기로 했습니다" → 만든 이유)
+ * - 구성: ① 브랜드 스토리("저렴한 게 전부일까요?" 문제 제기 → 네이비 배경 위 "기준을 먼저 세웠습니다" → 만든 이유)
  *         ② 브랜드 철학(Unite Technology / Responsibility / with You 3카드, 지그재그)
  *         ③ 마무리("우리는 고객의 현장을 지키는 사람들입니다." → 배경 위 "그리고 우리는 믿습니다.")
  *         ④ 강점 9가지(카드 그리드, Reveal 순차 등장)
@@ -121,7 +121,7 @@ function ImageBackdrop({
 }: {
   /** 실제 사진 확보 시 들어갈 사진 설명 (현재 스톡 사진의 alt 로 사용) */
   label: string;
-  /** 배경 사진 경로 — 스톡 사진(CC0): public/images/stock/*.webp — 실제 사진 확보 시 교체 */
+  /** 배경 사진 경로 — 스토리: 실제 시공 사진(public/images/site) / 마무리: 스톡 사진(public/images/stock) */
   photo: string;
   minHeightPc: string;
   children: ReactNode;
@@ -147,77 +147,82 @@ function ImageBackdrop({
 export function StorySection() {
   return (
     <section className="w-full">
-      {/* ===== 문제 제기: 뱃지 + "CCTV, 막상 달려고 하면 왜 이렇게 어려울까요?" + 3문단 / 문단 Reveal 순차 등장
-           주제: 브랜드 가이드 문구 "복잡한 보안은 쉽게, 사후관리는 확실하게" — 처음 CCTV를 알아보는 사람의 막막함에서 출발
-           (홈·AS 탭의 "고장 나면 연락 두절" 이야기와 겹치지 않게, 다른 업체를 깎아내리지 않는 실제 고민으로) ===== */}
+      {/* ===== 문제 제기: 뱃지 + "CCTV, 저렴한 게 전부일까요?" + 3문단 / 문단 Reveal 순차 등장
+           주제: "CCTV는 싸게 다는 게 전부가 아니다" — 견적서의 가격만 보고 고르면 정작 필요한 순간에 쓸모없을 수 있다는 이야기.
+           (특정 업체를 깎아내리지 않고, 고객이 실제로 겪는 상황으로. AS 탭의 "연락 두절" 문구와 겹치지 않게 표현 다르게) ===== */}
       <div className="flex flex-col items-center justify-center gap-[14px] px-[20px] pb-[120px] pt-[52px] lg:gap-[24px] lg:pb-[150px] lg:pt-[140px]">
         <Reveal>
           <SectionBadge>Brand Story</SectionBadge>
         </Reveal>
         <Reveal delay={100}>
           <Title as="h1">
-            <span>CCTV, 막상 달려고 하면</span> 왜 이렇게 어려울까요?
+            <span>CCTV, 저렴한 게</span> 전부일까요?
           </Title>
         </Reveal>
         <div className="flex flex-col items-center gap-[24px] lg:gap-[40px]">
           <Reveal delay={200}>
             <Body>
-              몇 대가 필요할까?
+              견적을 받아 보면
               <MoBr />
-              어디에 달아야 사각지대가 없을까?
+              가격이 제일 먼저 눈에 들어옵니다.
               <br />
-              200만 화소면 될까, 500만 화소가 필요할까?
+              몇만 원이라도 싼 곳이 좋아 보이는 건
+              <MoBr />
+              당연한 일이죠.
             </Body>
           </Reveal>
           <Reveal delay={300}>
             <Body>
-              렌탈이 나을지, 구매가 나을지.
+              그런데 설치하고 나서야 알게 됩니다.
               <br />
-              설치하고 나면 휴대폰으로는
+              녹화는 잘 되고 있는지, 밤에도 제대로 보이는지,
+              <br />
+              고장 나면 누가 와 주는지는
               <MoBr />
-              어떻게 보는 건지.
+              견적서에 적혀 있지 않았다는 걸.
             </Body>
           </Reveal>
           <Reveal delay={400}>
             <Body>
-              우리 공간을 지키려는 건데,
+              우리 공간을 지키려고 단 CCTV가
               <MoBr />
-              알아볼수록 고민만 늘어납니다.
+              정작 필요한 순간에 도움이 되지 않는다면,
+              <br />
+              그 가격은 결코 싼 게 아닙니다.
             </Body>
           </Reveal>
         </div>
       </div>
 
-      {/* ===== 네이비 배경(이미지 자리) 위 "그래서, 우리는 쉽게 만들기로 했습니다" + "그리고 알게 되었습니다" / PC min-height 826px ===== */}
+      {/* ===== 네이비 배경(이미지 자리) 위 "그래서, 우리는 기준을 먼저 세웠습니다" + "그리고 알게 되었습니다" / PC min-height 826px ===== */}
       <ImageBackdrop
-        label="벽면을 따라 정리된 배선 전선관과 분전함"
-        // 스톡 사진(CC0): public/images/stock/about-story-cable-conduits.webp — 실제 사진 확보 시 교체
-        // (원래 자리: 기사님이 현장에서 CCTV를 설치하는 모습)
-        photo="/images/stock/about-story-cable-conduits.webp"
+        label="기사 두 명이 사다리에 올라 아파트 주차장 천장에 CCTV를 설치하는 모습"
+        // 실제 시공 사진 (관리자 시공사례 — 대전 아파트): public/images/site/about-story-garage-install.webp
+        photo="/images/site/about-story-garage-install.webp"
         minHeightPc="lg:min-h-[826px]"
       >
         <Reveal>
           <Title tone="white">
-            <span>그래서, 우리는</span> 쉽게 만들기로 했습니다.
+            <span>그래서, 우리는</span> 기준을 먼저 세웠습니다.
           </Title>
         </Reveal>
         <div className="flex flex-col items-center gap-[24px] lg:gap-[40px]">
           <Reveal delay={100}>
             <Body tone="white">
-              어려운 용어 대신, 직접 와서 보고
+              현장에 맞지 않는 장비는 권하지 않고,
               <MoBr />
-              필요한 만큼만 설계하는 방식으로.
+              필요한 만큼만 정직하게 설계할 것.
               <br />
-              설치가 끝나면 휴대폰 연결과 사용법까지
+              설치한 사람이 끝까지 책임지고,
               <MoBr />
-              하나하나 알려 드리는 방식으로.
+              고장 나면 언제든 연락이 닿을 것.
             </Body>
           </Reveal>
           <Reveal delay={200}>
             <Body tone="white">
               <b>그리고 알게 되었습니다.</b>
               <br />
-              고객이 원하는 건 더 비싼 카메라가 아니라,
+              고객이 원하는 건 가장 싼 카메라가 아니라,
               <br />
               믿고 맡겨도 된다는 &lsquo;안심&rsquo;이라는 것을.
             </Body>
@@ -229,9 +234,9 @@ export function StorySection() {
       <div className="flex h-auto w-full flex-col items-center justify-center gap-[32px] bg-point-light px-[20px] py-[100px] lg:py-[200px]">
         <Reveal>
           <Body tone="soft" size="lg">
-            복잡한 보안은 쉽게,
+            저렴한 CCTV보다,
             <MoBr />
-            사후관리는 확실하게.
+            끝까지 믿을 수 있는 CCTV.
           </Body>
         </Reveal>
         <Reveal delay={150}>
@@ -269,10 +274,10 @@ export function PhilosophySection() {
         </Title>
       </Reveal>
       <Reveal delay={200} className="w-full">
-        {/* 스톡 사진(CC0): public/images/stock/install-hero-technician-wall.webp — 실제 시공팀 사진 확보 시 교체 */}
+        {/* 실제 시공 사진 (관리자 시공사례에서 고름): public/images/site/install-house-exterior.webp */}
         <div className="relative aspect-[1920/760] w-full overflow-hidden rounded-[4px] lg:rounded-[20px]">
           <Image
-            src="/images/stock/install-hero-technician-wall.webp"
+            src="/images/site/install-house-exterior.webp"
             alt={`${SITE.name} 시공 기사가 건물 벽에서 작업하는 모습`}
             fill
             sizes="(min-width: 1024px) 1082px, 100vw"
@@ -301,7 +306,7 @@ export function PhilosophySection() {
             // 카드: 배경 사진 위에 네이비 오버레이 + 큰 영문 "Unite ○○"
             const card = (
               <div className="relative flex h-[152px] w-full items-center justify-center overflow-hidden rounded-[12px] bg-brand lg:h-[244px] lg:rounded-[20px]">
-                {/* 스톡 사진(CC0): public/images/stock/about-*.webp (philosophy.tsx photo) — 실제 사진 확보 시 교체 */}
+                {/* 실제 시공 사진: public/images/site/about-*.webp (philosophy.tsx photo) */}
                 <Image
                   src={item.photo}
                   alt={item.photoAlt}
@@ -368,11 +373,11 @@ export function ClosingSection() {
           </Title>
         </Reveal>
         <Reveal delay={100} className="w-full">
-          {/* 스톡 사진(CC0): public/images/stock/as-urgent-check.webp — 실제 기사님 단체 사진 확보 시 교체 */}
+          {/* 실제 시공 사진 (관리자 시공사례에서 고름 — 기사님 여러 명이 실내 설치): public/images/site/team-indoor-install.webp */}
           <div className="relative aspect-[1081/450] w-full overflow-hidden rounded-[4px] lg:rounded-[20px]">
             <Image
-              src="/images/stock/as-urgent-check.webp"
-              alt="기사 두 명이 현장에서 장비를 점검하는 모습"
+              src="/images/site/team-indoor-install.webp"
+              alt="기사님들이 사다리에 올라 실내 천장에 CCTV를 설치하는 모습"
               fill
               sizes="(min-width: 1024px) 1082px, 100vw"
               className="object-cover"
@@ -387,9 +392,9 @@ export function ClosingSection() {
               관리해 온 사람들입니다.
               {/* TODO: 고객 확인 후 "○○년간 ○○건의 현장을…" 같은 실적 문장으로 교체 가능 */}
               <br />
-              수많은 현장에서 고객이 가장 어려워한 건 장비가 아니라,
+              수많은 현장에서 본 건, 가격만 보고 달았다가
               <br />
-              무엇을 골라야 할지 모르는 막막함이었습니다.
+              정작 필요할 때 쓰지 못하는 CCTV였습니다.
             </Body>
           </Reveal>
           <Reveal delay={300}>
@@ -406,8 +411,7 @@ export function ClosingSection() {
       <div className="w-full lg:pb-[200px]">
         <ImageBackdrop
           label="햇빛이 드는 밝고 깔끔한 사무 공간"
-          // 스톡 사진(CC0): public/images/stock/about-closing-bright-interior.webp — 실제 사진 확보 시 교체
-          // (원래 자리: 안심하고 일상을 보내는 고객의 공간)
+          // 스톡 사진(CC0): public/images/stock/about-closing-bright-interior.webp (실제 시공 사진으로 바꿔 봤으나 대표 요청으로 스톡 유지)
           photo="/images/stock/about-closing-bright-interior.webp"
           minHeightPc="lg:min-h-[407px]"
         >
@@ -416,7 +420,7 @@ export function ClosingSection() {
           </Reveal>
           <Reveal delay={150}>
             <Body tone="white">
-              고객이 안심해야, 우리가 존재할 이유가 생긴다고.
+              좋은 CCTV는 가격표가 아니라, 안심으로 증명된다고.
               <br />
               {SITE.name}는 현장에 꼭 맞는 설계, 끝까지 책임지는 시공,
               <br />

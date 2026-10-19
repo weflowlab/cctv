@@ -1,7 +1,7 @@
 /**
  * 신뢰 섹션 — 수상 내역 + 고객사 로고 그리드
  * - 상단: 한국브랜드 선호도 3년 연속 1위 수상 (메달 이미지 자리 + 원본 문구). PC 좌 메달 / 우 문구, 모바일 세로.
- * - 하단: "많은 기업이 {SITE.name}를 선택해 주셨습니다." + 고객사 로고 29개 그리드 (PC 5열 / 모바일 3열).
+ * - 하단: "많은 기업이 {SITE.name}를 선택해 주셨습니다." + 고객사 로고 30개 그리드 (PC 5열 / 모바일 3열).
  * - 기존 회사(대한민국CCTV) 자료 → 홈에서 LEGACY.award / LEGACY.clients 스위치로 각각 켜고 끔 (props showAward / showClients).
  * - 고객사 로고 이미지: public/images/clients/*.webp (기존 사이트 kkcctv.co.kr 홈에서 가져옴, 흰 배경 PNG 로 변환).
  */
@@ -9,37 +9,41 @@ import Image from "next/image";
 import Reveal from "@/components/common/Reveal";
 import { SITE } from "@/lib/site";
 
-/** 고객사 로고 (기존 사이트 화면 순서) — file: public/images/clients/<file>.webp */
+/**
+ * 고객사 로고 — file: public/images/clients/<file>.webp
+ * 순서: 기존 사이트 순서를 섞어, 공공기관과 기업이 번갈아 나오게 고정 (2026-10-19 요청)
+ */
 const CLIENTS = [
-  { name: "서울대학교", file: "snu" },
-  { name: "한국도로공사", file: "ex" },
-  { name: "POSTECH", file: "postech" },
   { name: "서울특별시", file: "seoul" },
   { name: "삼성화재", file: "samsung-fire" },
-  { name: "LX", file: "lx" },
-  { name: "강화군", file: "ganghwa" },
-  { name: "인천광역시", file: "incheon" },
-  { name: "SK D&D", file: "sk-dnd" },
-  { name: "서울교통공사", file: "seoul-metro" },
-  { name: "아워홈", file: "ourhome" },
-  { name: "부영그룹", file: "booyoung" },
-  { name: "대우조선해양건설", file: "dsc" },
-  { name: "경정·경륜", file: "kboat-kcycle" },
-  { name: "아주네트웍스", file: "aju-networks" },
-  { name: "로젠택배", file: "logen" },
-  { name: "김포경찰서", file: "gimpo-police" },
-  { name: "투썸플레이스", file: "twosome" },
-  { name: "심원", file: "simwon" },
-  { name: "F&F", file: "fnf" },
-  { name: "HL", file: "hl" },
-  { name: "디에스종합건설", file: "ds-construction" },
-  { name: "골프존파크", file: "golfzon-park" },
-  { name: "세림건설", file: "serim" },
+  { name: "한국도로공사", file: "ex" },
   { name: "LS전선", file: "ls-cable" },
+  { name: "서울대학교", file: "snu" },
+  { name: "투썸플레이스", file: "twosome" },
+  { name: "인천광역시", file: "incheon" },
   { name: "IBK기업은행", file: "ibk" },
-  { name: "빽다방", file: "paiks-coffee" },
-  { name: "한성기업", file: "hansung" },
+  { name: "서울교통공사", file: "seoul-metro" },
+  { name: "SK D&D", file: "sk-dnd" },
+  { name: "POSTECH", file: "postech" },
+  { name: "아워홈", file: "ourhome" },
+  { name: "김포경찰서", file: "gimpo-police" },
+  { name: "부영그룹", file: "booyoung" },
+  { name: "LX", file: "lx" },
+  { name: "골프존파크", file: "golfzon-park" },
+  { name: "강화군", file: "ganghwa" },
+  { name: "F&F", file: "fnf" },
   { name: "인천항시설관리센터", file: "ipfc" },
+  { name: "로젠택배", file: "logen" },
+  { name: "경정·경륜", file: "kboat-kcycle" },
+  { name: "HL", file: "hl" },
+  { name: "대우조선해양건설", file: "dsc" },
+  { name: "빽다방", file: "paiks-coffee" },
+  { name: "아주네트웍스", file: "aju-networks" },
+  { name: "디에스종합건설", file: "ds-construction" },
+  { name: "한성기업", file: "hansung" },
+  { name: "세림건설", file: "serim" },
+  { name: "심원", file: "simwon" },
+  { name: "한국철도기술연구원", file: "krri" }, // 2026-10-19 추가 (고객 제공 로고)
 ];
 
 export default function TrustSection({

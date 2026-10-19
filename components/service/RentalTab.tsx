@@ -13,15 +13,15 @@ import { RENTAL_BENEFITS, RENTAL_PARTNERS } from "./data";
 import { CrossLink, SectionHeading, SpaceOrBreak } from "./ui";
 import Eyebrow from "@/components/common/Eyebrow";
 
-/** 렌탈 혜택 7가지 카드 사진 (RENTAL_BENEFITS 순서와 동일) — 스톡 사진(CC0), 실제 사진 확보 시 교체 */
+/** 렌탈 혜택 7가지 카드 사진 (RENTAL_BENEFITS 순서와 동일) — 혜택 1~4 는 스톡 사진(CC0), 5·6·7 은 실제 시공 사진 */
 const BENEFIT_PHOTOS = [
-  { src: "/images/stock/rental-benefit1-coins.webp", alt: "테이블 위에 쌓인 동전" }, // 설치비/가입비/보증료 면제
-  { src: "/images/stock/rental-benefit2-handshake.webp", alt: "악수를 청하며 손을 내민 정장 차림의 남성" }, // 소유권 이전
-  { src: "/images/stock/rental-benefit3-toolkit.webp", alt: "나무 바닥 위에 가지런히 놓인 공구들" }, // A/S 서비스
-  { src: "/images/stock/rental-benefit4-dome-camera.webp", alt: "무늬 천장에 설치된 돔형 카메라" }, // 국내 인증 제품
-  { src: "/images/stock/rental-benefit5-bullet-cameras.webp", alt: "기둥에 나란히 설치된 CCTV 카메라 두 대" }, // FULL HD 카메라
-  { src: "/images/stock/rental-benefit6-smartphone.webp", alt: "커피 옆에서 두 손으로 스마트폰을 보는 모습" }, // 전용 앱 모니터링
-  { src: "/images/stock/rental-benefit7-control-room.webp", alt: "여러 화면이 걸린 밝은 관제실" }, // 24시간 영상 확인
+  { src: "/images/stock/rental-benefit1-coins.webp", alt: "테이블 위에 쌓인 동전" }, // 설치비/가입비/보증료 면제 (스톡)
+  { src: "/images/stock/rental-benefit2-handshake.webp", alt: "악수를 청하며 손을 내민 정장 차림의 남성" }, // 소유권 이전 (스톡)
+  { src: "/images/stock/rental-benefit3-toolkit.webp", alt: "나무 바닥 위에 가지런히 놓인 공구들" }, // A/S 서비스 (스톡)
+  { src: "/images/stock/rental-benefit4-dome-camera.webp", alt: "무늬 천장에 설치된 돔형 카메라" }, // 국내 인증 제품 (스톡)
+  { src: "/images/site/rental-benefit5-ptz-dome.webp", alt: "항구에 설치된 고급형 PTZ 돔 카메라" }, // FULL HD 최고급형 카메라 (평택항)
+  { src: "/images/site/rental-benefit6-phone-app.webp", alt: "스마트폰 앱으로 매장 CCTV 화면을 보는 모습" }, // 전용 앱 모니터링 (안산 매장)
+  { src: "/images/site/monitor-wall.webp", alt: "벽에 걸린 여러 대의 CCTV 모니터" }, // 24시간 영상 확인 (남양주 빌딩)
 ];
 
 export default function RentalTab() {
@@ -43,11 +43,11 @@ export default function RentalTab() {
               목돈 부담 없이 설치하세요.
             </p>
           </div>
-          {/* 스톡 사진(CC0): public/images/stock/rental-hero-white-wall-camera.webp — 실제 사진 확보 시 교체 */}
+          {/* 실제 시공 사진 (관리자 시공사례 — 오산 물류창고): public/images/site/rental-hero-dome-closeup.webp */}
           <div className="relative aspect-[4/3] w-full max-w-[480px] shrink-0 overflow-hidden rounded-[20px] lg:w-[480px]">
             <Image
-              src="/images/stock/rental-hero-white-wall-camera.webp"
-              alt="밝은 흰 벽에 설치된 CCTV 카메라"
+              src="/images/site/rental-hero-dome-closeup.webp"
+              alt="흰 벽에 설치된 돔형 CCTV 카메라 클로즈업"
               fill
               sizes="(min-width: 512px) 480px, 100vw"
               className="object-cover"
@@ -68,7 +68,7 @@ export default function RentalTab() {
                 delay={(i < 3 ? i : i - 3) * 120}
                 className={`overflow-hidden rounded-[14px] bg-[#f6f7fa] ${i === 0 ? "col-span-2 lg:col-span-4" : i < 3 ? "lg:col-span-4" : "lg:col-span-3"}`}
               >
-                {/* 스톡 사진(CC0): public/images/stock/rental-benefit{1~7}-*.webp — 실제 사진 확보 시 교체 */}
+                {/* 사진: BENEFIT_PHOTOS (혜택 1~4 스톡 / 5·6·7 실제 시공 사진 public/images/site/rental-*.webp) */}
                 {/* 혜택 1(첫 카드)은 모바일에서 2칸 큰 카드 → 사진 비율을 가로로 넓게 (AS 탭 솔루션 섹션과 같은 방식) */}
                 <div className={`relative w-full ${i === 0 ? "aspect-[16/9] lg:aspect-[4/3]" : "aspect-[4/3]"}`}>
                   <Image

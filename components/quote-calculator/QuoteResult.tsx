@@ -100,7 +100,14 @@ export default function QuoteResult({ data, recommended, onReset }: Props) {
                 <span className={unitCls}>원</span>
               </p>
               <p className="mt-[8px] w-fit rounded-[40px] bg-brand-light px-[12px] py-[4px] text-[13px] font-bold tracking-[-0.26px] text-point-strong lg:text-[15px]">
-                타사 렌탈 대비 매월 <AnimatedWon value={rental.other - rental.ours} />원 절약
+                {/* 타사보다 싸지 않은 대수는 절약 대신 소유권 안내 */}
+                {rental.other > rental.ours ? (
+                  <>
+                    타사 렌탈 대비 매월 <AnimatedWon value={rental.other - rental.ours} />원 절약
+                  </>
+                ) : (
+                  "36개월 납부 후 장비가 내 것이 됩니다"
+                )}
               </p>
               <div className="flex-1" />
               <Link href={buildContactHref({ ...query, service: "rental" })} className={`${btnCls} bg-brand text-white hover:bg-brand-strong`}>

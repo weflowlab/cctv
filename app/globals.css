@@ -150,7 +150,7 @@ img {
    같은 트랙을 2번(원본 + aria-hidden 복제) 이어 붙이고 -100% 이동 → 끊김 없이 반복.
    (CSS 모듈은 이 프로젝트 설정(next.config 의 *.css → Tailwind 로더)에서 클래스 이름이 연결되지 않아 전역 클래스로 둠)
    · .marquee-left / .marquee-right : 홈 제휴 제조사 로고 2줄 (PC 50초 / 모바일 35초)
-   · .review-row / .review-track    : 홈 카카오톡 후기 (PC 60초 / 모바일 40초, 호버·포커스·터치 시 멈춤) */
+   · .review-row / .review-track    : 홈 카카오톡 후기 2줄 반대 방향 (PC 220초 / 모바일 140초, 호버·포커스·터치 시 멈춤) */
 @keyframes marqueeLeft {
   0% { transform: translateX(0); }
   100% { transform: translateX(-100%); }
@@ -161,7 +161,7 @@ img {
 }
 .marquee-left { will-change: transform; animation: marqueeLeft 50s linear infinite; }
 .marquee-right { will-change: transform; animation: marqueeRight 50s linear infinite; }
-.review-track { will-change: transform; animation: marqueeLeft 60s linear infinite; }
+.review-track { will-change: transform; animation: marqueeLeft 220s linear infinite; } /* 한 줄 14장 기준 — 장수가 바뀌면 속도도 맞출 것. 방향(좌/우)은 Reviews.tsx 에서 줄마다 지정 */
 /* 마우스 기기: 호버 동안 멈춤 / 키보드: 포커스 동안 멈춤 / 터치: 손대는 동안 + 뗀 뒤 잠깐(.is-paused, Reviews.tsx) 멈췄다가 다시 흐름
    (터치 기기에서 :hover 를 쓰면 한 번 누른 뒤 hover 상태가 남아 계속 멈춰 있으므로 hover 기기로 한정) */
 @media (hover: hover) {
@@ -171,7 +171,7 @@ img {
 .review-row.is-paused .review-track { animation-play-state: paused; }
 @media screen and (max-width: 1023px) {
   .marquee-left, .marquee-right { animation-duration: 35s; }
-  .review-track { animation-duration: 40s; }
+  .review-track { animation-duration: 140s; }
 }
 
 /* 모션 최소화 설정 사용자는 애니메이션 생략 */

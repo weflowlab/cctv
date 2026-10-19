@@ -8,7 +8,7 @@
  *   · 선택 브랜드 네이비/흰 글자, 미선택 #F5F5F5/#888
  *   · scroll={false} 로 칩 이동 시 스크롤이 맨 위로 튀지 않게
  *   · 바 전체를 sticky(헤더 높이만큼 아래)로 고정, 모바일에서 넘치면 가로 스크롤(슬라이드)
- *   · 칩 안에 사례 건수("전체 11", "주택·빌라 2") — 서버(레이아웃)가 DB 에서 센 값을 counts 로 넘겨준다. 선택 칩에선 반투명 흰색 숫자.
+ *   · 칩에 건수 숫자는 표시하지 않는다 (2026-10-19 요청). counts 는 사례가 없는 장소 칩을 흐리게 하는 데만 쓴다.
  *     건수 0 인 장소도 표시하되 흐리게(비활성처럼), 클릭은 가능(빈 상태 안내로 이동)
  */
 import Link from "next/link";
@@ -69,16 +69,6 @@ function ChipsBar({ chips, current }: { chips: Chip[]; current: Current }) {
                 }`}
               >
                 {chip.name}
-                {/* 건수: 작은 숫자 (선택 칩은 반투명 흰색) */}
-                <span
-                  className={`text-[12px] font-semibold tabular-nums lg:text-[13px] ${
-                    selected ? "text-white/60" : empty ? "text-[#ccc]" : "text-[#aaa]"
-                  }`}
-                >
-                  <span className="sr-only">(</span>
-                  {chip.count}
-                  <span className="sr-only">건)</span>
-                </span>
               </Link>
             </li>
           );

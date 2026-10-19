@@ -75,11 +75,11 @@ export default function ServiceCards() {
             <span className={`${BUTTON} bg-point`}>
               <ArrowRightIcon className={ARROW} />
             </span>
-            {/* 스톡 사진(CC0): public/images/stock/card-install-dome-camera.webp — 실제 사진 확보 시 교체 */}
+            {/* 실제 시공 사진 (관리자 시공사례 — 고양시 일산 마트): public/images/site/card-install-mart-ladder.webp */}
             <div className="absolute bottom-[-20px] left-0 h-[200px] w-full overflow-hidden lg:bottom-0 lg:h-[320px]">
               <Image
-                src="/images/stock/card-install-dome-camera.webp"
-                alt="천장에 설치된 돔형 CCTV 카메라"
+                src="/images/site/card-install-mart-ladder.webp"
+                alt="기사가 사다리에 올라 마트 천장에 CCTV를 설치하는 모습"
                 fill
                 sizes="(min-width: 1024px) 528px, (min-width: 480px) 480px, 100vw"
                 className="object-cover"
@@ -137,10 +137,10 @@ export default function ServiceCards() {
             <span className={`${BUTTON} bg-black/[0.68]`}>
               <ArrowRightIcon className={ARROW} />
             </span>
-            {/* 스톡 사진(CC0): public/images/stock/card-rental-rooftop-camera.webp — 실제 사진 확보 시 교체 */}
+            {/* 실제 시공 사진 (관리자 시공사례 — 대부도 펜션): public/images/site/card-rental-green-wall-sky.webp */}
             <Image
-              src="/images/stock/card-rental-rooftop-camera.webp"
-              alt="파란 하늘 아래 건물 옥상에 설치된 CCTV 카메라"
+              src="/images/site/card-rental-green-wall-sky.webp"
+              alt="파란 하늘 아래 펜션 외벽 모서리에 설치된 CCTV 카메라"
               fill
               sizes="(min-width: 1024px) 528px, (min-width: 480px) 480px, 100vw"
               className="z-0 object-cover"

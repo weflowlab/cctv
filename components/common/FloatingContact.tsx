@@ -5,7 +5,7 @@
  * - PC: 오른쪽 아래 플로팅 원형 버튼 (60px, 오른쪽 32px · 아래 40px)
  *   세로 배치(위→아래): 전화 상담(tel) / 카카오톡 상담(노란 #FEE500, 새 탭) / 문의하기(/contact).
  *   문의폼이 메인 전환 경로라 맨 아래에 브랜드색으로 강조. 호버 시 버튼 왼쪽에 라벨 툴팁.
- * - 모바일: 플로팅 대신 화면 하단 고정 바 [전화 상담 | 무료 상담 신청(브랜드색)] — 카톡은 PC 플로팅에만
+ * - 모바일: 플로팅 대신 화면 하단 고정 바 [바로 전화 | 문의하기(브랜드색)] — 카톡은 PC 플로팅에만
  *   바가 푸터 마지막 줄을 가리지 않도록 같은 높이의 빈 공간을 문서 끝에 둔다.
  * - 눈에 띄게: 전화 → 카톡 → 문의 순서로 차례차례 가볍게 흔들림 반복 (globals.css .fc-shake, 호버 시 멈춤, 모션 최소화 설정 시 생략)
  * - 문의 페이지(/contact)에서는 문의하기 버튼을 숨긴다.
@@ -68,7 +68,7 @@ export default function FloatingContact() {
         {/* 전화 상담: 흰 원 + 브랜드색 수화기 */}
         <a
           href={SITE.phoneHref}
-          aria-label="전화 상담"
+          aria-label="바로 전화"
           className={btn}
         >
           <span className={`${face} border border-[#e5e5e5] bg-white`} style={{ animationDelay: SHAKE_DELAY[0] }}>
@@ -122,7 +122,7 @@ export default function FloatingContact() {
           <span className="fc-shake flex" style={{ animationDelay: SHAKE_DELAY[0] }}>
             <PhoneIcon className="h-[22px] w-[22px] fill-brand stroke-brand" />
           </span>
-          전화 상담
+          바로 전화
         </a>
         {!onContactPage && (
           <Link
@@ -132,7 +132,7 @@ export default function FloatingContact() {
             <span className="fc-shake flex" style={{ animationDelay: SHAKE_DELAY[1] }}>
               <FormIcon className="h-[24px] w-[24px]" />
             </span>
-            무료 상담 신청
+            문의하기
           </Link>
         )}
       </nav>

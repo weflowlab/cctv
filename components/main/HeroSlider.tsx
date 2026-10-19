@@ -43,7 +43,7 @@ type Slide = {
   buttons: { label: string; short: string; href: string; icon: "calc" | "consult" }[];
   /** 배경 이미지 자리 설명 (원래 넣을 실제 사진) */
   bg: string;
-  /** 배경 사진 — 스톡 사진(CC0): public/images/stock/*.webp — 실제 사진 확보 시 교체 */
+  /** 배경 사진 — 스톡 사진(CC0): public/images/stock/*.webp (실제 시공 사진으로 바꿔 봤으나 대표 요청으로 스톡 유지) */
   img: string;
   /** 배경 사진 대체 텍스트 */
   alt: string;
@@ -111,7 +111,7 @@ function SlideContent({ slide, idx, onGo }: { slide: Slide; idx: number; onGo?: 
   const Heading = idx === 0 ? "h1" : "h2";
   return (
     <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
-      {/* 배경 사진 — 스톡 사진(CC0): public/images/stock/hero-*.webp — 실제 사진 확보 시 교체
+      {/* 배경 사진 — 스톡 사진(CC0): public/images/stock/hero-*.webp
           첫 슬라이드는 첫 화면(LCP)이라 preload.
           나머지도 5초 자동 넘김으로 곧바로 첫 화면에 나와 LCP 로 잡히므로 lazy 대신 eager
           (preload 와 loading 은 같이 쓰지 않음 — Next 문서 권장) */}

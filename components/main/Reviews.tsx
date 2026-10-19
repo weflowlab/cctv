@@ -3,11 +3,11 @@
 /**
  * 카카오톡 후기 섹션 — 고객이 대표에게 직접 보낸 카카오톡 대화 캡처 캐러셀
  * - 텍스트 후기(별점·이름·날짜) 대신 실제 대화 캡처 이미지를 보여 준다.
- * - 이미지: 고객이 보내 줄 캡처 약 10장 (2026-10-12 전달 예정).
- *   지금은 1차 시안용 예시 캡처 1장(public/images/reviews/sample-01.webp)을 10칸에 반복.
- *   TODO(오픈 전 필수): 실제 고객 후기 캡처로 src·width·height 교체 — 예시 캡처는 업무 대화라 실제 후기가 아님.
+ * - 이미지: 대표님이 전달한 고객 카카오톡 후기 캡처 27장 (2026-10-19, public/images/reviews/review-01~27.webp)
+ *   원본(가로 797px)의 아래쪽 빈 대화 공간은 잘라냈다. 원본 파일은 저장소 밖(카톡후기 폴더)에 보관.
  * - 카드는 캡처 원본 비율 그대로(잘림 없음), 띠는 화면 끝까지 꽉 차게(좌우 페이드 없음).
- * - 카드: 캡처 원본 비율. 왼쪽으로 끝없이 흐르는 띠(무한 루프, globals.css 의 .review-row / .review-track)
+ *   캡처가 가로로 넓어 카드 폭을 모바일 260px / PC 400px 로 (글자가 너무 작아지지 않게).
+ * - 카드: 캡처 원본 비율. 2줄로 나눠 윗줄은 왼쪽, 아랫줄은 오른쪽으로 끝없이 흐르는 띠(globals.css 의 .review-row / .review-track)
  *   같은 카드 묶음을 2번(원본 + aria-hidden 복제) 이어 붙여 끊김 없이 반복. 마우스를 올리거나 포커스가 들어오면 멈춤.
  *   이전/다음 버튼 없음.
  * - 카드 클릭 → 라이트박스(크게 보기): ESC·배경 클릭·닫기 버튼으로 닫기, 좌우 버튼·방향키로 이동, 열린 동안 배경 스크롤 잠금.
@@ -18,13 +18,36 @@ import Eyebrow from "@/components/common/Eyebrow";
 import Reveal from "@/components/common/Reveal";
 import { ArrowLeftIcon, ArrowRightIcon } from "./icons";
 
-/** 카카오톡 후기 캡처 10장 — 지금은 예시 캡처 반복 */
-const REVIEW_SHOTS = Array.from({ length: 10 }, (_, i) => ({
-  label: `고객 카카오톡 후기 캡처 ${String(i + 1).padStart(2, "0")}`,
-  src: "/images/reviews/sample-01.webp",
-  width: 1170,
-  height: 1863,
-}));
+/** 카카오톡 후기 캡처 (보여 줄 순서) */
+const REVIEW_SHOTS = [
+  { src: "/images/reviews/review-01.webp", width: 797, height: 311 },
+  { src: "/images/reviews/review-02.webp", width: 797, height: 479 },
+  { src: "/images/reviews/review-03.webp", width: 797, height: 363 },
+  { src: "/images/reviews/review-04.webp", width: 797, height: 244 },
+  { src: "/images/reviews/review-05.webp", width: 797, height: 346 },
+  { src: "/images/reviews/review-06.webp", width: 797, height: 261 },
+  { src: "/images/reviews/review-07.webp", width: 797, height: 363 },
+  { src: "/images/reviews/review-08.webp", width: 797, height: 363 },
+  { src: "/images/reviews/review-09.webp", width: 797, height: 313 },
+  { src: "/images/reviews/review-10.webp", width: 797, height: 346 },
+  { src: "/images/reviews/review-11.webp", width: 797, height: 346 },
+  { src: "/images/reviews/review-12.webp", width: 797, height: 363 },
+  { src: "/images/reviews/review-13.webp", width: 797, height: 380 },
+  { src: "/images/reviews/review-14.webp", width: 797, height: 295 },
+  { src: "/images/reviews/review-15.webp", width: 797, height: 313 },
+  { src: "/images/reviews/review-16.webp", width: 797, height: 278 },
+  { src: "/images/reviews/review-17.webp", width: 797, height: 313 },
+  { src: "/images/reviews/review-18.webp", width: 797, height: 244 },
+  { src: "/images/reviews/review-19.webp", width: 797, height: 279 },
+  { src: "/images/reviews/review-20.webp", width: 797, height: 330 },
+  { src: "/images/reviews/review-21.webp", width: 797, height: 346 },
+  { src: "/images/reviews/review-22.webp", width: 797, height: 312 },
+  { src: "/images/reviews/review-23.webp", width: 797, height: 332 },
+  { src: "/images/reviews/review-24.webp", width: 797, height: 330 },
+  { src: "/images/reviews/review-25.webp", width: 797, height: 370 },
+  { src: "/images/reviews/review-26.webp", width: 797, height: 488 },
+  { src: "/images/reviews/review-27.webp", width: 797, height: 539 },
+].map((shot, i) => ({ ...shot, label: `고객 카카오톡 후기 캡처 ${String(i + 1).padStart(2, "0")}` }));
 
 /** 라이트박스: 선택한 캡처를 화면 가운데 크게 표시 */
 function Lightbox({
@@ -99,6 +122,65 @@ function Lightbox({
   );
 }
 
+/** 윗줄·아랫줄로 나누는 지점 (앞 절반 / 뒤 절반) */
+const ROW_SPLIT = Math.ceil(REVIEW_SHOTS.length / 2);
+
+/**
+ * 후기 한 줄 — 같은 카드 묶음을 2번(원본 + aria-hidden 복제) 이어 붙여 끊김 없이 반복
+ * direction: left(왼쪽으로 흐름) / right(오른쪽으로 흐름). 마우스를 올린 줄만 멈춘다.
+ */
+function ReviewRow({
+  start,
+  end,
+  direction,
+  paused,
+  onOpen,
+}: {
+  start: number;
+  end: number;
+  direction: "left" | "right";
+  paused: boolean;
+  onOpen: (idx: number) => void;
+}) {
+  const shots = REVIEW_SHOTS.slice(start, end);
+  return (
+    <div className={`review-row flex w-full items-start overflow-hidden py-[6px] ${paused ? "is-paused" : ""}`}>
+      {[false, true].map((isClone) => (
+        <ul
+          key={String(isClone)}
+          aria-hidden={isClone || undefined}
+          className="review-track flex shrink-0 items-start gap-[12px] pr-[12px] lg:gap-[24px] lg:pr-[24px]"
+          // 방향은 줄마다 인라인으로 지정 (전역 CSS 클래스 순서·병합에 영향받지 않게)
+          style={{ animationName: direction === "right" ? "marqueeRight" : "marqueeLeft" }}
+        >
+          {shots.map((shot, i) => (
+            <li key={shot.label} className="w-[260px] shrink-0 lg:w-[400px]">
+              {/* 카드 클릭 → 라이트박스 (복제 묶음은 키보드 포커스 제외) */}
+              <button
+                type="button"
+                tabIndex={isClone ? -1 : undefined}
+                aria-label={`${shot.label} 크게 보기`}
+                onClick={() => onOpen(start + i)}
+                className="relative block w-full cursor-zoom-in overflow-hidden rounded-[16px] bg-white shadow-[0_4px_25px_0_rgba(0,0,0,0.06)] transition-shadow duration-200 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)] lg:rounded-[20px]"
+              >
+                {/* 캡처 원본 비율 그대로 (잘림 없음) */}
+                <Image
+                  src={shot.src}
+                  alt={isClone ? "" : shot.label}
+                  width={shot.width}
+                  height={shot.height}
+                  sizes="(min-width: 1024px) 400px, 260px"
+                  className="block h-auto w-full"
+                />
+              </button>
+            </li>
+          ))}
+        </ul>
+      ))}
+    </div>
+  );
+}
+
 export default function Reviews() {
   // 라이트박스로 연 캡처 번호 (null = 닫힘)
   const [openIdx, setOpenIdx] = useState<number | null>(null);
@@ -126,7 +208,7 @@ export default function Reviews() {
 
   return (
     // ===== 카카오톡 후기: 연회색 배경 =====
-    <section className="flex w-full flex-col items-center overflow-hidden bg-[#f9f9f9] py-[80px] lg:py-[140px]">
+    <section className="flex w-full flex-col items-center overflow-hidden bg-[#f9f9f9] pb-[56px] pt-[80px] lg:pb-[100px] lg:pt-[140px]">
       <div className="flex w-full max-w-[1080px] flex-col items-center">
         {/* ===== 섹션 헤더 ===== */}
         <Reveal threshold={0.1} className="flex flex-col items-center gap-[16px] px-[16px] text-center lg:gap-[20px] lg:px-0">
@@ -147,43 +229,15 @@ export default function Reviews() {
 
       </div>
 
-      {/* ===== 캡처 카드 무한 흐름: 화면 끝까지 꽉 차게 / 원본 묶음 + 복제 묶음(aria-hidden) / 호버·포커스 시 멈춤 ===== */}
+      {/* ===== 캡처 카드 무한 흐름 2줄: 윗줄은 왼쪽, 아랫줄은 오른쪽으로 (장수가 많아 반씩 나눔) ===== */}
       <div
         onTouchStart={pauseByTouch}
         onTouchEnd={resumeAfterTouch}
         onTouchCancel={resumeAfterTouch}
-        className={`review-row mt-[32px] flex w-full items-start overflow-hidden py-[12px] lg:mt-[56px] ${touchPaused ? "is-paused" : ""}`}
+        className="mt-[32px] flex w-full flex-col gap-[12px] lg:mt-[56px] lg:gap-[24px]"
       >
-        {[false, true].map((isClone) => (
-          <ul
-            key={String(isClone)}
-            aria-hidden={isClone || undefined}
-            className={`review-track flex shrink-0 gap-[12px] pr-[12px] lg:gap-[24px] lg:pr-[24px]`}
-          >
-            {REVIEW_SHOTS.map((shot, idx) => (
-              <li key={shot.label} className="w-[160px] shrink-0 lg:w-[240px]">
-                {/* 카드 클릭 → 라이트박스 (복제 묶음은 키보드 포커스 제외) */}
-                <button
-                  type="button"
-                  tabIndex={isClone ? -1 : undefined}
-                  aria-label={`${shot.label} 크게 보기`}
-                  onClick={() => setOpenIdx(idx)}
-                  className="relative block w-full cursor-zoom-in overflow-hidden rounded-[16px] bg-white shadow-[0_4px_25px_0_rgba(0,0,0,0.06)] transition-shadow duration-200 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)] lg:rounded-[20px]"
-                >
-                  {/* 캡처 원본 비율 그대로 (잘림 없음) */}
-                  <Image
-                    src={shot.src}
-                    alt={isClone ? "" : shot.label}
-                    width={shot.width}
-                    height={shot.height}
-                    sizes="(min-width: 1024px) 240px, 160px"
-                    className="block h-auto w-full"
-                  />
-                </button>
-              </li>
-            ))}
-          </ul>
-        ))}
+        <ReviewRow start={0} end={ROW_SPLIT} direction="left" paused={touchPaused} onOpen={setOpenIdx} />
+        <ReviewRow start={ROW_SPLIT} end={REVIEW_SHOTS.length} direction="right" paused={touchPaused} onOpen={setOpenIdx} />
       </div>
 
       {/* ===== 라이트박스 (카드 클릭 시) ===== */}

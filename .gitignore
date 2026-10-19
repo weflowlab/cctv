@@ -42,3 +42,6 @@ next-env.d.ts
 
 # claude local settings
 .claude/settings.local.json
+
+# 고객이 보낸 후기 캡처 원본 (사이트용 변환본은 public/images/reviews)
+/카톡후기/

@@ -7,6 +7,7 @@
  * - 하위 화면의 API 가 401 을 받으면(세션 만료) adminFetch 가 이벤트를 쏘고, 여기서 로그인 화면으로 돌린다
  */
 import { ArrowLeft, LogOut, Menu, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
@@ -25,26 +26,29 @@ function isActive(pathname: string, m: (typeof MENUS)[number]) {
 }
 
 /**
- * 브랜드 표기 — 사이트 로고와 같은 "UNITECH CCTV" 2색 + 관리자
+ * 브랜드 표기 — 사이트 로고와 같은 엠블럼 + "유니텍 CCTV" 글자 이미지(public/images/logo) + 관리자
  * - stacked: "관리자"를 로고 아랫줄에 (PC 사이드바)
  * - noLabel: "관리자" 글자 없이 (로그인 화면)
+ * - small: 모바일 상단바 (조금 작게)
  */
 function Brand({ small, noLabel, stacked }: { small?: boolean; noLabel?: boolean; stacked?: boolean }) {
-  const [brand, ...rest] = SITE.nameEn.split(" ");
+  const emblemH = small ? 24 : 30;
+  const wordH = small ? 14 : 17;
   return (
     <Link
       href="/admin/inquiries"
       style={{
         display: "flex",
         flexDirection: stacked ? "column" : "row",
-        alignItems: stacked ? "flex-start" : "baseline",
-        gap: stacked ? "0.3rem" : "0.5rem",
+        alignItems: stacked ? "flex-start" : "center",
+        gap: stacked ? "0.4rem" : "0.6rem",
         textDecoration: "none",
       }}
     >
-      <span style={{ fontWeight: 800, fontSize: small ? "1.1rem" : "1.3rem", letterSpacing: "0.02em", whiteSpace: "nowrap" }}>
-        <span style={{ color: "var(--accent)" }}>{brand}</span>{" "}
-        <span style={{ color: "var(--point)" }}>{rest.join(" ")}</span>
+      <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", whiteSpace: "nowrap" }}>
+        {/* marginTop -1: 방패가 글자보다 내려와 보여 1px 올림 (사이트 로고와 동일한 시각 보정) */}
+        <Image src="/images/logo/emblem.webp" alt="" width={136} height={144} style={{ height: emblemH, width: "auto", marginTop: -1 }} />
+        <Image src="/images/logo/wordmark.webp" alt={SITE.name} width={936} height={136} style={{ height: wordH, width: "auto" }} />
       </span>
       {!noLabel && <span style={{ color: "var(--text-muted)", fontSize: small ? "0.8rem" : "0.9rem", fontWeight: 600 }}>관리자</span>}
     </Link>
