@@ -174,10 +174,12 @@ img {
   .review-track { animation-duration: 140s; }
 }
 
-/* 모션 최소화 설정 사용자는 애니메이션 생략 */
+/* 모션 최소화 설정 사용자는 등장·흔들림 애니메이션 생략
+   단, 제휴 로고 띠(.marquee-*)와 카톡 후기 띠(.review-track)는 설정과 상관없이 계속 흐르게 둔다 (2026-10-20 대표 결정):
+   멈추면 칩·카드가 잘린 채 고정돼 고장난 것처럼 보이고, 삼성 폰은 절전 모드만 켜도 이 설정이 잡혀 멈춘 화면을 보는 사람이 많다 */
 @media (prefers-reduced-motion: reduce) {
   .reveal-pending { opacity: 1; }
-  .fade-in, .slide-in-left, .slide-in-right, .slide-in-up, .slide-in-down, .float-right, .fc-shake, .marquee-left, .marquee-right, .review-track {
+  .fade-in, .slide-in-left, .slide-in-right, .slide-in-up, .slide-in-down, .float-right, .fc-shake {
     animation: none;
     opacity: 1;
   }

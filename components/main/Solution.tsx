@@ -113,7 +113,8 @@ export default function Solution() {
                     sizes="(min-width: 1024px) 255px, (min-width: 640px) 50vw, 100vw"
                     className="object-cover transition-transform duration-300 group-hover:scale-[1.04]"
                   />
-                  <span className="absolute left-[12px] top-[12px] rounded-[100px] bg-white/90 px-[10px] py-[4px] text-[12px] font-bold text-brand backdrop-blur lg:text-[13px]">
+                  {/* 서비스명 칩 — 2026-10-20 대표 요청으로 한 단계 키움 (12/13px → 14/15px, 여백도 넓힘) */}
+                  <span className="absolute left-[14px] top-[14px] rounded-[100px] bg-white/92 px-[14px] py-[7px] text-[14px] font-bold tracking-[-0.28px] text-brand shadow-[0_2px_8px_rgba(0,0,0,0.12)] backdrop-blur lg:px-[16px] lg:py-[8px] lg:text-[15px]">
                     {service}
                   </span>
                 </div>
@@ -125,9 +126,10 @@ export default function Solution() {
                   <p className="mt-[8px] flex-1 break-keep text-[14px] leading-[22px] tracking-[-0.28px] text-sub max-lg:whitespace-pre-line lg:text-[15px] lg:leading-[24px]">
                     {desc}
                   </p>
-                  <span className="mt-[16px] flex items-center gap-[4px] text-[13px] font-bold text-[#999] transition-colors group-hover:text-brand">
+                  {/* 자세히 보기 — 2026-10-20 대표 요청으로 강조: 회색(#999) → 네이비 글자, 한 단계 크게. 버튼 모양은 아니고 글자만 (알약 버튼은 거절) */}
+                  <span className="mt-[16px] flex items-center gap-[5px] text-[14px] font-bold tracking-[-0.28px] text-brand transition-colors group-hover:text-point-strong lg:text-[15px]">
                     자세히 보기
-                    <ArrowRightIcon className="h-[10px] w-[12px] transition-transform group-hover:translate-x-[3px]" />
+                    <ArrowRightIcon className="h-[11px] w-[13px] transition-transform group-hover:translate-x-[3px]" />
                   </span>
                 </div>
               </Link>
