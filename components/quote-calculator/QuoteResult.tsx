@@ -5,7 +5,9 @@
  * - 추천 대수(고정) 표시 + 선택 요약 → 견적 카드 → 맨 아래 [다시 계산하기]
  * - 대수 조정 슬라이더(CountSlider, 1~16, 초기값 = 추천 대수) → 아래 가격 카드 금액이 즉시 재계산(숫자 애니메이션)
  * - 가격 카드 2개
- *   · 렌탈: RENTAL_MONTHLY 자사 월 요금 + 타사 대비 매월 절약액
+ *   · 렌탈: RENTAL_MONTHLY 자사 월 요금 + 타사 월 요금 비교 — 홈·렌탈 탭의 RentalCompareCard 와 같은 규칙 (2026-10-20 맞춤)
+ *     자사 줄 아래 "36개월 납부 후 종료 · 소유권 이전", 타사 줄 아래 "36개월 후에도 계속 납부", 취소선은 자사가 쌀 때만.
+ *     띠 문구는 절약액에 따라: 더 쌈 → 매월 N원 절약 / 같음 → 36개월 뒤엔 내 것 / 더 비쌈 → 36개월만 내고 끝, 그 뒤 매월 타사 요금만큼 절약
  *   · 일시납 설치: INSTALL_PRICES[화소][설치환경] 1~4대 가격(부가세 별도), 5대 이상은 별도 견적 안내
  *   · 각 카드의 [이 견적으로 상담 신청] → /contact?service=<rental|install>&count=N&place=<slug>&res=<200|500>
  */
@@ -17,6 +19,7 @@ import {
   CAMERA_NAME,
   INSTALL_PRICES,
   RENTAL_MONTHLY,
+  rentalSaving,
   type Placement,
   type Resolution,
 } from "@/components/service/data";
@@ -45,6 +48,8 @@ export default function QuoteResult({ data, recommended, onReset }: Props) {
   const placement = data.placement as Placement;
 
   const rental = RENTAL_MONTHLY[count - 1];
+  const saving = rentalSaving(count);
+  const cheaper = rental.ours < rental.other;
   const installPrice = INSTALL_PRICES[resolution][placement][count - 1]; // 5대 이상은 undefined
   const query = { count, place, resolution, placement };
 
@@ -90,7 +95,7 @@ export default function QuoteResult({ data, recommended, onReset }: Props) {
           </div>
 
           <div className="mt-[28px] grid grid-cols-1 gap-[12px] lg:mt-[40px] lg:grid-cols-2 lg:gap-[16px]">
-            {/* ===== 렌탈 카드: 월 요금 + 타사 대비 절약액 ===== */}
+            {/* ===== 렌탈 카드: 자사 월 요금(+36개월 후 종료) / 타사 월 요금(+계속 납부) / 강조 띠 — RentalCompareCard 와 같은 규칙 ===== */}
             <section className={cardCls}>
               <p className={`${tagCls} bg-brand text-white`}>렌탈</p>
               <p className="mt-[8px] text-[14px] tracking-[-0.28px] text-[#888] lg:text-[16px]">설치비·가입비·보증료 면제</p>
@@ -99,14 +104,30 @@ export default function QuoteResult({ data, recommended, onReset }: Props) {
                 <AnimatedWon value={rental.ours} />
                 <span className={unitCls}>원</span>
               </p>
-              <p className="mt-[8px] w-fit rounded-[40px] bg-brand-light px-[12px] py-[4px] text-[13px] font-bold tracking-[-0.26px] text-point-strong lg:text-[15px]">
-                {/* 타사보다 싸지 않은 대수는 절약 대신 소유권 안내 */}
-                {rental.other > rental.ours ? (
+              <p className="mt-[4px] text-[13px] font-bold tracking-[-0.26px] text-point-strong lg:text-[15px]">
+                36개월 납부 후 종료 · 소유권 이전
+              </p>
+              {/* 타사 렌탈: 자사가 쌀 때만 취소선 */}
+              <p className="mt-[12px] flex items-baseline justify-between gap-[8px] border-t border-[#eee] pt-[12px] text-[14px] tracking-[-0.28px] text-[#888] lg:text-[16px]">
+                <span>타사 렌탈</span>
+                <span className="text-right">
+                  <span className={`font-bold text-[#999] ${cheaper ? "line-through decoration-[#bbb]" : ""}`}>
+                    월 <AnimatedWon value={rental.other} />원
+                  </span>
+                  <span className="block text-[12px] text-[#999] lg:text-[13px]">36개월 후에도 계속 납부</span>
+                </span>
+              </p>
+              <p className="mt-[12px] w-fit rounded-[40px] bg-brand-light px-[12px] py-[4px] text-[13px] font-bold tracking-[-0.26px] text-point-strong lg:text-[15px]">
+                {cheaper ? (
                   <>
-                    타사 렌탈 대비 매월 <AnimatedWon value={rental.other - rental.ours} />원 절약
+                    매월 <AnimatedWon value={saving} />원 절약, 36개월 뒤엔 내 것
                   </>
+                ) : rental.ours === rental.other ? (
+                  "월 요금은 같아도, 36개월 뒤엔 장비가 내 것"
                 ) : (
-                  "36개월 납부 후 장비가 내 것이 됩니다"
+                  <>
+                    36개월만 내고 끝, 그 뒤엔 매월 <AnimatedWon value={rental.other} />원 절약
+                  </>
                 )}
               </p>
               <div className="flex-1" />

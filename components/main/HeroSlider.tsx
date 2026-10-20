@@ -43,7 +43,8 @@ type Slide = {
   buttons: { label: string; short: string; href: string; icon: "calc" | "consult" }[];
   /** 배경 이미지 자리 설명 (원래 넣을 실제 사진) */
   bg: string;
-  /** 배경 사진 — 스톡 사진(CC0): public/images/stock/*.webp (실제 시공 사진으로 바꿔 봤으나 대표 요청으로 스톡 유지) */
+  /** 배경 사진 — 4장 모두 실제 시공 사진(public/images/site/hero-*.webp)
+   *  현장 사진은 색·디테일이 많아 글자가 묻히므로 SlideContent 에서 살짝 블러 + 어두운 막을 덮는다 (2026-10-20) */
   img: string;
   /** 배경 사진 대체 텍스트 */
   alt: string;
@@ -63,9 +64,11 @@ const SLIDES: Slide[] = [
     title: ["자리 비운 사이 생기는 일,", "이제 CCTV로 지키세요"],
     desc: `현장에 맞춘 설계부터 설치·렌탈·수리까지,\n${SITE.name}가 한 번에 책임집니다.`,
     buttons: [{ label: "내 공간 견적 계산하기", short: "견적 계산하기", href: "/calculator", icon: "calc" }, CONSULT],
-    bg: "메인 히어로 배경 (매장·사무실 CCTV 설치 현장)",
-    img: "/images/stock/hero-main-ceiling-camera.webp",
-    alt: "천장에 설치된 CCTV 카메라",
+    bg: "메인 히어로 배경 (CCTV 설치 현장)",
+    // 실제 시공 사진 (관리자 시공사례 — 구리시 매장 인테리어현장): 천장 뼈대 위에서 기사 두 명이 배선 작업
+    // 사진 순서는 대표 지정 (2026-10-20): 메인=구리 / 렌탈=김해 / AS=속초 / 스피커=제천
+    img: "/images/site/hero-speaker-ceiling-wiring.webp",
+    alt: "인테리어 공사 중인 매장 천장에서 기사 두 명이 사다리에 올라 배선 작업을 하는 모습",
   },
   {
     id: "rental",
@@ -74,8 +77,9 @@ const SLIDES: Slide[] = [
     desc: "목돈 없이 월 이용료로 설치하고,\n사용 중 고장도 함께 관리합니다.",
     buttons: [{ label: "월 렌탈료 계산해 보기", short: "렌탈료 계산하기", href: "/calculator", icon: "calc" }, CONSULT],
     bg: "렌탈 슬라이드 배경 (CCTV 렌탈 설치 현장)",
-    img: "/images/stock/hero-rental-building-dome-camera.webp",
-    alt: "건물 외벽에 설치된 돔 카메라",
+    // 실제 시공 사진 (관리자 시공사례 — 김해 단독주택): public/images/site/hero-main-house-install.webp
+    img: "/images/site/hero-main-house-install.webp",
+    alt: "기사 두 명이 사다리에 올라 단독주택 외벽에 CCTV를 설치하는 모습",
   },
   {
     id: "as",
@@ -84,8 +88,10 @@ const SLIDES: Slide[] = [
     desc: `${SITE.hours} 접수,\n방문 점검부터 수리까지 끝까지 맡습니다.`,
     buttons: [{ label: "교체·증설 견적 알아보기", short: "견적 알아보기", href: "/calculator", icon: "calc" }, CONSULT],
     bg: "AS 출장수리 슬라이드 배경 (CCTV 점검·수리 현장)",
-    img: "/images/stock/as-old-camera.webp",
-    alt: "건물 외벽에 달린 오래된 CCTV 카메라",
+    // 실제 시공 사진 (관리자 시공사례 — 속초 사무실): public/images/site/hero-as-office-repair.webp
+    // (부산항 사진은 얼굴 모자이크가 있어 대표가 빼 달라고 함 — 2026-10-20)
+    img: "/images/site/hero-as-office-repair.webp",
+    alt: "기사가 사무실 창가에서 CCTV 배선 작업을 하는 모습",
   },
   {
     id: "speaker",
@@ -94,8 +100,9 @@ const SLIDES: Slide[] = [
     desc: "배선 공사를 한 번에 끝내 공사 기간과 중복 비용을 줄이고, 관리도 한 곳에서.",
     buttons: [{ label: "우리 공간 견적 계산하기", short: "견적 계산하기", href: "/calculator", icon: "calc" }, CONSULT],
     bg: "CCTV+스피커 슬라이드 배경 (원본 2026/07/KakaoTalk_Photo_2026-07-02-17-32-14.jpg)",
-    img: "/images/stock/hero-speaker-bookshelf-speaker.webp",
-    alt: "실내에 놓인 스피커",
+    // 실제 시공 사진 (관리자 시공사례 — 제천 휴게소): public/images/site/hero-rental-cafe-install.webp
+    img: "/images/site/hero-rental-cafe-install.webp",
+    alt: "기사가 사다리에 올라 밝은 매장 천장에 CCTV를 설치하는 모습",
   },
 ];
 
@@ -111,10 +118,11 @@ function SlideContent({ slide, idx, onGo }: { slide: Slide; idx: number; onGo?: 
   const Heading = idx === 0 ? "h1" : "h2";
   return (
     <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
-      {/* 배경 사진 — 스톡 사진(CC0): public/images/stock/hero-*.webp
+      {/* 배경 사진 — 실제 시공 사진(public/images/site/hero-*.webp)
           첫 슬라이드는 첫 화면(LCP)이라 preload.
           나머지도 5초 자동 넘김으로 곧바로 첫 화면에 나와 LCP 로 잡히므로 lazy 대신 eager
-          (preload 와 loading 은 같이 쓰지 않음 — Next 문서 권장) */}
+          (preload 와 loading 은 같이 쓰지 않음 — Next 문서 권장)
+          blur-[1px] + scale-[1.02]: 현장 사진의 잔디테일만 아주 살짝 눌러 글자가 뜨게 (3px → 1.5px → 1px, 대표 확인). 블러로 흐려지는 가장자리는 2% 확대로 밖으로 밀어냄 */}
       <Image
         src={slide.img}
         alt={slide.alt}
@@ -122,10 +130,12 @@ function SlideContent({ slide, idx, onGo }: { slide: Slide; idx: number; onGo?: 
         preload={idx === 0}
         loading={idx === 0 ? undefined : "eager"}
         sizes="100vw"
-        className="z-0 object-cover"
+        className="z-0 scale-[1.02] object-cover blur-[1px]"
       />
-      {/* 카피 가독성용 어두운 그라데이션 (모바일: 위→아래 / PC: 왼쪽→오른쪽) */}
-      <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(12,11,9,0.85)_0%,rgba(12,11,9,0.55)_60%,rgba(12,11,9,0.3)_100%)] lg:bg-[linear-gradient(90deg,rgba(12,11,9,0.85)_0%,rgba(12,11,9,0.5)_55%,rgba(12,11,9,0.1)_100%)]" />
+      {/* 카피 가독성용 어두운 그라데이션 (모바일: 위→아래 / PC: 왼쪽→오른쪽)
+          2026-10-20: 실제 현장 사진이라 스톡 때(0.85/0.55/0.3, PC 0.85/0.5/0.1)보다 끝쪽만 한 단계 어둡게.
+          전체를 고르게 덮는 막 + 0.9 그라데이션은 너무 어두워 뺌 */}
+      <span className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(12,11,9,0.85)_0%,rgba(12,11,9,0.6)_60%,rgba(12,11,9,0.4)_100%)] lg:bg-[linear-gradient(90deg,rgba(12,11,9,0.85)_0%,rgba(12,11,9,0.55)_55%,rgba(12,11,9,0.2)_100%)]" />
 
       {/* ===== 카피 + 버튼 + 점: 모바일 가운데 정렬 / PC 1080px 안에서 왼쪽 정렬, 세로 가운데
            위 여백(헤더 높이)만 있으면 아래로 처져 보여 아래 여백(pb)으로 살짝 끌어올림 ===== */}
