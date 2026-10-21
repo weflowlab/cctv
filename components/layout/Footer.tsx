@@ -49,9 +49,7 @@ export default async function Footer() {
               <Link href="/terms/personal">
                 <strong>개인정보처리방침</strong>
               </Link>
-              <Link href="/terms/location">
-                <span>위치정보 이용약관</span>
-              </Link>
+              {/* 위치정보 이용약관 링크는 뺌 (2026-10-21) — 사용자 위치를 수집하지 않아 위치정보법상 약관 대상이 아님 */}
             </div>
             <div className="mt-[16px] text-[11px] leading-[1.4] tracking-[-0.22px] text-[#8e9097] lg:mt-[12px] lg:text-[14px] lg:leading-[22px] lg:tracking-[-0.3px] lg:text-[#888]">
               © {year} {SITE.legalName}. All rights Reserved.

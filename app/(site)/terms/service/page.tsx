@@ -1,7 +1,7 @@
 /**
  * /terms/service - 약관 페이지 (서버 컴포넌트, 인터랙션 없음)
  * - 본문은 components/terms/data/service.ts 의 구조화 데이터를 TermsDocument 로 렌더.
- * - 현재는 "준비 중" 안내만 있음 — 실제 약관 확정 시 data 파일만 교체하면 된다.
+ * - 본문은 2026-10-21 작성 (시행일 2026-10-22). 수정은 data 파일에서.
  * - 다른 약관으로의 이동은 공통 Footer 의 약관 링크로 처리.
  */
 import type { Metadata } from "next";

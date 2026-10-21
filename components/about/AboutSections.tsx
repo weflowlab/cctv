@@ -523,13 +523,12 @@ export function AwardSection() {
       <Title>
         <strong>3년 연속 1위</strong> 수상
       </Title>
-      {/* 제목 ↔ 설명 간격: 섹션 gap(14/24px)만으로는 붙어 보여 조금 더 내림 (2026-10-21 대표 요청) */}
-      <div className="mt-[10px] lg:mt-[16px]">
-        <Body>
-          {`${SITE.name}는 한국브랜드 선호도 3년 연속 1위 수상 기업입니다.
-${SITE.name}의 검증된 제품과 서비스를 확인해보세요.`}
-        </Body>
-      </div>
+      {/* 두 문장은 줄을 나눠 표시 (템플릿 문자열의 줄바꿈은 <p> 에서 공백이 돼 한 줄로 붙어 보였음 — 2026-10-21 수정) */}
+      <Body>
+        {SITE.name}는 한국브랜드 선호도 3년 연속 1위 수상 기업입니다.
+        <br />
+        {SITE.name}의 검증된 제품과 서비스를 확인해보세요.
+      </Body>
     </section>
   );
 }

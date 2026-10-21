@@ -10,12 +10,12 @@
  * TODO 목록 (본문의 `TODO:` 주석 위치 참고)
  *   1. 보유 기간 기본값(상담 완료 후 1년) — 회사 확인
  *   2. 이메일 — SITE.email 사용 (현재 "준비 중", lib/site.ts 에서 확정값으로 교체)
- *   3. 처리 위탁: Vercel(호스팅) 현재 기준 기재, Neon(DB)은 상담 신청 저장·관리자 페이지 도입 시 추가
- *   4. 국외 이전: Vercel·Neon 서버 리전·이전 국가·이전 방법 확인 후 확정
+ *   3. 처리 위탁: Vercel(호스팅)·Neon(DB, 상담 신청 저장) 기재 완료 (2026-10-21)
+ *   4. 국외 이전: Neon 은 싱가포르 리전으로 기재 완료. Vercel 은 리전이 설정에 따라 달라 "미국 등 서버 소재국"으로 둠
  *   5. 접속 로그(IP 등) 자동 생성 여부·보관 기간 — 호스팅 설정 확인
  *   6. 쿠키·분석 도구: 현재 미사용 → GA·픽셀 등 도입 시 해당 조항 변경
  *   7. 개인정보 보호책임자: 대표(SITE.ceo) 겸임 — 담당 부서·담당자 지정 시 추가
- *   8. 시행일(공고일) 날짜
+ *   8. 시행일: 2026년 10월 22일 (고객 지정, 2026-10-21)
  *   블록 타입은 ./types.ts 참고 (h: 제목 / p: 문단 / li: 목록 / table: 표 / gap: 빈 줄)
  */
 import { SITE } from "@/lib/site";
@@ -29,8 +29,8 @@ const headCell = (text: string): TermsCell => ({ lines: [[{ b: text }]] });
 /** 이메일 표기 — SITE.email (확정 전 "준비 중") */
 const EMAIL_TEXT = SITE.email;
 
-/** 시행일 — TODO: 게시일 확정 후 기입 (예: "2026년 11월 1일") */
-const EFFECTIVE_DATE = "2026년 ○월 ○일";
+/** 시행일 — 고객 지정 (2026-10-21 전달, 서비스 이용약관과 같은 날) */
+const EFFECTIVE_DATE = "2026년 10월 22일";
 
 export const personalTerms: TermsBlock[] = [
   { t: "h", level: 1, align: "center", runs: [{ b: "개인정보처리방침" }] },
@@ -160,13 +160,14 @@ export const personalTerms: TermsBlock[] = [
   /* ===== 5. 처리 위탁 ===== */
   { t: "h", level: 2, runs: [{ b: "제5조 (개인정보 처리의 위탁)" }] },
   { t: "p", runs: ["회사는 원활한 서비스 제공을 위해 다음과 같이 개인정보 처리 업무를 외부에 맡기고 있습니다."] },
-  // TODO: 상담 신청 저장(DB)·관리자 페이지 도입 시 Neon(데이터베이스) 행 추가 — 예: "Neon Inc. / 상담 신청 정보 저장·관리"
+  // 2026-10-21: 상담 신청이 Neon 데이터베이스에 저장되고(lib/inquiries.ts) 관리자 페이지에서 조회되므로 Neon 행 추가
   {
     t: "table",
     head: true,
     rows: [
       [headCell("수탁자"), headCell("위탁 업무 내용")],
       [cell("Vercel Inc."), cell("홈페이지 호스팅 및 운영, 상담 신청 정보 전송 처리")],
+      [cell("Neon Inc."), cell("상담 신청 정보의 저장·관리(데이터베이스 운영)")],
     ],
   },
   {
@@ -184,7 +185,7 @@ export const personalTerms: TermsBlock[] = [
     t: "p",
     runs: ["회사가 이용하는 홈페이지 호스팅 서비스는 해외 사업자가 운영하므로, 개인정보가 아래와 같이 국외에서 처리될 수 있습니다."],
   },
-  // TODO: 이전 국가·서버 리전·이전 일시/방법 확인 후 확정. Neon(DB) 도입 시 행 추가
+  // Vercel 리전은 Vercel 설정에 따라 다를 수 있어 "미국 등 서버 소재국"으로 둠. Neon 은 아래 행 (2026-10-21 추가)
   {
     t: "table",
     head: true,
@@ -203,6 +204,15 @@ export const personalTerms: TermsBlock[] = [
         cell("상담 신청 정보, 접속 기록"),
         cell("홈페이지 호스팅 및 운영"),
         cell("상담 신청·홈페이지 이용 시 네트워크를 통해 전송"),
+        cell("제3조의 보유 기간 또는 위탁 계약 종료 시까지"),
+      ],
+      // Neon: 상담 신청 정보가 저장되는 데이터베이스 — 서버 리전은 싱가포르(AWS ap-southeast-1, 2026-10-21 설정 기준)
+      [
+        cell("Neon Inc. (privacy@neon.tech)"),
+        cell("싱가포르"),
+        cell("상담 신청 정보(성함, 연락처, 희망 서비스, 희망 서비스일, 전달 내용)"),
+        cell("상담 신청 정보의 저장·관리"),
+        cell("상담 신청 시 네트워크를 통해 전송·저장"),
         cell("제3조의 보유 기간 또는 위탁 계약 종료 시까지"),
       ],
     ],

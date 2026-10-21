@@ -73,7 +73,6 @@ const PAGE_KO: Record<string, string> = {
   "/faq": "자주 묻는 질문",
   "/terms/service": "이용약관",
   "/terms/personal": "개인정보처리방침",
-  "/terms/location": "위치기반 이용약관",
   // 서비스 탭 · 장소별 시공사례 — 사이트 설정(SERVICES·PLACES)에서 이름을 가져온다
   ...Object.fromEntries(SERVICES.map((s) => [`/service/${s.slug}`, `서비스 · ${s.name}`])),
   ...Object.fromEntries(PLACES.map((p) => [`/cases/place/${p.slug}`, `시공사례 · ${p.name}`])),

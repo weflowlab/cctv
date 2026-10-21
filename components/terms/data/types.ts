@@ -1,6 +1,6 @@
 /**
  * 약관 본문 구조화 데이터 타입
- * - components/terms/data/{service,personal,location}.ts 가 이 타입을 따릅니다.
+ * - components/terms/data/{service,personal}.ts 가 이 타입을 따릅니다. (위치정보 약관은 2026-10-21 삭제 — 위치정보를 수집하지 않음)
  * - 원문은 keeper.ceo 가 Word / Google Docs 에서 export 한 HTML 이며, 파이썬 스크립트로 블록 단위로 추출했습니다.
  */
 
