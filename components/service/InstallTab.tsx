@@ -38,8 +38,13 @@ export default function InstallTab() {
               <br />
               {SITE.name}의 특가 이벤트 패키지입니다.
             </p>
-            <p className="mt-[8px] text-[13px] leading-[1.6] tracking-[-0.26px] text-[#888] lg:text-[16px]">
-              큰 규모의 공사 및 정보통신공사는 별도 문의 부탁드립니다.
+            {/* 대형 공사 안내 — 흐린 회색 작은 글씨라 안 보인다는 대표 지적(2026-10-21) → 느낌표 아이콘 + 네이비 굵은 글자로 강조 (상자는 빼 달라고 해서 글자만) */}
+            <p className="mt-[12px] inline-flex items-center gap-[6px] text-[14px] font-bold leading-[1.5] tracking-[-0.28px] text-brand lg:mt-[14px] lg:text-[17px]">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden className="h-[18px] w-[18px] shrink-0 text-point-strong lg:h-[20px] lg:w-[20px]">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 8v4.5M12 16h.01" />
+              </svg>
+              <span className="break-keep">큰 규모의 공사 및 정보통신공사는 별도 문의 부탁드립니다.</span>
             </p>
           </div>
           {/* 실제 시공 사진 (관리자 시공사례에서 고름): public/images/site/install-house-exterior.webp */}

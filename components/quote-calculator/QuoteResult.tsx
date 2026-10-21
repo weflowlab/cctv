@@ -151,10 +151,17 @@ export default function QuoteResult({ data, recommended, onReset }: Props) {
                   <p className="mt-[8px] text-[13px] tracking-[-0.26px] text-[#888] lg:text-[15px]">부가세 별도 · 기본 자재 포함 · 기계 무상 AS 1년</p>
                 </>
               ) : (
-                <p className="mt-[16px] text-[20px] font-bold leading-[1.45] tracking-[-0.4px] text-[#222] lg:text-[24px]">
-                  5대 이상은 현장 확인 후
-                  <br />
-                  별도 견적으로 안내해 드려요
+                // 모바일: 원래 크기 20px 그대로, 3줄 "…또는 / 현장 확인 후 별도 견적으로 / 안내해 드려요" (2줄로 맞추려면 14px 까지 줄여야 해 너무 작음 — 대표 지적)
+                //   둘째 줄 ≈12.6em → 20px 에서 252px, 360px 폰 카드 안쪽 256px 에 딱 들어감
+                // PC: 22px 2줄 "…현장 확인 후 / 별도 견적으로…" (첫 줄 ≈383px, 카드 안쪽 420px — 24px 는 418px 로 꽉 차서 한 단계 내림)
+                <p className="mt-[16px] whitespace-nowrap text-[20px] font-bold leading-[1.45] tracking-[-0.4px] text-[#222] lg:text-[22px]">
+                  5대 이상은 유선상담 또는
+                  <br className="lg:hidden" />
+                  {" "}현장 확인 후
+                  <br className="hidden lg:inline" />
+                  {" "}별도 견적으로
+                  <br className="lg:hidden" />
+                  {" "}안내해 드려요
                 </p>
               )}
               <div className="flex-1" />

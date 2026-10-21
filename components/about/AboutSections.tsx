@@ -523,10 +523,13 @@ export function AwardSection() {
       <Title>
         <strong>3년 연속 1위</strong> 수상
       </Title>
-      <Body>
-        {`${SITE.name}는 한국브랜드 선호도 3년 연속 1위 수상 기업입니다.
+      {/* 제목 ↔ 설명 간격: 섹션 gap(14/24px)만으로는 붙어 보여 조금 더 내림 (2026-10-21 대표 요청) */}
+      <div className="mt-[10px] lg:mt-[16px]">
+        <Body>
+          {`${SITE.name}는 한국브랜드 선호도 3년 연속 1위 수상 기업입니다.
 ${SITE.name}의 검증된 제품과 서비스를 확인해보세요.`}
-      </Body>
+        </Body>
+      </div>
     </section>
   );
 }
