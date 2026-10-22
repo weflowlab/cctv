@@ -7,7 +7,7 @@
  * - 칩: [전체 → /cases] + PLACES 6개 [→ /cases/place/<slug>] 를 Link 로 나열
  *   · 선택 브랜드 네이비/흰 글자, 미선택 #F5F5F5/#888
  *   · scroll={false} 로 칩 이동 시 스크롤이 맨 위로 튀지 않게
- *   · 바 전체를 sticky(헤더 높이만큼 아래)로 고정, 모바일에서 넘치면 가로 스크롤(슬라이드)
+ *   · PC: 바 전체를 sticky(헤더 높이만큼 아래)로 고정 / 모바일: 줄바꿈으로 전부 보이게, sticky 없음 (2026-10-22, 전엔 가로 스크롤)
  *   · 칩에 건수 숫자는 표시하지 않는다 (2026-10-19 요청). counts 는 사례가 없는 장소 칩을 흐리게 하는 데만 쓴다.
  *     건수 0 인 장소도 표시하되 흐리게(비활성처럼), 클릭은 가능(빈 상태 안내로 이동)
  */
@@ -45,11 +45,13 @@ function ActiveChips({ chips }: { chips: Chip[] }) {
 
 function ChipsBar({ chips, current }: { chips: Chip[]; current: Current }) {
   return (
+    // 모바일: 칩 7개가 가로 스크롤이라 3~4개만 보였음 → 줄바꿈해 한눈에 다 보이게 (2026-10-22 대표 요청, 360px 폰에서 2줄)
+    //         2줄이 화면 위에 붙어 있으면 목록을 가려서 모바일은 sticky 를 풀고 제자리에 둔다. PC 는 그대로 sticky.
     <nav
       aria-label="장소 선택"
-      className="sticky top-[var(--header-height-mobile)] z-10 w-full bg-white/95 py-[12px] backdrop-blur lg:top-[var(--header-height)] lg:py-[16px]"
+      className="z-10 w-full bg-white/95 py-[12px] backdrop-blur lg:sticky lg:top-[var(--header-height)] lg:py-[16px]"
     >
-      <ul className="mx-auto flex max-w-[1112px] flex-nowrap gap-[6px] overflow-x-auto px-[16px] [scrollbar-width:none] lg:flex-wrap lg:gap-[10px] [&::-webkit-scrollbar]:hidden">
+      <ul className="mx-auto flex max-w-[1112px] flex-wrap gap-[6px] px-[16px] lg:gap-[10px]">
         {chips.map((chip) => {
           const selected = chip.slug === current;
           const empty = chip.count === 0;
@@ -60,7 +62,7 @@ function ChipsBar({ chips, current }: { chips: Chip[]; current: Current }) {
                 href={chip.href}
                 scroll={false}
                 aria-current={selected ? "page" : undefined}
-                className={`flex h-[40px] items-center gap-[6px] rounded-[50px] border border-white px-[16px] text-[14px] font-medium leading-[22px] tracking-[-0.3px] transition-all duration-300 ease-in-out lg:h-[46px] lg:px-[20px] lg:text-[16px] lg:leading-[24px] lg:tracking-[-0.4px] ${
+                className={`flex h-[36px] items-center gap-[6px] rounded-[50px] border border-white px-[13px] text-[13px] font-medium leading-[20px] tracking-[-0.3px] transition-all duration-300 ease-in-out lg:h-[46px] lg:px-[20px] lg:text-[16px] lg:leading-[24px] lg:tracking-[-0.4px] ${
                   selected
                     ? "bg-brand text-white"
                     : empty
