@@ -168,6 +168,8 @@ export const personalTerms: TermsBlock[] = [
       [headCell("수탁자"), headCell("위탁 업무 내용")],
       [cell("Vercel Inc."), cell("홈페이지 호스팅 및 운영, 상담 신청 정보 전송 처리")],
       [cell("Neon Inc."), cell("상담 신청 정보의 저장·관리(데이터베이스 운영)")],
+      // 2026-10-22: 상담 신청 알림 메일을 네이버 메일(SMTP)로 회사 담당자에게 발송 (lib/mailer.ts)
+      [cell("네이버 주식회사"), cell("상담 신청 알림 메일 발송(회사 담당자 앞)")],
     ],
   },
   {

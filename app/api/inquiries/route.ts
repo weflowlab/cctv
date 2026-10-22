@@ -1,9 +1,12 @@
+import { after } from "next/server";
 import { createInquiry, parseInquiry } from "@/lib/inquiries";
+import { sendInquiryNotification } from "@/lib/mailer";
 import { checkRateLimit, clientIp, detectDevice, DEVICE_LABEL } from "@/lib/requestInfo";
 
 /**
  * POST /api/inquiries — 상담 신청 폼 접수 (공개)
  * 폼 화면을 거치지 않고 바로 부를 수 있는 창구라 값 검사·허니팟·횟수 제한을 여기서 한다.
+ * 저장 후 네이버 메일로 알림을 보낸다 (lib/mailer.ts) — after() 로 응답을 먼저 돌려줘 고객이 메일 발송을 기다리지 않게.
  */
 export async function POST(req: Request) {
   let body: unknown;
@@ -28,6 +31,8 @@ export async function POST(req: Request) {
   }
 
   const device = DEVICE_LABEL[detectDevice(req.headers.get("user-agent") || "")];
-  await createInquiry({ ...parsed.value, device });
+  const inquiry = await createInquiry({ ...parsed.value, device });
+  // 알림 메일 — 응답을 보낸 뒤 실행, 실패해도 접수에는 영향 없음
+  after(() => sendInquiryNotification(inquiry));
   return Response.json({ ok: true }, { status: 201 });
 }
