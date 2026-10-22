@@ -13,8 +13,8 @@ export const SITE = {
   nameEn: "UNITECH CCTV",
   /** 상호 (사업자 정보·저작권 표기용) */
   legalName: "유니텍CCTV",
-  /** 사이트 주소 (공유 이미지·검색엔진 절대경로 기준) — 임시 Vercel 주소. TODO: 정식 도메인 연결 시 교체 */
-  url: "https://unitechcctv.vercel.app",
+  /** 사이트 주소 (공유 이미지·검색엔진 절대경로 기준) — 정식 도메인 (2026-10-22 연결: 카페24 구입 → DNS A·CNAME → Vercel, www 는 이 주소로 308) */
+  url: "https://unitechcctv.co.kr",
   /** 브랜드 슬로건 (브랜드 가이드) */
   slogan: "하나된 기술로 안전을 지키다",
   /** 대표전화 (2026-10-19 고객 전달) */
