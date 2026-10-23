@@ -188,9 +188,8 @@ export default function LiveInquiries() {
         @keyframes liveRowFlash { 0% { background-color: rgba(0,167,171,0.16); } 100% { background-color: transparent; } }
         /* 밀려난 마지막 행: 창 밖으로 내려가며 페이드아웃 */
         @keyframes liveRowOut { to { opacity: 0; } }
-        @media (prefers-reduced-motion: reduce) {
-          [class*="liveRow"] { animation: none !important; }
-        }
+        /* "애니메이션 줄이기" 설정이어도 움직임 유지 (2026-10-23) — 꺼 두면 줄이 툭툭 바뀌어 어색함.
+           삼성 폰은 절전 모드만 켜도 이 설정이 잡힌다. 실적 숫자·제휴 로고·후기 띠와 같은 결정 */
       `}</style>
     </div>
   );

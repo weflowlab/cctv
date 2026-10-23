@@ -4,7 +4,8 @@
  * - 숫자는 고객이 준 값 (2026-10-19): 누적 시공 1,200건 · 누적 수리 950건. 바꿀 때는 STATS 만 고친다.
  * - 카운트업: 띠가 화면에 들어오면 0 → 목표까지 1.6초 동안 올라간다 (처음엔 빠르고 끝에서 천천히, 한 번만).
  *   서버 HTML 엔 최종 숫자가 들어가 있고(검색·JS 꺼진 환경), 브라우저에서 마운트되면 0 으로 내렸다가 보일 때 센다.
- *   prefers-reduced-motion 이면 바로 최종 숫자.
+ *   폰의 "애니메이션 줄이기"(prefers-reduced-motion) 설정과 상관없이 센다 — 삼성 폰은 절전 모드만 켜도 이 설정이 잡혀
+ *   숫자가 안 움직여 "고장 났다"는 문의가 옴 (2026-10-23 대표 폰). 제휴 로고·후기 띠와 같은 결정(globals.css 참고).
  * - 숫자와 단위("건+")는 같은 크기. PC 2칸 가로 / 모바일도 2칸, 가운데 세로 구분선.
  */
 import { useEffect, useRef, useState } from "react";
@@ -25,7 +26,6 @@ export default function StatBand() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     // 마운트 직후 다음 프레임에 0 으로 내려 두고, 띠가 보이면 센다
     let raf = requestAnimationFrame(() => setShown(STATS.map(() => 0)));
 
